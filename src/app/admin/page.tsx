@@ -1,13 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Package, Plane, MapPin, Battery, AlertTriangle, BarChart3, Settings, Users, 
-  Calendar, Filter, Plus, Search, RefreshCw, Home, Shield, FileText, Bell, 
-  LogOut, Eye, Edit, Trash2, ChevronLeft, ChevronRight, ArrowUpDown, 
-  CheckCircle, Clock, Zap
-} from 'lucide-react'
+  Users, Package, Settings, BarChart3, Menu, X, 
+  Filter, Download, Plus, Edit, Trash2, Eye, 
+  Battery, Signal, MapPin, Clock, AlertTriangle,
+  TrendingUp, TrendingDown, Activity, Shield, Bell, CheckCircle,
+  Home, Plane, ChevronRight, ChevronLeft, LogOut, ArrowUpDown,
+  RefreshCw, FileText
+} from 'lucide-react';
 import { BubbleCard, BubbleButton, BubbleInput } from '@/components/ui/skyway-components'
 
 // Interfaces for type safety
@@ -69,13 +72,70 @@ const mockUsers: User[] = [
   { id: 'USR-004', name: 'Customer Beta', email: 'beta@example.com', role: 'customer', status: 'inactive', lastLogin: '2024-09-28 14:20', createdAt: '2024-03-25' }
 ]
 
+const LiveMapComponent = dynamic(() => import('@/components/ui/LiveMap'), { ssr: false })
+
 export default function AdminDashboard() {
   const [activeMenu, setActiveMenu] = useState('dashboard')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [selectedShipments, setSelectedShipments] = useState<string[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
+  const [selectedDrone, setSelectedDrone] = useState<string | null>(null)
   const itemsPerPage = 5
+
+  // Mock data untuk live drone positions dan routes
+  const liveDroneData = [
+    {
+      id: 'SWD-447',
+      name: 'Sky Falcon Alpha',
+      position: { lat: -7.2575, lng: 112.7521 }, // Surabaya
+      status: 'active',
+      battery: 78,
+      altitude: 120,
+      speed: 45,
+      route: [
+        { lat: -7.2575, lng: 112.7521, timestamp: '14:30' },
+        { lat: -7.2590, lng: 112.7540, timestamp: '14:35' },
+        { lat: -7.2610, lng: 112.7560, timestamp: '14:40' },
+        { lat: -7.2630, lng: 112.7580, timestamp: '14:45' }
+      ],
+      destination: { lat: -7.2700, lng: 112.7650, name: 'Pakuwon Mall' }
+    },
+    {
+      id: 'SWD-448',
+      name: 'Sky Falcon Beta',
+      position: { lat: -7.2504, lng: 112.7688 }, // Tunjungan
+      status: 'idle',
+      battery: 95,
+      altitude: 0,
+      speed: 0,
+      route: [
+        { lat: -7.2504, lng: 112.7688, timestamp: '14:20' }
+      ],
+      destination: null
+    },
+    {
+      id: 'SWD-449',
+      name: 'Sky Falcon Gamma',
+      position: { lat: -7.2574, lng: 112.7575 }, // Hub Gubeng
+      status: 'charging',
+      battery: 45,
+      altitude: 0,
+      speed: 0,
+      route: [
+        { lat: -7.2574, lng: 112.7575, timestamp: '13:45' }
+      ],
+      destination: null
+    }
+  ]
+
+  const defaultMapCenter: [number, number] = [-7.2575, 112.7521]
+  const mapCenter: [number, number] = liveDroneData.length
+    ? [
+        liveDroneData.reduce((sum, drone) => sum + drone.position.lat, 0) / liveDroneData.length,
+        liveDroneData.reduce((sum, drone) => sum + drone.position.lng, 0) / liveDroneData.length
+      ] as [number, number]
+    : defaultMapCenter
 
   // Hide navigation for admin dashboard
   useEffect(() => {
@@ -139,6 +199,7 @@ export default function AdminDashboard() {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home },
     { id: 'fleet', label: 'Fleet Management', icon: Plane, badge: mockDrones.filter(d => d.status === 'active').length },
+    { id: 'map', label: 'Live Map', icon: MapPin, badge: 'Live' },
     { id: 'shipments', label: 'Shipments', icon: Package, badge: mockShipments.filter(s => s.status === 'pending').length },
     { id: 'users', label: 'User Management', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
@@ -333,6 +394,94 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </BubbleCard>
+            </motion.div>
+          )}
+
+          {/* Live Map */}
+          {activeMenu === 'map' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-6"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-2">Live Drone Map</h2>
+                  <p className="text-sky-100/70">Real-time drone positions and flight paths</p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <BubbleButton onClick={() => setSelectedDrone(null)} variant="secondary">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    Show All
+                  </BubbleButton>
+                  <BubbleButton>
+                    <Activity className="w-4 h-4 mr-2" />
+                    Live Tracking
+                  </BubbleButton>
+                </div>
+              </div>
+
+              {/* Map Container */}
+              <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
+                <div className="relative h-[480px] w-full">
+                  <LiveMapComponent
+                    drones={liveDroneData}
+                    selectedDrone={selectedDrone}
+                    onDroneSelect={setSelectedDrone}
+                    center={mapCenter}
+                    zoom={selectedDrone ? 14 : 12}
+                  />
+                </div>
+              </BubbleCard>
+
+              {/* Quick Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <BubbleCard className="p-4 bg-white/10 backdrop-blur-xl border-white/20 rounded-2xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sky-100/70 text-sm">Active Drones</p>
+                      <p className="text-2xl font-bold text-white">
+                        {liveDroneData.filter(d => d.status === 'active').length}
+                      </p>
+                    </div>
+                    <Plane className="w-8 h-8 text-cyan-400" />
+                  </div>
+                </BubbleCard>
+                
+                <BubbleCard className="p-4 bg-white/10 backdrop-blur-xl border-white/20 rounded-2xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sky-100/70 text-sm">In Transit</p>
+                      <p className="text-2xl font-bold text-white">
+                        {liveDroneData.filter(d => d.status === 'idle').length}
+                      </p>
+                    </div>
+                    <Activity className="w-8 h-8 text-amber-400" />
+                  </div>
+                </BubbleCard>
+                
+                <BubbleCard className="p-4 bg-white/10 backdrop-blur-xl border-white/20 rounded-2xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sky-100/70 text-sm">Average Battery</p>
+                      <p className="text-2xl font-bold text-white">
+                        {Math.round(liveDroneData.reduce((acc, d) => acc + d.battery, 0) / liveDroneData.length)}%
+                      </p>
+                    </div>
+                    <Battery className="w-8 h-8 text-sky-400" />
+                  </div>
+                </BubbleCard>
+                
+                <BubbleCard className="p-4 bg-white/10 backdrop-blur-xl border-white/20 rounded-2xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sky-100/70 text-sm">Total Distance</p>
+                      <p className="text-2xl font-bold text-white">847 km</p>
+                    </div>
+                    <MapPin className="w-8 h-8 text-teal-400" />
+                  </div>
+                </BubbleCard>
+              </div>
             </motion.div>
           )}
 

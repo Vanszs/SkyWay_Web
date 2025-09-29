@@ -4,6 +4,32 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { BubbleCard, BubbleButton } from '@/components/ui/skyway-components'
 import { MapPin, Navigation, Clock, Battery, Wifi } from 'lucide-react'
+import dynamic from 'next/dynamic'
+
+const DemoLiveMap = dynamic(() => import('@/components/ui/DemoLiveMap'), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-sky-navy/20 rounded-xl flex items-center justify-center"><div className="text-white">Loading map...</div></div>
+})
+
+// Dummy data for the demo map
+const demoDrones = [
+  {
+    id: 'SW-007',
+    name: 'SkyWay Alpha',
+    position: { lat: -6.229728, lng: 106.827149 },
+    status: 'active' as const,
+    battery: 82,
+    altitude: 120,
+    speed: 45,
+    route: [
+      { lat: -6.2607, lng: 106.8012, timestamp: '10:00' },
+      { lat: -6.24, lng: 106.81, timestamp: '10:02' },
+      { lat: -6.229728, lng: 106.827149, timestamp: '10:05' },
+      { lat: -6.22, lng: 106.84, timestamp: '10:08' },
+    ],
+    destination: { lat: -6.21, lng: 106.85, name: 'Gedung Cyber' },
+  },
+]
 
 export default function DemoMap() {
   const [activeDemo, setActiveDemo] = useState<'tracking' | 'planning' | 'live'>('tracking')
@@ -129,131 +155,8 @@ export default function DemoMap() {
               </div>
 
               {/* Map Area */}
-              <div className="relative h-full bg-gradient-to-br from-sky-navy to-sky-blue p-6">
-                {/* Map Grid Background */}
-                <div className="absolute inset-6 opacity-10">
-                  <svg className="w-full h-full">
-                    <defs>
-                      <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="1"/>
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" />
-                  </svg>
-                </div>
-
-                {/* Route Visualization */}
-                <div className="relative z-10 h-full flex flex-col justify-center">
-                  {/* Starting Point */}
-                  <motion.div 
-                    className="absolute top-1/4 left-1/4 flex items-center space-x-2"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                      <MapPin className="w-4 h-4 text-white" />
-                    </div>
-                    <div className="bg-sky-navy/80 backdrop-blur-sm px-2 py-1 rounded-lg shadow-soft text-sm font-medium text-white">
-                      Origin
-                    </div>
-                  </motion.div>
-
-                  {/* Destination */}
-                  <motion.div 
-                    className="absolute bottom-1/4 right-1/4 flex items-center space-x-2"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.7 }}
-                  >
-                    <div className="bg-sky-navy/80 backdrop-blur-sm px-2 py-1 rounded-lg shadow-soft text-sm font-medium text-white">
-                      Destination
-                    </div>
-                    <div className="w-6 h-6 bg-sky-gold rounded-full flex items-center justify-center">
-                      <MapPin className="w-4 h-4 text-white" />
-                    </div>
-                  </motion.div>
-
-                  {/* Animated Route */}
-                  <svg className="absolute inset-0 w-full h-full">
-                    <motion.path
-                      d="M 25% 25% Q 50% 15% 75% 75%"
-                      stroke="rgb(224, 164, 88)"
-                      strokeWidth="3"
-                      fill="none"
-                      strokeDasharray="10,5"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  </svg>
-
-                  {/* Drone Position */}
-                  <motion.div 
-                    className="absolute w-8 h-8 text-sky-gold flex items-center justify-center"
-                    style={{ 
-                      left: `${25 + (currentDemo.progress / 100) * 50}%`, 
-                      top: `${25 - Math.sin((currentDemo.progress / 100) * Math.PI) * 10}%` 
-                    }}
-                    animate={{ 
-                      rotate: [0, 10, -10, 0],
-                      scale: [1, 1.1, 1]
-                    }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity,
-                      ease: "easeInOut" 
-                    }}
-                  >
-                    🚁
-                  </motion.div>
-
-                  {/* Info Panel */}
-                  <motion.div 
-                    className="absolute top-4 right-4 bg-sky-navy/80 backdrop-blur-md border border-sky-gold/30 p-4 rounded-2xl shadow-soft min-w-[200px]"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 }}
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4 text-sky-gold" />
-                        <span className="text-sm">ETA: {currentDemo.eta}</span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Navigation className="w-4 h-4 text-sky-gold" />
-                        <span className="text-sm">Speed: 45 km/h</span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Battery className="w-4 h-4 text-green-500" />
-                        <span className="text-sm">Battery: 78%</span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <Wifi className="w-4 h-4 text-purple-500" />
-                        <span className="text-sm">Signal: Strong</span>
-                      </div>
-
-                      {/* Progress Bar */}
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-xs text-neutral-300">
-                          <span>Progress</span>
-                          <span>{currentDemo.progress}%</span>
-                        </div>
-                        <div className="w-full bg-white/30 rounded-full h-2">
-                          <motion.div 
-                            className="bg-sky-gold h-2 rounded-full"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${currentDemo.progress}%` }}
-                            transition={{ duration: 1.5 }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </div>
+              <div className="relative h-full bg-gradient-to-br from-sky-navy to-sky-blue">
+                <DemoLiveMap drone={demoDrones[0]} />
               </div>
             </BubbleCard>
           </motion.div>
