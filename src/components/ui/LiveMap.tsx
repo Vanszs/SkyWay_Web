@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Plane, Battery, MapPin, Activity, Clock, Signal,
+  Battery, MapPin, Activity, Clock, Signal,
   Navigation, Zap, Target, Plus, X
 } from 'lucide-react'
 import { BubbleCard } from './skyway-components'
@@ -33,7 +33,7 @@ const Polyline = dynamic(
   { ssr: false }
 )
 
-interface DroneMapData {
+export interface DroneMapData {
   id: string
   name: string
   position: { lat: number; lng: number }
@@ -76,7 +76,25 @@ const DroneIcon = ({ drone, isSelected }: { drone: DroneMapData, isSelected: boo
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
     >
-      <Plane className="w-5 h-5 text-white drop-shadow-sm" />
+      <svg
+        className="w-6 h-6 text-white drop-shadow-sm"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="2.6" fill="currentColor" />
+        <line x1="12" y1="4" x2="12" y2="8.5" />
+        <line x1="12" y1="15.5" x2="12" y2="20" />
+        <line x1="4" y1="12" x2="8.5" y2="12" />
+        <line x1="15.5" y1="12" x2="20" y2="12" />
+        <circle cx="6" cy="6" r="2.1" />
+        <circle cx="18" cy="6" r="2.1" />
+        <circle cx="6" cy="18" r="2.1" />
+        <circle cx="18" cy="18" r="2.1" />
+      </svg>
       
       {/* Battery indicator */}
       <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-slate-800 flex items-center justify-center">
@@ -264,8 +282,16 @@ export const LiveMap: React.FC<LiveMapProps> = ({
       html: `
         <div class="relative w-12 h-12 rounded-full flex items-center justify-center cursor-pointer shadow-xl transform transition-all duration-200 hover:scale-110 ${ringClass}"
           style="background: linear-gradient(135deg, ${statusColors[drone.status]}, ${statusColors[drone.status]}dd); border: 2px solid rgba(255,255,255,0.3);">
-          <svg class="w-6 h-6 text-white drop-shadow-lg" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
+          <svg class="w-6 h-6 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="2.6" fill="currentColor"></circle>
+            <line x1="12" y1="4" x2="12" y2="8.5"></line>
+            <line x1="12" y1="15.5" x2="12" y2="20"></line>
+            <line x1="4" y1="12" x2="8.5" y2="12"></line>
+            <line x1="15.5" y1="12" x2="20" y2="12"></line>
+            <circle cx="6" cy="6" r="2.1"></circle>
+            <circle cx="18" cy="6" r="2.1"></circle>
+            <circle cx="6" cy="18" r="2.1"></circle>
+            <circle cx="18" cy="18" r="2.1"></circle>
           </svg>
           
           <!-- Battery Indicator -->
@@ -511,3 +537,4 @@ export const LiveMap: React.FC<LiveMapProps> = ({
 }
 
 export default LiveMap
+

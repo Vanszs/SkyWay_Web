@@ -1,7 +1,8 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
+import type { DroneMapData } from '@/components/ui/LiveMap'
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, Package, Settings, BarChart3, Menu, X, 
@@ -84,8 +85,10 @@ export default function AdminDashboard() {
   const itemsPerPage = 5
 
   // Mock data untuk live drone positions dan routes
+  const createDrone = (drone: DroneMapData): DroneMapData => drone
+
   const liveDroneData = [
-    {
+    createDrone({
       id: 'SWD-447',
       name: 'Sky Falcon Alpha',
       position: { lat: -7.2575, lng: 112.7521 }, // Surabaya
@@ -100,8 +103,8 @@ export default function AdminDashboard() {
         { lat: -7.2630, lng: 112.7580, timestamp: '14:45' }
       ],
       destination: { lat: -7.2700, lng: 112.7650, name: 'Pakuwon Mall' }
-    },
-    {
+    }),
+    createDrone({
       id: 'SWD-448',
       name: 'Sky Falcon Beta',
       position: { lat: -7.2504, lng: 112.7688 }, // Tunjungan
@@ -113,8 +116,8 @@ export default function AdminDashboard() {
         { lat: -7.2504, lng: 112.7688, timestamp: '14:20' }
       ],
       destination: null
-    },
-    {
+    }),
+    createDrone({
       id: 'SWD-449',
       name: 'Sky Falcon Gamma',
       position: { lat: -7.2574, lng: 112.7575 }, // Hub Gubeng
@@ -126,14 +129,22 @@ export default function AdminDashboard() {
         { lat: -7.2574, lng: 112.7575, timestamp: '13:45' }
       ],
       destination: null
-    }
+    })
   ]
 
+  const poweredStatuses: Array<DroneMapData['status']> = ['active', 'idle', 'charging']
+  const poweredDrones = liveDroneData.filter((drone) =>
+    poweredStatuses.includes(drone.status)
+  )
+  const visibleSelectedDrone = poweredDrones.some((drone) => drone.id === selectedDrone)
+    ? selectedDrone
+    : null
+
   const defaultMapCenter: [number, number] = [-7.2575, 112.7521]
-  const mapCenter: [number, number] = liveDroneData.length
+  const mapCenter: [number, number] = poweredDrones.length
     ? [
-        liveDroneData.reduce((sum, drone) => sum + drone.position.lat, 0) / liveDroneData.length,
-        liveDroneData.reduce((sum, drone) => sum + drone.position.lng, 0) / liveDroneData.length
+        poweredDrones.reduce((sum, drone) => sum + drone.position.lat, 0) / poweredDrones.length,
+        poweredDrones.reduce((sum, drone) => sum + drone.position.lng, 0) / poweredDrones.length
       ] as [number, number]
     : defaultMapCenter
 
@@ -425,11 +436,11 @@ export default function AdminDashboard() {
               <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
                 <div className="relative h-[480px] w-full">
                   <LiveMapComponent
-                    drones={liveDroneData}
-                    selectedDrone={selectedDrone}
+                    drones={poweredDrones}
+                    selectedDrone={visibleSelectedDrone}
                     onDroneSelect={setSelectedDrone}
                     center={mapCenter}
-                    zoom={selectedDrone ? 14 : 12}
+                    zoom={visibleSelectedDrone ? 14 : 12}
                   />
                 </div>
               </BubbleCard>
@@ -441,7 +452,7 @@ export default function AdminDashboard() {
                     <div>
                       <p className="text-sky-100/70 text-sm">Active Drones</p>
                       <p className="text-2xl font-bold text-white">
-                        {liveDroneData.filter(d => d.status === 'active').length}
+                        {poweredDrones.filter(d => d.status === 'active').length}
                       </p>
                     </div>
                     <Plane className="w-8 h-8 text-cyan-400" />
@@ -453,7 +464,7 @@ export default function AdminDashboard() {
                     <div>
                       <p className="text-sky-100/70 text-sm">In Transit</p>
                       <p className="text-2xl font-bold text-white">
-                        {liveDroneData.filter(d => d.status === 'idle').length}
+                        {poweredDrones.filter(d => d.status === 'idle').length}
                       </p>
                     </div>
                     <Activity className="w-8 h-8 text-amber-400" />
@@ -465,7 +476,7 @@ export default function AdminDashboard() {
                     <div>
                       <p className="text-sky-100/70 text-sm">Average Battery</p>
                       <p className="text-2xl font-bold text-white">
-                        {Math.round(liveDroneData.reduce((acc, d) => acc + d.battery, 0) / liveDroneData.length)}%
+                        {poweredDrones.length ? Math.round(poweredDrones.reduce((acc, d) => acc + d.battery, 0) / poweredDrones.length) : 0}%
                       </p>
                     </div>
                     <Battery className="w-8 h-8 text-sky-400" />
@@ -687,7 +698,7 @@ export default function AdminDashboard() {
                           <td className="p-4">
                             <div className="text-sm">
                               <p className="text-white">{shipment.origin}</p>
-                              <p className="text-sky-100/70">↓</p>
+                              <p className="text-sky-100/70">&darr;</p>
                               <p className="text-white">{shipment.destination}</p>
                             </div>
                           </td>
@@ -990,3 +1001,5 @@ export default function AdminDashboard() {
     </div>
   )
 }
+
+

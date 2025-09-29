@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Poppins } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
@@ -22,7 +22,11 @@ export const metadata: Metadata = {
   description: 'SkyWay provides semi-autonomous delivery drones and full monitoring system for logistics companies, e-commerce merchants, and UMKM.',
   keywords: ['drone delivery', 'logistics', 'urban delivery', 'drone-as-a-service', 'tracking'],
   authors: [{ name: 'SkyWay Team' }],
-  viewport: 'width=device-width, initial-scale=1',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
   themeColor: '#0D1B2A',
 }
 

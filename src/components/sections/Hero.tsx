@@ -68,11 +68,6 @@ export default function Hero() {
                 </BubbleButton>
               </Link>
 
-              <Link href="/login">
-                <BubbleButton variant="ghost" size="lg" className="border-white/30 text-white hover:bg-white/10">
-                  Admin Login
-                </BubbleButton>
-              </Link>
             </motion.div>
 
             {/* Stats */}
