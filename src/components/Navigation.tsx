@@ -33,6 +33,7 @@ export const Navigation: React.FC<NavigationProps> = ({ className = "" }) => {
 
   return (
     <motion.nav 
+      data-navigation="true"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
           ? 'bg-sky-navy/95 backdrop-blur-lg border-b border-white/20 shadow-lg' 
