@@ -1,0 +1,329 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Alun-alun Sidoarjo",
+        "height": 25,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7172, -7.4471],
+          [112.7178, -7.4471],
+          [112.7178, -7.4476],
+          [112.7172, -7.4476],
+          [112.7172, -7.4471]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "GOR Delta Sidoarjo",
+        "height": 35,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7185, -7.4450],
+          [112.7195, -7.4450],
+          [112.7195, -7.4460],
+          [112.7185, -7.4460],
+          [112.7185, -7.4450]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lippo Plaza Sidoarjo",
+        "height": 45,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7140, -7.4485],
+          [112.7155, -7.4485],
+          [112.7155, -7.4495],
+          [112.7140, -7.4495],
+          [112.7140, -7.4485]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas UPN Veteran Jatim",
+        "height": 40,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7130, -7.4440],
+          [112.7145, -7.4440],
+          [112.7145, -7.4450],
+          [112.7130, -7.4450],
+          [112.7130, -7.4440]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "City of Tomorrow Mall",
+        "height": 50,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7160, -7.4420],
+          [112.7175, -7.4420],
+          [112.7175, -7.4430],
+          [112.7160, -7.4430],
+          [112.7160, -7.4420]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tunjungan Plaza Surabaya",
+        "height": 65,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7300, -7.2580],
+          [112.7320, -7.2580],
+          [112.7320, -7.2600],
+          [112.7300, -7.2600],
+          [112.7300, -7.2580]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pakuwon Mall Surabaya",
+        "height": 60,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7350, -7.2700],
+          [112.7370, -7.2700],
+          [112.7370, -7.2720],
+          [112.7350, -7.2720],
+          [112.7350, -7.2700]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Galaxy Mall Surabaya",
+        "height": 55,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7250, -7.2750],
+          [112.7270, -7.2750],
+          [112.7270, -7.2770],
+          [112.7250, -7.2770],
+          [112.7250, -7.2750]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Grand City Surabaya",
+        "height": 58,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7400, -7.2650],
+          [112.7415, -7.2650],
+          [112.7415, -7.2670],
+          [112.7400, -7.2670],
+          [112.7400, -7.2650]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "TPS 3 Alun-alun Sidoarjo",
+        "height": 30,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7190, -7.4490],
+          [112.7198, -7.4490],
+          [112.7198, -7.4498],
+          [112.7190, -7.4498],
+          [112.7190, -7.4490]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RSUD Sidoarjo",
+        "height": 42,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7120, -7.4500],
+          [112.7135, -7.4500],
+          [112.7135, -7.4515],
+          [112.7120, -7.4515],
+          [112.7120, -7.4500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kantor Pemkab Sidoarjo",
+        "height": 38,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7150, -7.4430],
+          [112.7165, -7.4430],
+          [112.7165, -7.4445],
+          [112.7150, -7.4445],
+          [112.7150, -7.4430]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Surabaya Town Square",
+        "height": 52,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7280, -7.2800],
+          [112.7295, -7.2800],
+          [112.7295, -7.2820],
+          [112.7280, -7.2820],
+          [112.7280, -7.2800]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Royal Plaza Surabaya",
+        "height": 48,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7325, -7.2780],
+          [112.7340, -7.2780],
+          [112.7340, -7.2800],
+          [112.7325, -7.2800],
+          [112.7325, -7.2780]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ciputra World Surabaya",
+        "height": 62,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7375, -7.2620],
+          [112.7390, -7.2620],
+          [112.7390, -7.2640],
+          [112.7375, -7.2640],
+          [112.7375, -7.2620]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Graha Pena Surabaya",
+        "height": 70,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7420, -7.2720],
+          [112.7435, -7.2720],
+          [112.7435, -7.2740],
+          [112.7420, -7.2740],
+          [112.7420, -7.2720]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ITS Tower Surabaya",
+        "height": 75,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7920, -7.2830],
+          [112.7935, -7.2830],
+          [112.7935, -7.2845],
+          [112.7920, -7.2845],
+          [112.7920, -7.2830]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Airlangga Kampus C",
+        "height": 45,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7900, -7.2780],
+          [112.7915, -7.2780],
+          [112.7915, -7.2795],
+          [112.7900, -7.2795],
+          [112.7900, -7.2780]
+        ]]
+      }
+    }
+  ]
+}

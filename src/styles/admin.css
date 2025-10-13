@@ -1,0 +1,466 @@
+/* SkyWay Admin Dashboard Design System */
+
+/* Admin-specific CSS variables */
+:root {
+  /* Admin Color Palette */
+  --admin-bg: #ffffff;
+  --admin-secondary-bg: #f8fafc;
+  --admin-surface: #ffffff;
+  --admin-surface-secondary: #f1f5f9;
+  
+  --admin-text: #1e293b;
+  --admin-text-secondary: #64748b;
+  --admin-text-muted: #94a3b8;
+  
+  --admin-border: #e2e8f0;
+  --admin-border-secondary: #f1f5f9;
+  
+  --admin-primary: #3b82f6;
+  --admin-secondary: #10b981;
+  --admin-accent: #f59e0b;
+  --admin-danger: #ef4444;
+  --admin-warning: #f59e0b;
+  --admin-info: #06b6d4;
+  
+  --admin-success: #10b981;
+  --admin-error: #ef4444;
+  --admin-pending: #f59e0b;
+  --admin-active: #10b981;
+  --admin-inactive: #6b7280;
+  
+  --admin-sidebar-bg: #1e293b;
+  --admin-sidebar-text: #f1f5f9;
+  --admin-sidebar-text-secondary: #94a3b8;
+  --admin-sidebar-hover: #334155;
+  --admin-sidebar-active: #3b82f6;
+  
+  /* Admin Spacing */
+  --admin-spacing-xs: 0.25rem;
+  --admin-spacing-sm: 0.5rem;
+  --admin-spacing-md: 1rem;
+  --admin-spacing-lg: 1.5rem;
+  --admin-spacing-xl: 2rem;
+  --admin-spacing-2xl: 3rem;
+  
+  /* Admin Border Radius */
+  --admin-radius-sm: 0.375rem;
+  --admin-radius-md: 0.5rem;
+  --admin-radius-lg: 0.75rem;
+  --admin-radius-xl: 1rem;
+  
+  /* Admin Shadows - Flat design with minimal shadows */
+  --admin-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --admin-shadow-md: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --admin-shadow-lg: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Admin Base Styles */
+.admin-dashboard {
+  background-color: var(--admin-secondary-bg);
+  color: var(--admin-text);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* Admin Sidebar Styles */
+.admin-sidebar {
+  background-color: var(--admin-sidebar-bg);
+  border-right: 1px solid var(--admin-border);
+  color: var(--admin-sidebar-text);
+  transition: all 0.3s ease;
+}
+
+.admin-sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: var(--admin-spacing-md) var(--admin-spacing-lg);
+  border-radius: var(--admin-radius-lg);
+  color: var(--admin-sidebar-text);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.admin-sidebar-item:hover {
+  background-color: var(--admin-sidebar-hover);
+  color: var(--admin-sidebar-text);
+}
+
+.admin-sidebar-item.active {
+  background-color: var(--admin-sidebar-active);
+  color: white;
+}
+
+/* Admin Header Styles */
+.admin-header {
+  background-color: var(--admin-surface);
+  border-bottom: 1px solid var(--admin-border);
+  padding: var(--admin-spacing-lg) var(--admin-spacing-2xl);
+}
+
+.admin-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--admin-text);
+  margin: 0;
+}
+
+.admin-subtitle {
+  font-size: 0.875rem;
+  color: var(--admin-text-secondary);
+  margin: 0;
+  margin-top: var(--admin-spacing-xs);
+}
+
+/* Admin Card Styles */
+.admin-card {
+  background-color: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-lg);
+  box-shadow: var(--admin-shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.admin-card:hover {
+  box-shadow: var(--admin-shadow-md);
+}
+
+.admin-card-header {
+  padding: var(--admin-spacing-lg);
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-card-body {
+  padding: var(--admin-spacing-lg);
+}
+
+.admin-card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--admin-text);
+  margin: 0;
+}
+
+/* Admin Button Styles */
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--admin-spacing-sm) var(--admin-spacing-md);
+  border-radius: var(--admin-radius-md);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.admin-btn-primary {
+  background-color: var(--admin-primary);
+  color: white;
+}
+
+.admin-btn-primary:hover {
+  background-color: #2563eb;
+}
+
+.admin-btn-secondary {
+  background-color: var(--admin-secondary);
+  color: white;
+}
+
+.admin-btn-secondary:hover {
+  background-color: #059669;
+}
+
+.admin-btn-outline {
+  background-color: transparent;
+  color: var(--admin-text);
+  border: 1px solid var(--admin-border);
+}
+
+.admin-btn-outline:hover {
+  background-color: var(--admin-surface-secondary);
+}
+
+/* Admin Table Styles */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--admin-surface);
+}
+
+.admin-table th {
+  text-align: left;
+  padding: var(--admin-spacing-md) var(--admin-spacing-lg);
+  font-weight: 600;
+  color: var(--admin-text);
+  border-bottom: 1px solid var(--admin-border);
+  font-size: 0.875rem;
+}
+
+.admin-table td {
+  padding: var(--admin-spacing-md) var(--admin-spacing-lg);
+  color: var(--admin-text);
+  border-bottom: 1px solid var(--admin-border-secondary);
+  font-size: 0.875rem;
+}
+
+.admin-table tr:hover {
+  background-color: var(--admin-surface-secondary);
+}
+
+/* Admin Status Badge Styles */
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--admin-spacing-xs) var(--admin-spacing-sm);
+  border-radius: var(--admin-radius-xl);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.admin-badge-success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.admin-badge-warning {
+  background-color: #fed7aa;
+  color: #92400e;
+}
+
+.admin-badge-danger {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.admin-badge-info {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.admin-badge-secondary {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* Admin Input Styles */
+.admin-input {
+  width: 100%;
+  padding: var(--admin-spacing-sm) var(--admin-spacing-md);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-md);
+  background-color: var(--admin-surface);
+  color: var(--admin-text);
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+}
+
+.admin-input::placeholder {
+  color: var(--admin-text-muted);
+}
+
+/* Admin Stats Card Styles */
+.admin-stats-card {
+  background-color: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-lg);
+  padding: var(--admin-spacing-lg);
+  box-shadow: var(--admin-shadow-sm);
+}
+
+.admin-stats-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--admin-text);
+  line-height: 1;
+}
+
+.admin-stats-label {
+  font-size: 0.875rem;
+  color: var(--admin-text-secondary);
+  margin-top: var(--admin-spacing-sm);
+}
+
+.admin-stats-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--admin-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Admin Progress Bar */
+.admin-progress {
+  width: 100%;
+  height: 0.5rem;
+  background-color: var(--admin-border);
+  border-radius: var(--admin-radius-xl);
+  overflow: hidden;
+}
+
+.admin-progress-bar {
+  height: 100%;
+  background-color: var(--admin-primary);
+  transition: width 0.3s ease;
+}
+
+/* Admin Responsive */
+@media (max-width: 768px) {
+  .admin-header {
+    padding: var(--admin-spacing-md) var(--admin-spacing-lg);
+  }
+  
+  .admin-card-body {
+    padding: var(--admin-spacing-md);
+  }
+  
+  .admin-table {
+    font-size: 0.75rem;
+  }
+  
+  .admin-table th,
+  .admin-table td {
+    padding: var(--admin-spacing-sm);
+  }
+}
+
+/* Admin Map Container Styles */
+.admin-map-container {
+  height: 500px;
+  width: 100%;
+  border-radius: var(--admin-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--admin-border);
+}
+
+.admin-map-container .leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+/* Map loading state */
+.admin-map-loading {
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: var(--admin-radius-lg);
+}
+
+/* Route information panel */
+.admin-route-info {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  padding: var(--admin-spacing-md);
+  border-radius: var(--admin-radius-lg);
+  margin-top: var(--admin-spacing-md);
+}
+
+.admin-route-info h4 {
+  margin: 0 0 var(--admin-spacing-sm) 0;
+  font-weight: 600;
+}
+
+.admin-route-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--admin-spacing-md);
+  margin-top: var(--admin-spacing-sm);
+}
+
+.admin-route-stat {
+  text-align: center;
+}
+
+.admin-route-stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  display: block;
+}
+
+.admin-route-stat-label {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Mobile responsive for map */
+@media (max-width: 768px) {
+  .admin-map-container {
+    height: 400px;
+  }
+  
+  .admin-map-loading {
+    height: 400px;
+  }
+  
+  .admin-route-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--admin-spacing-sm);
+  }
+}
+
+/* Leaflet map specific fixes */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.leaflet-control-zoom a {
+  background-color: white !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 28px !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: #f3f4f6 !important;
+}
+
+/* Custom marker styles */
+.custom-start-marker,
+.custom-end-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Ensure map fills container */
+.leaflet-map-pane {
+  z-index: 1;
+}
+
+.leaflet-tile-pane {
+  z-index: 2;
+}
+
+.leaflet-overlay-pane {
+  z-index: 3;
+}
+
+.leaflet-marker-pane {
+  z-index: 4;
+}
+
+.leaflet-popup-pane {
+  z-index: 5;
+}

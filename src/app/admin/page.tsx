@@ -1,16 +1,16 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import type { DroneMapData } from '@/components/ui/LiveMap'
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Users, Package, Settings, BarChart3, Menu, X, 
-  Filter, Download, Plus, Edit, Trash2, Eye, 
+import {
+  Users, Package, Settings, BarChart3, Menu, X,
+  Filter, Download, Plus, Edit, Trash2, Eye,
   Battery, Signal, MapPin, Clock, AlertTriangle,
   TrendingUp, TrendingDown, Activity, Shield, Bell, CheckCircle,
   Home, Plane, ChevronRight, ChevronLeft, LogOut, ArrowUpDown,
-  RefreshCw, FileText
+  RefreshCw, FileText, Search
 } from 'lucide-react';
 import { BubbleCard, BubbleButton, BubbleInput } from '@/components/ui/skyway-components'
 
@@ -186,25 +186,25 @@ export default function AdminDashboard() {
     }
   }, [])
 
-  // Status color mappings
+  // Status color mappings - Updated for light theme
   const statusColors = {
-    active: 'text-cyan-300 bg-cyan-400/20',
-    idle: 'text-sky-blue bg-sky-blue/20', 
-    charging: 'text-sky-gold bg-sky-gold/20',
-    maintenance: 'text-red-300 bg-red-400/20',
-    pending: 'text-amber-300 bg-amber-400/20',
-    assigned: 'text-sky-blue bg-sky-blue/20',
-    in_flight: 'text-sky-gold bg-sky-gold/20',
-    delivered: 'text-cyan-300 bg-cyan-400/20',
-    cancelled: 'text-red-300 bg-red-400/20',
-    urgent: 'text-red-300',
-    high: 'text-orange-300',
-    medium: 'text-sky-gold',
-    low: 'text-sky-blue',
-    admin: 'text-purple-300 bg-purple-400/20',
-    operator: 'text-sky-gold bg-sky-gold/20',
-    pilot: 'text-cyan-300 bg-cyan-400/20',
-    customer: 'text-gray-300 bg-gray-400/20'
+    active: 'text-emerald-700 bg-emerald-100 border-emerald-200',
+    idle: 'text-blue-700 bg-blue-100 border-blue-200',
+    charging: 'text-yellow-700 bg-yellow-100 border-yellow-200',
+    maintenance: 'text-red-700 bg-red-100 border-red-200',
+    pending: 'text-orange-700 bg-orange-100 border-orange-200',
+    assigned: 'text-blue-700 bg-blue-100 border-blue-200',
+    in_flight: 'text-yellow-700 bg-yellow-100 border-yellow-200',
+    delivered: 'text-emerald-700 bg-emerald-100 border-emerald-200',
+    cancelled: 'text-red-700 bg-red-100 border-red-200',
+    urgent: 'text-red-700',
+    high: 'text-orange-700',
+    medium: 'text-yellow-700',
+    low: 'text-blue-700',
+    admin: 'text-purple-700 bg-purple-100 border-purple-200',
+    operator: 'text-yellow-700 bg-yellow-100 border-yellow-200',
+    pilot: 'text-blue-700 bg-blue-100 border-blue-200',
+    customer: 'text-gray-700 bg-gray-100 border-gray-200'
   }
 
   const menuItems = [
@@ -218,7 +218,7 @@ export default function AdminDashboard() {
   ]
 
   // Filter and pagination logic
-  const filteredShipments = mockShipments.filter(shipment => 
+  const filteredShipments = mockShipments.filter(shipment =>
     shipment.trackingNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
     shipment.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     shipment.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -232,27 +232,27 @@ export default function AdminDashboard() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-navy via-sky-blue to-sky-navy flex">
-      {/* Sidebar */}
-      <motion.div 
-        className={`${sidebarCollapsed ? 'w-20' : 'w-72'} bg-white/10 backdrop-blur-xl border-r border-white/20 flex flex-col transition-all duration-300`}
+    <div className="admin-dashboard min-h-screen flex">
+      {/* Clean Flat Sidebar */}
+      <motion.div
+        className={`${sidebarCollapsed ? 'w-20' : 'w-64'} admin-sidebar flex flex-col transition-all duration-300`}
         initial={false}
-        animate={{ width: sidebarCollapsed ? 80 : 288 }}
+        animate={{ width: sidebarCollapsed ? 80 : 256 }}
       >
         {/* Sidebar Header */}
-        <div className="p-6 border-b border-white/10">
+        <div className="p-6 border-b border-slate-700">
           <div className="flex items-center justify-between">
             {!sidebarCollapsed && (
               <div>
-                <h2 className="text-xl font-bold text-white">SkyWay Admin</h2>
-                <p className="text-sky-100/70 text-sm">Control Center</p>
+                <h2 className="text-xl font-bold text-white">SkyWay</h2>
+                <p className="text-slate-400 text-sm">Admin Panel</p>
               </div>
             )}
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors"
+              className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 transition-colors"
             >
-              {sidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+              {sidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
             </button>
           </div>
         </div>
@@ -263,10 +263,8 @@ export default function AdminDashboard() {
             <motion.button
               key={item.id}
               onClick={() => setActiveMenu(item.id)}
-              className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center px-3' : 'px-4'} py-3 rounded-2xl transition-all duration-200 ${
-                activeMenu === item.id 
-                  ? 'bg-sky-gold text-sky-navy shadow-lg' 
-                  : 'text-white hover:bg-white/10'
+              className={`admin-sidebar-item w-full ${sidebarCollapsed ? 'justify-center' : ''} ${
+                activeMenu === item.id ? 'active' : ''
               }`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -276,7 +274,7 @@ export default function AdminDashboard() {
                 <>
                   <span className="font-medium flex-1 text-left">{item.label}</span>
                   {item.badge && (
-                    <span className="bg-red-400 text-white text-xs px-2 py-1 rounded-full">
+                    <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
                       {item.badge}
                     </span>
                   )}
@@ -287,8 +285,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Sidebar Footer */}
-        <div className="p-4 border-t border-white/10">
-          <button className={`w-full flex items-center ${sidebarCollapsed ? 'justify-center px-3' : 'px-4'} py-3 text-white hover:bg-white/10 rounded-2xl transition-colors`}>
+        <div className="p-4 border-t border-slate-700">
+          <button className={`admin-sidebar-item w-full ${sidebarCollapsed ? 'justify-center' : ''}`}>
             <LogOut className={`w-5 h-5 ${sidebarCollapsed ? '' : 'mr-3'}`} />
             {!sidebarCollapsed && <span>Logout</span>}
           </button>
@@ -298,40 +296,48 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Top Header */}
-        <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 p-6">
+        <div className="admin-header">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-white capitalize">
-                {activeMenu === 'dashboard' ? 'Dashboard Overview' : 
+              <h1 className="admin-title capitalize">
+                {activeMenu === 'dashboard' ? 'Dashboard' :
                  activeMenu === 'fleet' ? 'Fleet Management' :
                  activeMenu === 'shipments' ? 'Shipment Management' :
                  activeMenu === 'users' ? 'User Management' :
                  activeMenu === 'analytics' ? 'Analytics & Reports' :
                  'System Settings'}
               </h1>
-              <p className="text-sky-100/70">
-                {new Date().toLocaleDateString('id-ID', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
+              <p className="admin-subtitle">
+                {new Date().toLocaleDateString('id-ID', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
                 })}
               </p>
             </div>
             <div className="flex items-center space-x-4">
-              <BubbleButton variant="secondary" size="sm">
-                <Bell className="w-4 h-4 mr-2" />
-                Notifications
-              </BubbleButton>
-              <div className="w-10 h-10 bg-gradient-to-br from-sky-gold to-amber-400 rounded-2xl flex items-center justify-center">
-                <Users className="w-5 h-5 text-sky-navy" />
+              <div className="relative">
+                <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className="admin-input pl-10 pr-4 py-2 w-64"
+                />
+              </div>
+              <button className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors relative">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              </button>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Users className="w-5 h-5 text-white" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 p-6 overflow-auto">
+        <div className="flex-1 p-8 overflow-auto">
           {/* Dashboard */}
           {activeMenu === 'dashboard' && (
             <motion.div
@@ -340,71 +346,109 @@ export default function AdminDashboard() {
               className="space-y-6"
             >
               {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="admin-stats-card">
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-3xl font-bold text-white">{mockDrones.filter(d => d.status === 'active').length}</div>
-                      <div className="text-sky-100/70 text-sm">Active Drones</div>
+                      <div className="admin-stats-value">{mockDrones.filter(d => d.status === 'active').length}</div>
+                      <div className="admin-stats-label">Active Drones</div>
                     </div>
-                    <Plane className="w-8 h-8 text-sky-gold" />
-                  </div>
-                </BubbleCard>
-
-                <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-3xl font-bold text-white">{mockShipments.filter(s => s.status === 'pending').length}</div>
-                      <div className="text-sky-100/70 text-sm">Pending Orders</div>
+                    <div className="admin-stats-icon bg-emerald-100">
+                      <Plane className="w-6 h-6 text-emerald-600" />
                     </div>
-                    <Package className="w-8 h-8 text-amber-300" />
-                  </div>
-                </BubbleCard>
-
-                <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-3xl font-bold text-white">{mockDrones.length}</div>
-                      <div className="text-sky-100/70 text-sm">Total Fleet</div>
-                    </div>
-                    <Battery className="w-8 h-8 text-cyan-300" />
-                  </div>
-                </BubbleCard>
-
-                <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-3xl font-bold text-white">98.5%</div>
-                      <div className="text-sky-100/70 text-sm">Success Rate</div>
-                    </div>
-                    <CheckCircle className="w-8 h-8 text-green-400" />
-                  </div>
-                </BubbleCard>
-              </div>
-
-              {/* System Overview */}
-              <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                <h3 className="text-lg font-semibold text-white mb-6">System Overview</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center p-4 bg-white/5 rounded-2xl">
-                    <Plane className="w-12 h-12 text-sky-gold mx-auto mb-3" />
-                    <h4 className="text-white font-medium mb-2">Fleet Status</h4>
-                    <p className="text-sky-100/70 text-sm">All drones operational and ready for deployment</p>
-                  </div>
-                  
-                  <div className="text-center p-4 bg-white/5 rounded-2xl">
-                    <Package className="w-12 h-12 text-amber-300 mx-auto mb-3" />
-                    <h4 className="text-white font-medium mb-2">Active Orders</h4>
-                    <p className="text-sky-100/70 text-sm">Multiple deliveries in progress across the city</p>
-                  </div>
-                  
-                  <div className="text-center p-4 bg-white/5 rounded-2xl">
-                    <BarChart3 className="w-12 h-12 text-cyan-300 mx-auto mb-3" />
-                    <h4 className="text-white font-medium mb-2">Performance</h4>
-                    <p className="text-sky-100/70 text-sm">Excellent delivery times and customer satisfaction</p>
                   </div>
                 </div>
-              </BubbleCard>
+
+                <div className="admin-stats-card">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="admin-stats-value">{mockShipments.filter(s => s.status === 'pending').length}</div>
+                      <div className="admin-stats-label">Pending Orders</div>
+                    </div>
+                    <div className="admin-stats-icon bg-orange-100">
+                      <Package className="w-6 h-6 text-orange-600" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="admin-stats-card">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="admin-stats-value">{mockDrones.length}</div>
+                      <div className="admin-stats-label">Total Fleet</div>
+                    </div>
+                    <div className="admin-stats-icon bg-blue-100">
+                      <Battery className="w-6 h-6 text-blue-600" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="admin-stats-card">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="admin-stats-value">98.5%</div>
+                      <div className="admin-stats-label">Success Rate</div>
+                    </div>
+                    <div className="admin-stats-icon bg-green-100">
+                      <CheckCircle className="w-6 h-6 text-green-600" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Charts Section */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="admin-card">
+                  <div className="admin-card-header">
+                    <h3 className="admin-card-title">Revenue Overview</h3>
+                  </div>
+                  <div className="admin-card-body">
+                    <div className="h-64 flex items-center justify-center text-gray-400">
+                      <div className="text-center">
+                        <TrendingUp className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                        <p>Revenue Chart</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="admin-card">
+                  <div className="admin-card-header">
+                    <h3 className="admin-card-title">Recent Activity</h3>
+                  </div>
+                  <div className="admin-card-body">
+                    <div className="space-y-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">New order received</p>
+                          <p className="text-xs text-gray-500">2 minutes ago</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Plane className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">Drone SWD-447 deployed</p>
+                          <p className="text-xs text-gray-500">5 minutes ago</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                          <AlertTriangle className="w-4 h-4 text-yellow-600" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">Weather warning issued</p>
+                          <p className="text-xs text-gray-500">10 minutes ago</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -415,83 +459,40 @@ export default function AdminDashboard() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold text-white mb-2">Live Drone Map</h2>
-                  <p className="text-sky-100/70">Real-time drone positions and flight paths</p>
+              <div className="admin-card">
+                <div className="admin-card-header">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="admin-card-title">Live Drone Map</h2>
+                      <p className="text-sm text-gray-500">Real-time drone positions and flight paths</p>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <button
+                        onClick={() => setSelectedDrone(null)}
+                        className="admin-btn admin-btn-outline"
+                      >
+                        <MapPin className="w-4 h-4 mr-2" />
+                        Show All
+                      </button>
+                      <button className="admin-btn admin-btn-primary">
+                        <Activity className="w-4 h-4 mr-2" />
+                        Live Tracking
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <BubbleButton onClick={() => setSelectedDrone(null)} variant="secondary">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    Show All
-                  </BubbleButton>
-                  <BubbleButton>
-                    <Activity className="w-4 h-4 mr-2" />
-                    Live Tracking
-                  </BubbleButton>
-                </div>
-              </div>
 
-              {/* Map Container */}
-              <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                <div className="relative h-[480px] w-full">
-                  <LiveMapComponent
-                    drones={poweredDrones}
-                    selectedDrone={visibleSelectedDrone}
-                    onDroneSelect={setSelectedDrone}
-                    center={mapCenter}
-                    zoom={visibleSelectedDrone ? 14 : 12}
-                  />
+                <div className="admin-card-body p-0">
+                  <div className="relative h-[500px] w-full bg-gray-800 rounded-lg overflow-hidden">
+                    <LiveMapComponent
+                      drones={poweredDrones}
+                      selectedDrone={visibleSelectedDrone}
+                      onDroneSelect={setSelectedDrone}
+                      center={mapCenter}
+                      zoom={visibleSelectedDrone ? 14 : 12}
+                    />
+                  </div>
                 </div>
-              </BubbleCard>
-
-              {/* Quick Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <BubbleCard className="p-4 bg-white/10 backdrop-blur-xl border-white/20 rounded-2xl">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sky-100/70 text-sm">Active Drones</p>
-                      <p className="text-2xl font-bold text-white">
-                        {poweredDrones.filter(d => d.status === 'active').length}
-                      </p>
-                    </div>
-                    <Plane className="w-8 h-8 text-cyan-400" />
-                  </div>
-                </BubbleCard>
-                
-                <BubbleCard className="p-4 bg-white/10 backdrop-blur-xl border-white/20 rounded-2xl">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sky-100/70 text-sm">In Transit</p>
-                      <p className="text-2xl font-bold text-white">
-                        {poweredDrones.filter(d => d.status === 'idle').length}
-                      </p>
-                    </div>
-                    <Activity className="w-8 h-8 text-amber-400" />
-                  </div>
-                </BubbleCard>
-                
-                <BubbleCard className="p-4 bg-white/10 backdrop-blur-xl border-white/20 rounded-2xl">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sky-100/70 text-sm">Average Battery</p>
-                      <p className="text-2xl font-bold text-white">
-                        {poweredDrones.length ? Math.round(poweredDrones.reduce((acc, d) => acc + d.battery, 0) / poweredDrones.length) : 0}%
-                      </p>
-                    </div>
-                    <Battery className="w-8 h-8 text-sky-400" />
-                  </div>
-                </BubbleCard>
-                
-                <BubbleCard className="p-4 bg-white/10 backdrop-blur-xl border-white/20 rounded-2xl">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sky-100/70 text-sm">Total Distance</p>
-                      <p className="text-2xl font-bold text-white">847 km</p>
-                    </div>
-                    <MapPin className="w-8 h-8 text-teal-400" />
-                  </div>
-                </BubbleCard>
               </div>
             </motion.div>
           )}
@@ -503,113 +504,116 @@ export default function AdminDashboard() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white">Fleet Management</h2>
-                <div className="flex items-center space-x-4">
-                  <BubbleInput placeholder="Search drones..." className="w-64" />
-                  <BubbleButton variant="secondary">
-                    <Filter className="w-4 h-4 mr-2" />
-                    Filter
-                  </BubbleButton>
-                  <BubbleButton>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Drone
-                  </BubbleButton>
+              <div className="admin-card">
+                <div className="admin-card-header">
+                  <div className="flex items-center justify-between">
+                    <h2 className="admin-card-title">Fleet Management</h2>
+                    <div className="flex items-center space-x-4">
+                      <div className="relative">
+                        <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          placeholder="Search drones..."
+                          className="admin-input pl-10 pr-4 py-2 w-64"
+                        />
+                      </div>
+                      <button className="admin-btn admin-btn-outline">
+                        <Filter className="w-4 h-4 mr-2" />
+                        Filter
+                      </button>
+                      <button className="admin-btn admin-btn-primary">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Drone
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="admin-card-body p-0">
+                  <div className="overflow-x-auto">
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Drone ID</th>
+                          <th>Status</th>
+                          <th>Battery</th>
+                          <th>Location</th>
+                          <th>Current Job</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mockDrones.map((drone) => (
+                          <tr key={drone.id}>
+                            <td>
+                              <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                  <Plane className="w-5 h-5 text-blue-600" />
+                                </div>
+                                <span className="font-medium">{drone.id}</span>
+                              </div>
+                            </td>
+                            <td>
+                              <span className={`admin-badge ${
+                                drone.status === 'active' ? 'admin-badge-success' :
+                                drone.status === 'idle' ? 'admin-badge-info' :
+                                drone.status === 'charging' ? 'admin-badge-warning' :
+                                'admin-badge-danger'
+                              }`}>
+                                {drone.status.toUpperCase()}
+                              </span>
+                            </td>
+                            <td>
+                              <div className="flex items-center space-x-2">
+                                <div className="admin-progress w-16">
+                                  <div
+                                    className={`admin-progress-bar ${
+                                      drone.battery > 60 ? 'bg-emerald-500' :
+                                      drone.battery > 30 ? 'bg-yellow-500' :
+                                      'bg-red-500'
+                                    }`}
+                                    style={{ width: `${drone.battery}%` }}
+                                  />
+                                </div>
+                                <span className={`text-sm font-medium ${
+                                  drone.battery > 60 ? 'text-emerald-700' :
+                                  drone.battery > 30 ? 'text-yellow-700' :
+                                  'text-red-700'
+                                }`}>
+                                  {drone.battery}%
+                                </span>
+                              </div>
+                            </td>
+                            <td>
+                              <span className="text-sm">{drone.location.address}</span>
+                            </td>
+                            <td>
+                              {drone.currentJob ? (
+                                <span className="text-sm font-medium text-blue-600">{drone.currentJob}</span>
+                              ) : (
+                                <span className="text-sm text-gray-400">-</span>
+                              )}
+                            </td>
+                            <td>
+                              <div className="flex items-center space-x-2">
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Edit className="w-4 h-4" />
+                                </button>
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Settings className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-
-              {/* Fleet Table */}
-              <BubbleCard className="bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="border-b border-white/10">
-                      <tr className="text-left">
-                        <th className="p-4 text-sky-100/70 font-medium">
-                          <div className="flex items-center space-x-2">
-                            <span>Drone ID</span>
-                            <ArrowUpDown className="w-4 h-4" />
-                          </div>
-                        </th>
-                        <th className="p-4 text-sky-100/70 font-medium">Status</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Battery</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Location</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Current Job</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Total Flights</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {mockDrones.map((drone) => (
-                        <motion.tr 
-                          key={drone.id}
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                        >
-                          <td className="p-4">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 bg-sky-gold/20 rounded-xl flex items-center justify-center">
-                                <Plane className="w-5 h-5 text-sky-gold" />
-                              </div>
-                              <span className="text-white font-medium">{drone.id}</span>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[drone.status]}`}>
-                              {drone.status.toUpperCase()}
-                            </span>
-                          </td>
-                          <td className="p-4">
-                            <div className="flex items-center space-x-2">
-                              <div className="w-16 h-2 bg-white/20 rounded-full overflow-hidden">
-                                <div 
-                                  className={`h-full transition-all duration-300 ${
-                                    drone.battery > 60 ? 'bg-cyan-300' :
-                                    drone.battery > 30 ? 'bg-sky-gold' :
-                                    'bg-red-400'
-                                  }`}
-                                  style={{ width: `${drone.battery}%` }}
-                                />
-                              </div>
-                              <span className={`text-sm font-medium ${
-                                drone.battery > 60 ? 'text-cyan-300' :
-                                drone.battery > 30 ? 'text-sky-gold' :
-                                'text-red-400'
-                              }`}>
-                                {drone.battery}%
-                              </span>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-white text-sm">{drone.location.address}</span>
-                          </td>
-                          <td className="p-4">
-                            {drone.currentJob ? (
-                              <span className="text-sky-gold text-sm font-medium">{drone.currentJob}</span>
-                            ) : (
-                              <span className="text-sky-100/50 text-sm">-</span>
-                            )}
-                          </td>
-                          <td className="p-4">
-                            <span className="text-white text-sm">{drone.totalFlights.toLocaleString()}</span>
-                          </td>
-                          <td className="p-4">
-                            <div className="flex items-center space-x-2">
-                              <button className="p-2 text-sky-blue hover:bg-white/10 rounded-lg transition-colors">
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 text-sky-gold hover:bg-white/10 rounded-lg transition-colors">
-                                <Edit className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 text-red-400 hover:bg-white/10 rounded-lg transition-colors">
-                                <Settings className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </BubbleCard>
             </motion.div>
           )}
 
@@ -620,158 +624,172 @@ export default function AdminDashboard() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white">Shipment Management</h2>
-                <div className="flex items-center space-x-4">
-                  <BubbleInput 
-                    placeholder="Search shipments..." 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-64"
-                  />
-                  <BubbleButton variant="secondary">
-                    <Filter className="w-4 h-4 mr-2" />
-                    Filter
-                  </BubbleButton>
-                  <BubbleButton>
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Order
-                  </BubbleButton>
+              <div className="admin-card">
+                <div className="admin-card-header">
+                  <div className="flex items-center justify-between">
+                    <h2 className="admin-card-title">Shipment Management</h2>
+                    <div className="flex items-center space-x-4">
+                      <div className="relative">
+                        <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          placeholder="Search shipments..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="admin-input pl-10 pr-4 py-2 w-64"
+                        />
+                      </div>
+                      <button className="admin-btn admin-btn-outline">
+                        <Filter className="w-4 h-4 mr-2" />
+                        Filter
+                      </button>
+                      <button
+                        className="admin-btn admin-btn-primary"
+                        onClick={() => window.location.href = '/admin/new-order'}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Order
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="admin-card-body p-0">
+                  <div className="overflow-x-auto">
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th className="p-4">
+                            <input type="checkbox" className="rounded" />
+                          </th>
+                          <th>Tracking</th>
+                          <th>Customer</th>
+                          <th>Route</th>
+                          <th>Priority</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {currentShipments.map((shipment) => (
+                          <tr key={shipment.id}>
+                            <td className="p-4">
+                              <input
+                                type="checkbox"
+                                className="rounded"
+                                checked={selectedShipments.includes(shipment.id)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedShipments([...selectedShipments, shipment.id])
+                                  } else {
+                                    setSelectedShipments(selectedShipments.filter(id => id !== shipment.id))
+                                  }
+                                }}
+                              />
+                            </td>
+                            <td>
+                              <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                                  <Package className="w-5 h-5 text-orange-600" />
+                                </div>
+                                <div>
+                                  <p className="font-medium">{shipment.trackingNumber}</p>
+                                  <p className="text-xs text-gray-500">{shipment.createdAt}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <div>
+                                <p className="text-sm">{shipment.customerName}</p>
+                                <p className="text-xs text-gray-500">{shipment.customerPhone}</p>
+                              </div>
+                            </td>
+                            <td>
+                              <div className="text-sm">
+                                <p>{shipment.origin}</p>
+                                <p className="text-gray-500">↓</p>
+                                <p>{shipment.destination}</p>
+                              </div>
+                            </td>
+                            <td>
+                              <span className={`admin-badge ${
+                                shipment.priority === 'urgent' ? 'admin-badge-danger' :
+                                shipment.priority === 'high' ? 'admin-badge-warning' :
+                                shipment.priority === 'medium' ? 'admin-badge-info' :
+                                'admin-badge-secondary'
+                              }`}>
+                                {shipment.priority.toUpperCase()}
+                              </span>
+                            </td>
+                            <td>
+                              <span className={`admin-badge ${
+                                shipment.status === 'delivered' ? 'admin-badge-success' :
+                                shipment.status === 'in_flight' ? 'admin-badge-warning' :
+                                shipment.status === 'assigned' ? 'admin-badge-info' :
+                                shipment.status === 'pending' ? 'admin-badge-warning' :
+                                'admin-badge-danger'
+                              }`}>
+                                {shipment.status.replace('_', ' ').toUpperCase()}
+                              </span>
+                            </td>
+                            <td>
+                              <div className="flex items-center space-x-2">
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Edit className="w-4 h-4" />
+                                </button>
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Pagination */}
+                  <div className="flex items-center justify-between p-4 border-t">
+                    <div className="text-sm text-gray-500">
+                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredShipments.length)} of {filteredShipments.length} entries
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                        disabled={currentPage === 1}
+                        className="admin-btn admin-btn-outline disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Previous
+                      </button>
+
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <button
+                          key={page}
+                          onClick={() => setCurrentPage(page)}
+                          className={`admin-btn ${
+                            currentPage === page
+                              ? 'admin-btn-primary'
+                              : 'admin-btn-outline'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+
+                      <button
+                        onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                        disabled={currentPage === totalPages}
+                        className="admin-btn admin-btn-outline disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              {/* Shipment Table */}
-              <BubbleCard className="bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="border-b border-white/10">
-                      <tr className="text-left">
-                        <th className="p-4">
-                          <input type="checkbox" className="rounded border-white/30" />
-                        </th>
-                        <th className="p-4 text-sky-100/70 font-medium">Tracking</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Customer</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Route</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Priority</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Status</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Weight</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentShipments.map((shipment) => (
-                        <motion.tr 
-                          key={shipment.id}
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                        >
-                          <td className="p-4">
-                            <input 
-                              type="checkbox" 
-                              className="rounded border-white/30"
-                              checked={selectedShipments.includes(shipment.id)}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedShipments([...selectedShipments, shipment.id])
-                                } else {
-                                  setSelectedShipments(selectedShipments.filter(id => id !== shipment.id))
-                                }
-                              }}
-                            />
-                          </td>
-                          <td className="p-4">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 bg-amber-300/20 rounded-xl flex items-center justify-center">
-                                <Package className="w-5 h-5 text-amber-300" />
-                              </div>
-                              <div>
-                                <p className="text-white font-medium">{shipment.trackingNumber}</p>
-                                <p className="text-sky-100/50 text-xs">{shipment.createdAt}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <div>
-                              <p className="text-white text-sm">{shipment.customerName}</p>
-                              <p className="text-sky-100/70 text-xs">{shipment.customerPhone}</p>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <div className="text-sm">
-                              <p className="text-white">{shipment.origin}</p>
-                              <p className="text-sky-100/70">&darr;</p>
-                              <p className="text-white">{shipment.destination}</p>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <span className={`text-sm font-medium ${statusColors[shipment.priority]}`}>
-                              {shipment.priority.toUpperCase()}
-                            </span>
-                          </td>
-                          <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[shipment.status]}`}>
-                              {shipment.status.replace('_', ' ').toUpperCase()}
-                            </span>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-white text-sm">{shipment.weight} kg</span>
-                          </td>
-                          <td className="p-4">
-                            <div className="flex items-center space-x-2">
-                              <button className="p-2 text-sky-blue hover:bg-white/10 rounded-lg transition-colors">
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 text-sky-gold hover:bg-white/10 rounded-lg transition-colors">
-                                <Edit className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 text-red-400 hover:bg-white/10 rounded-lg transition-colors">
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Pagination */}
-                <div className="flex items-center justify-between p-4 border-t border-white/10">
-                  <div className="text-sky-100/70 text-sm">
-                    Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredShipments.length)} of {filteredShipments.length} entries
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <button 
-                      onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                      disabled={currentPage === 1}
-                      className="px-3 py-1 bg-white/10 text-white rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Previous
-                    </button>
-                    
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                      <button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 rounded-lg transition-colors ${
-                          currentPage === page 
-                            ? 'bg-sky-gold text-sky-navy font-medium' 
-                            : 'bg-white/10 text-white hover:bg-white/20'
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
-                    
-                    <button 
-                      onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                      disabled={currentPage === totalPages}
-                      className="px-3 py-1 bg-white/10 text-white rounded-lg hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              </BubbleCard>
             </motion.div>
           )}
 
@@ -782,93 +800,101 @@ export default function AdminDashboard() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white">User Management</h2>
-                <div className="flex items-center space-x-4">
-                  <BubbleInput placeholder="Search users..." className="w-64" />
-                  <BubbleButton variant="secondary">
-                    <Filter className="w-4 h-4 mr-2" />
-                    Filter
-                  </BubbleButton>
-                  <BubbleButton>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add User
-                  </BubbleButton>
+              <div className="admin-card">
+                <div className="admin-card-header">
+                  <div className="flex items-center justify-between">
+                    <h2 className="admin-card-title">User Management</h2>
+                    <div className="flex items-center space-x-4">
+                      <div className="relative">
+                        <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="text"
+                          placeholder="Search users..."
+                          className="admin-input pl-10 pr-4 py-2 w-64"
+                        />
+                      </div>
+                      <button className="admin-btn admin-btn-outline">
+                        <Filter className="w-4 h-4 mr-2" />
+                        Filter
+                      </button>
+                      <button className="admin-btn admin-btn-primary">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add User
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="admin-card-body p-0">
+                  <div className="overflow-x-auto">
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>User</th>
+                          <th>Role</th>
+                          <th>Status</th>
+                          <th>Last Login</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mockUsers.map((user) => (
+                          <tr key={user.id}>
+                            <td>
+                              <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                  <span className="text-white font-bold text-sm">
+                                    {user.name.split(' ').map(n => n[0]).join('')}
+                                  </span>
+                                </div>
+                                <div>
+                                  <p className="font-medium">{user.name}</p>
+                                  <p className="text-sm text-gray-500">{user.email}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <span className={`admin-badge ${
+                                user.role === 'admin' ? 'admin-badge-danger' :
+                                user.role === 'operator' ? 'admin-badge-warning' :
+                                user.role === 'pilot' ? 'admin-badge-info' :
+                                'admin-badge-secondary'
+                              }`}>
+                                {user.role.toUpperCase()}
+                              </span>
+                            </td>
+                            <td>
+                              <span className={`admin-badge ${
+                                user.status === 'active' ? 'admin-badge-success' :
+                                user.status === 'inactive' ? 'admin-badge-secondary' :
+                                'admin-badge-danger'
+                              }`}>
+                                {user.status.toUpperCase()}
+                              </span>
+                            </td>
+                            <td>
+                              <span className="text-sm">{user.lastLogin}</span>
+                            </td>
+                            <td>
+                              <div className="flex items-center space-x-2">
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Edit className="w-4 h-4" />
+                                </button>
+                                <button className="p-2 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors">
+                                  <Shield className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
-
-              {/* User Table */}
-              <BubbleCard className="bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="border-b border-white/10">
-                      <tr className="text-left">
-                        <th className="p-4 text-sky-100/70 font-medium">User</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Role</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Status</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Last Login</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Created</th>
-                        <th className="p-4 text-sky-100/70 font-medium">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {mockUsers.map((user) => (
-                        <motion.tr 
-                          key={user.id}
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                        >
-                          <td className="p-4">
-                            <div className="flex items-center space-x-3">
-                              <div className="w-10 h-10 bg-gradient-to-br from-sky-gold to-amber-400 rounded-xl flex items-center justify-center">
-                                <span className="text-sky-navy font-bold text-sm">
-                                  {user.name.split(' ').map(n => n[0]).join('')}
-                                </span>
-                              </div>
-                              <div>
-                                <p className="text-white font-medium">{user.name}</p>
-                                <p className="text-sky-100/70 text-sm">{user.email}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[user.role]}`}>
-                              {user.role.toUpperCase()}
-                            </span>
-                          </td>
-                          <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              user.status === 'active' ? 'text-cyan-300 bg-cyan-400/20' :
-                              user.status === 'inactive' ? 'text-gray-300 bg-gray-400/20' :
-                              'text-red-300 bg-red-400/20'
-                            }`}>
-                              {user.status.toUpperCase()}
-                            </span>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-white text-sm">{user.lastLogin}</span>
-                          </td>
-                          <td className="p-4">
-                            <span className="text-sky-100/70 text-sm">{user.createdAt}</span>
-                          </td>
-                          <td className="p-4">
-                            <div className="flex items-center space-x-2">
-                              <button className="p-2 text-sky-blue hover:bg-white/10 rounded-lg transition-colors">
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 text-sky-gold hover:bg-white/10 rounded-lg transition-colors">
-                                <Edit className="w-4 h-4" />
-                              </button>
-                              <button className="p-2 text-red-400 hover:bg-white/10 rounded-lg transition-colors">
-                                <Shield className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </motion.tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </BubbleCard>
             </motion.div>
           )}
 
@@ -879,60 +905,80 @@ export default function AdminDashboard() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-white">Analytics & Reports</h2>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                  <h3 className="text-xl font-bold text-white mb-6">Performance Metrics</h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sky-100/70">On-time Delivery</span>
-                      <span className="text-cyan-300 font-semibold text-lg">98.5%</span>
-                    </div>
-                    <div className="w-full bg-white/20 rounded-full h-2">
-                      <div className="bg-cyan-300 h-2 rounded-full" style={{ width: '98.5%' }}></div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center">
-                      <span className="text-sky-100/70">Fleet Utilization</span>
-                      <span className="text-sky-gold font-semibold text-lg">87.2%</span>
-                    </div>
-                    <div className="w-full bg-white/20 rounded-full h-2">
-                      <div className="bg-sky-gold h-2 rounded-full" style={{ width: '87.2%' }}></div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center">
-                      <span className="text-sky-100/70">Customer Satisfaction</span>
-                      <span className="text-green-400 font-semibold text-lg">94.8%</span>
-                    </div>
-                    <div className="w-full bg-white/20 rounded-full h-2">
-                      <div className="bg-green-400 h-2 rounded-full" style={{ width: '94.8%' }}></div>
-                    </div>
-                  </div>
-                </BubbleCard>
+              <div className="admin-card">
+                <div className="admin-card-header">
+                  <h2 className="admin-card-title">Analytics & Reports</h2>
+                </div>
 
-                <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                  <h3 className="text-xl font-bold text-white mb-6">Recent Alerts</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-start space-x-3 p-3 bg-sky-gold/10 rounded-xl border border-sky-gold/20">
-                      <AlertTriangle className="w-5 h-5 text-sky-gold mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-white font-medium">Weather Warning</p>
-                        <p className="text-sky-100/70 text-sm">Strong winds expected 15:00-17:00</p>
-                        <p className="text-sky-100/50 text-xs mt-1">2 minutes ago</p>
+                <div className="admin-card-body">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="admin-card">
+                      <div className="admin-card-header">
+                        <h3 className="admin-card-title">Performance Metrics</h3>
+                      </div>
+                      <div className="admin-card-body">
+                        <div className="space-y-4">
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm font-medium">On-time Delivery</span>
+                              <span className="text-emerald-600 font-semibold">98.5%</span>
+                            </div>
+                            <div className="admin-progress">
+                              <div className="admin-progress-bar bg-emerald-500" style={{ width: '98.5%' }}></div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm font-medium">Fleet Utilization</span>
+                              <span className="text-yellow-600 font-semibold">87.2%</span>
+                            </div>
+                            <div className="admin-progress">
+                              <div className="admin-progress-bar bg-yellow-500" style={{ width: '87.2%' }}></div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="flex justify-between items-center mb-2">
+                              <span className="text-sm font-medium">Customer Satisfaction</span>
+                              <span className="text-green-600 font-semibold">94.8%</span>
+                            </div>
+                            <div className="admin-progress">
+                              <div className="admin-progress-bar bg-green-500" style={{ width: '94.8%' }}></div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex items-start space-x-3 p-3 bg-cyan-300/10 rounded-xl border border-cyan-300/20">
-                      <Battery className="w-5 h-5 text-cyan-300 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-white font-medium">SWD-449 Charging Complete</p>
-                        <p className="text-sky-100/70 text-sm">Battery at 100%, ready for dispatch</p>
-                        <p className="text-sky-100/50 text-xs mt-1">15 minutes ago</p>
+                    <div className="admin-card">
+                      <div className="admin-card-header">
+                        <h3 className="admin-card-title">Recent Alerts</h3>
+                      </div>
+                      <div className="admin-card-body">
+                        <div className="space-y-4">
+                          <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5" />
+                            <div className="flex-1">
+                              <p className="font-medium">Weather Warning</p>
+                              <p className="text-sm text-gray-600">Strong winds expected 15:00-17:00</p>
+                              <p className="text-xs text-gray-500 mt-1">2 minutes ago</p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start space-x-3 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                            <Battery className="w-5 h-5 text-emerald-600 mt-0.5" />
+                            <div className="flex-1">
+                              <p className="font-medium">SWD-449 Charging Complete</p>
+                              <p className="text-sm text-gray-600">Battery at 100%, ready for dispatch</p>
+                              <p className="text-xs text-gray-500 mt-1">15 minutes ago</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </BubbleCard>
+                </div>
               </div>
             </motion.div>
           )}
@@ -944,55 +990,69 @@ export default function AdminDashboard() {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-6"
             >
-              <h2 className="text-2xl font-bold text-white">System Settings</h2>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                  <h3 className="text-xl font-bold text-white mb-6">System Configuration</h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center py-3 border-b border-white/10">
-                      <div>
-                        <p className="text-white font-medium">Auto-assignment</p>
-                        <p className="text-sky-100/70 text-sm">Automatically assign drones to shipments</p>
-                      </div>
-                      <input type="checkbox" className="rounded" defaultChecked />
-                    </div>
-                    
-                    <div className="flex justify-between items-center py-3 border-b border-white/10">
-                      <div>
-                        <p className="text-white font-medium">Real-time Notifications</p>
-                        <p className="text-sky-100/70 text-sm">Push notifications for critical events</p>
-                      </div>
-                      <input type="checkbox" className="rounded" defaultChecked />
-                    </div>
-                    
-                    <div className="flex justify-between items-center py-3">
-                      <div>
-                        <p className="text-white font-medium">Maintenance Alerts</p>
-                        <p className="text-sky-100/70 text-sm">Alert when drones need maintenance</p>
-                      </div>
-                      <input type="checkbox" className="rounded" defaultChecked />
-                    </div>
-                  </div>
-                </BubbleCard>
+              <div className="admin-card">
+                <div className="admin-card-header">
+                  <h2 className="admin-card-title">System Settings</h2>
+                </div>
 
-                <BubbleCard className="p-6 bg-white/10 backdrop-blur-xl border-white/20 rounded-3xl">
-                  <h3 className="text-xl font-bold text-white mb-6">Quick Actions</h3>
-                  <div className="space-y-3">
-                    <BubbleButton className="w-full justify-start" variant="secondary">
-                      <RefreshCw className="w-5 h-5 mr-3" />
-                      Refresh System Data
-                    </BubbleButton>
-                    <BubbleButton className="w-full justify-start" variant="secondary">
-                      <FileText className="w-5 h-5 mr-3" />
-                      Generate Reports
-                    </BubbleButton>
-                    <BubbleButton className="w-full justify-start" variant="secondary">
-                      <Settings className="w-5 h-5 mr-3" />
-                      System Diagnostics
-                    </BubbleButton>
+                <div className="admin-card-body">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="admin-card">
+                      <div className="admin-card-header">
+                        <h3 className="admin-card-title">System Configuration</h3>
+                      </div>
+                      <div className="admin-card-body">
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center py-3 border-b">
+                            <div>
+                              <p className="font-medium">Auto-assignment</p>
+                              <p className="text-sm text-gray-500">Automatically assign drones to shipments</p>
+                            </div>
+                            <input type="checkbox" className="rounded" defaultChecked />
+                          </div>
+
+                          <div className="flex justify-between items-center py-3 border-b">
+                            <div>
+                              <p className="font-medium">Real-time Notifications</p>
+                              <p className="text-sm text-gray-500">Push notifications for critical events</p>
+                            </div>
+                            <input type="checkbox" className="rounded" defaultChecked />
+                          </div>
+
+                          <div className="flex justify-between items-center py-3">
+                            <div>
+                              <p className="font-medium">Maintenance Alerts</p>
+                              <p className="text-sm text-gray-500">Alert when drones need maintenance</p>
+                            </div>
+                            <input type="checkbox" className="rounded" defaultChecked />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="admin-card">
+                      <div className="admin-card-header">
+                        <h3 className="admin-card-title">Quick Actions</h3>
+                      </div>
+                      <div className="admin-card-body">
+                        <div className="space-y-3">
+                          <button className="admin-btn admin-btn-outline w-full text-left flex items-center">
+                            <RefreshCw className="w-5 h-5 mr-3" />
+                            Refresh System Data
+                          </button>
+                          <button className="admin-btn admin-btn-outline w-full text-left flex items-center">
+                            <FileText className="w-5 h-5 mr-3" />
+                            Generate Reports
+                          </button>
+                          <button className="admin-btn admin-btn-outline w-full text-left flex items-center">
+                            <Settings className="w-5 h-5 mr-3" />
+                            System Diagnostics
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </BubbleCard>
+                </div>
               </div>
             </motion.div>
           )}
@@ -1001,5 +1061,3 @@ export default function AdminDashboard() {
     </div>
   )
 }
-
-
