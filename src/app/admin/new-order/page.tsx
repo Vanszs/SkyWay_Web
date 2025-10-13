@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Package, MapPin, User, Phone, Weight, Clock, Save, X } from 'lucide-react'
+import { ArrowLeft, Package, MapPin, User, Phone, Weight, Clock, Save, X, Zap } from 'lucide-react'
 import Link from 'next/link'
 import { RouteMapContainer } from '@/components/MapContainer'
 import type { RouteData } from '@/types/route'
@@ -223,14 +223,64 @@ export default function NewOrder() {
                 <div className="mt-6">
                   <div className="admin-card">
                     <div className="admin-card-header">
-                      <h4 className="admin-card-title">Interactive Route Map</h4>
-                      <p className="text-sm text-gray-600">
-                        Click on the map to set pickup and delivery points for optimal drone routing
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="admin-card-title flex items-center">
+                            <Zap className="w-4 h-4 mr-2 text-purple-500" />
+                            Interactive Route Map
+                          </h4>
+                          <p className="text-sm text-gray-600">
+                            Click on the map to set pickup and delivery points for optimal drone routing
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                            PSO Enabled
+                          </div>
+                          <div className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                            AI Optimized
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div className="admin-card-body p-0">
                       <div className="admin-map-container">
-                        <RouteMapContainer onRouteSelect={handleRouteSelect} />
+                        <RouteMapContainer
+                          onRouteSelect={handleRouteSelect}
+                          enablePSO={true}
+                          enableGoogleMaps={false}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* PSO Information */}
+                  <div className="mt-4 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <Zap className="w-5 h-5 text-purple-500 mt-0.5" />
+                      <div>
+                        <h5 className="font-semibold text-purple-900 mb-1">PSO Route Optimization Active</h5>
+                        <p className="text-sm text-purple-700 mb-2">
+                          Particle Swarm Optimization is analyzing thousands of potential routes to find the optimal path that avoids no-fly zones while minimizing distance and ensuring smooth flight paths.
+                        </p>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span className="text-purple-700">Collision Avoidance</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span className="text-purple-700">Distance Optimization</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                            <span className="text-purple-700">Smooth Pathfinding</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                            <span className="text-purple-700">No-Fly Zone Avoidance</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

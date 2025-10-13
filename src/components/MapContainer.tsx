@@ -3,10 +3,13 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
-import { RefreshCw, MapPin, Navigation, X } from 'lucide-react'
+import { RefreshCw, MapPin, Navigation, X, Zap, Settings, Bug } from 'lucide-react'
 import { generateSafeRoute, calculateRouteDistance } from '@/lib/pathfinding'
+import { optimizeRouteWithPSO, DEFAULT_PSO_CONFIG, PSOConfig } from '@/lib/pso'
+import DebugWindow from './DebugWindow'
 import { Point, Waypoint, BuildingFeature, RouteData, RoutePoint } from '@/types/route'
 import { googleMapsService } from '@/lib/googleMapsService'
+import PSOControlPanel from './PSOControlPanel'
 import 'leaflet/dist/leaflet.css'
 
 // Dynamically import Leaflet components to avoid SSR issues
@@ -38,6 +41,7 @@ interface RouteMapProps {
   initialCenter?: [number, number]
   initialZoom?: number
   enableGoogleMaps?: boolean
+  enablePSO?: boolean
 }
 
 // Map click handler component
@@ -71,7 +75,8 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
   onRouteSelect,
   initialCenter = [-7.2575, 112.7521], // Default to Surabaya
   initialZoom = 13,
-  enableGoogleMaps = true
+  enableGoogleMaps = true,
+  enablePSO = true // PSO default enabled
 }) => {
   const [mapReady, setMapReady] = useState(false)
   const [L, setL] = useState<any>(null)
@@ -82,6 +87,11 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
   const [buildings, setBuildings] = useState<BuildingFeature[]>([])
   const [elevationData, setElevationData] = useState<any[]>([])
   const [googleMapsEnabled, setGoogleMapsEnabled] = useState(enableGoogleMaps)
+  const [psoEnabled, setPsoEnabled] = useState(enablePSO)
+  const [psoConfig, setPsoConfig] = useState<PSOConfig>(DEFAULT_PSO_CONFIG)
+  const [psoProgress, setPsoProgress] = useState<{ iteration: number; bestFitness: number; maxIterations: number } | null>(null)
+  const [showCreateRouteButton, setShowCreateRouteButton] = useState(false)
+  const [debugWindowVisible, setDebugWindowVisible] = useState(false)
 
   // Load building data
   useEffect(() => {
@@ -171,21 +181,29 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
     if (!startPoint) {
       setStartPoint(clickedPoint)
       onPointSelected?.(clickedPoint, 'start')
+      setShowCreateRouteButton(false)
     } else if (!endPoint) {
       setEndPoint(clickedPoint)
       onPointSelected?.(clickedPoint, 'end')
-      
-      // Calculate route when both points are selected
-      calculateRoute(startPoint, clickedPoint)
+      setShowCreateRouteButton(true) // Show create route button when both points are selected
     } else {
       // Reset and start new route
       clearRoute()
       setStartPoint(clickedPoint)
       onPointSelected?.(clickedPoint, 'start')
+      setShowCreateRouteButton(false)
     }
   }, [startPoint, endPoint, onPointSelected])
 
-  // Calculate safe route
+  // Handle create route button click
+  const handleCreateRoute = useCallback(() => {
+    if (startPoint && endPoint) {
+      calculateRoute(startPoint, endPoint)
+      setShowCreateRouteButton(false)
+    }
+  }, [startPoint, endPoint])
+
+  // Calculate safe route with PSO support
   const calculateRoute = useCallback(async (start: Point, end: Point) => {
     setIsCalculating(true)
     try {
@@ -221,7 +239,56 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
         } catch (googleError) {
           console.warn('Google Maps routing failed, falling back to local pathfinding:', googleError)
           
-          // Fallback to local pathfinding
+          // Fallback to local pathfinding or PSO
+          if (psoEnabled) {
+            // PSO with progress tracking (async)
+            const psoResult = await optimizeRouteWithPSO(
+              start,
+              end,
+              buildings,
+              psoConfig,
+              (iteration, bestFitness) => {
+                setPsoProgress({
+                  iteration,
+                  bestFitness,
+                  maxIterations: psoConfig.maxIterations
+                })
+              }
+            )
+            finalRoute = psoResult.route
+            distance = calculateRouteDistance(finalRoute)
+            console.log('PSO route calculated:', psoResult)
+          } else {
+            const safeRoute = generateSafeRoute(start, end, buildings, {
+              bufferDistance: 0.0001, // ~10m buffer
+              gridSize: 0.0002 // ~20m grid
+            })
+            
+            finalRoute = safeRoute
+            distance = calculateRouteDistance(safeRoute)
+          }
+        }
+      } else {
+        // Use local pathfinding or PSO
+        if (psoEnabled) {
+          // PSO with progress tracking (async)
+          const psoResult = await optimizeRouteWithPSO(
+            start,
+            end,
+            buildings,
+            psoConfig,
+            (iteration, bestFitness) => {
+              setPsoProgress({
+                iteration,
+                bestFitness,
+                maxIterations: psoConfig.maxIterations
+              })
+            }
+          )
+          finalRoute = psoResult.route
+          distance = calculateRouteDistance(finalRoute)
+          console.log('PSO route calculated:', psoResult)
+        } else {
           const safeRoute = generateSafeRoute(start, end, buildings, {
             bufferDistance: 0.0001, // ~10m buffer
             gridSize: 0.0002 // ~20m grid
@@ -230,15 +297,6 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           finalRoute = safeRoute
           distance = calculateRouteDistance(safeRoute)
         }
-      } else {
-        // Use local pathfinding
-        const safeRoute = generateSafeRoute(start, end, buildings, {
-          bufferDistance: 0.0001, // ~10m buffer
-          gridSize: 0.0002 // ~20m grid
-        })
-        
-        finalRoute = safeRoute
-        distance = calculateRouteDistance(safeRoute)
       }
       
       setRoute(finalRoute)
@@ -259,7 +317,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
         distance: distance,
         estimatedDuration: Math.ceil(distance * 2), // Rough estimate: 2 minutes per km
         isSafe: true, // Assuming the calculated route is safe
-        path: finalRoute.map(wp => [wp.lat, wp.lng] as [number, number])
+        path: finalRoute.map((wp: any) => [wp.lat, wp.lng] as [number, number])
       }
       
       // Notify parent components
@@ -271,6 +329,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
       console.error('Error calculating route:', error)
     } finally {
       setIsCalculating(false)
+      setPsoProgress(null) // Clear progress when done
     }
   }, [buildings, onRouteCalculated, onRouteSelect, googleMapsEnabled])
 
@@ -364,10 +423,10 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           <Polyline
             positions={route.map(point => [point.lat, point.lng] as [number, number])}
             pathOptions={{
-              color: '#0066ff',
+              color: psoEnabled ? '#9333ea' : '#0066ff',
               weight: 4,
               opacity: 0.8,
-              dashArray: '10, 5'
+              dashArray: psoEnabled ? '5, 5' : '10, 5'
             }}
           />
         )}
@@ -375,6 +434,17 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
       
       {/* Map Controls - Moved to top right to avoid interference */}
       <div className="absolute top-4 right-16 z-[1000] flex flex-col gap-2">
+        <button
+          className={`w-10 h-10 backdrop-blur-sm border rounded-lg flex items-center justify-center transition-colors shadow-lg ${
+            psoEnabled
+              ? 'bg-purple-500 text-white border-purple-500 hover:bg-purple-600'
+              : 'bg-white/95 text-gray-700 border-gray-200 hover:bg-white'
+          }`}
+          onClick={() => setPsoEnabled(!psoEnabled)}
+          title={psoEnabled ? "Disable PSO Optimization" : "Enable PSO Optimization"}
+        >
+          <Zap className="w-4 h-4" />
+        </button>
         <button
           className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
           onClick={clearRoute}
@@ -389,10 +459,46 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
         >
           <RefreshCw className="w-4 h-4" />
         </button>
+        <button
+          className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
+          onClick={() => setDebugWindowVisible(!debugWindowVisible)}
+          title="Toggle Debug Window"
+        >
+          <Bug className="w-4 h-4" />
+        </button>
       </div>
+
+      {/* Create Route Button - Appears when both points are selected */}
+      {showCreateRouteButton && startPoint && endPoint && (
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-[1000]">
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-600 transition-colors flex items-center gap-2"
+            onClick={handleCreateRoute}
+            disabled={isCalculating}
+          >
+            {isCalculating ? (
+              <>
+                <motion.div
+                  className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                />
+                Optimizing Route...
+              </>
+            ) : (
+              <>
+                <Zap className="w-4 h-4" />
+                Create PSO Route
+              </>
+            )}
+          </motion.button>
+        </div>
+      )}
       
       {/* Instructions Panel - Smaller and positioned to not interfere */}
-      <div className="absolute top-4 right-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-3 shadow-lg max-w-[180px]">
+      <div className="absolute top-4 right-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-3 shadow-lg max-w-[200px]">
         <h3 className="font-semibold text-gray-900 mb-2 flex items-center text-sm">
           <MapPin className="w-3 h-3 mr-1" />
           How to Use
@@ -400,9 +506,28 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
         <div className="text-xs text-gray-600 space-y-1">
           <p>1. Click map for START</p>
           <p>2. Click again for END</p>
-          <p>3. Route auto-calculates</p>
+          <p>3. Click "Create PSO Route"</p>
           <p>4. Red = no-fly zones</p>
         </div>
+        
+        {psoEnabled && (
+          <div className="mt-2 p-1 bg-purple-50 border border-purple-200 rounded text-xs">
+            <p className="text-purple-800 font-medium flex items-center">
+              <Zap className="w-3 h-3 mr-1" />
+              PSO Active
+            </p>
+            <p className="text-purple-600">100m safety distance</p>
+          </div>
+        )}
+        
+        {showCreateRouteButton && (
+          <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
+            <p className="text-blue-800 font-medium">
+              📍 Points selected!
+            </p>
+            <p className="text-blue-600">Click "Create PSO Route"</p>
+          </div>
+        )}
         
         {isCalculating && (
           <div className="mt-2 flex items-center text-blue-600">
@@ -411,14 +536,16 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             />
-            <span className="text-xs">Calculating...</span>
+            <span className="text-xs">
+              PSO Optimizing...
+            </span>
           </div>
         )}
         
         {route.length > 0 && (
           <div className="mt-2 p-1 bg-green-50 border border-green-200 rounded text-xs">
             <p className="text-green-800 font-medium">
-              ✓ Route ready!
+              ✓ PSO Route ready!
             </p>
             <p className="text-green-600">
               {calculateRouteDistance(route).toFixed(2)} km
@@ -440,8 +567,8 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
             <span>End</span>
           </div>
           <div className="flex items-center">
-            <div className="w-3 h-0.5 bg-blue-500 mr-1"></div>
-            <span>Route</span>
+            <div className={`w-3 h-0.5 mr-1 ${psoEnabled ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
+            <span>{psoEnabled ? 'PSO' : 'Route'}</span>
           </div>
           <div className="flex items-center">
             <div className="w-3 h-3 bg-red-500 opacity-30 border border-red-500 mr-1"></div>
@@ -473,6 +600,25 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           </div>
         </div>
       )}
+
+      {/* PSO Control Panel - Positioned to avoid interference */}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-[1000]">
+        <PSOControlPanel
+          config={psoConfig}
+          onConfigChange={setPsoConfig}
+          isEnabled={psoEnabled}
+          onEnabledChange={setPsoEnabled}
+          isOptimizing={isCalculating && psoEnabled}
+          optimizationProgress={psoProgress || undefined}
+        />
+      </div>
+
+      {/* Debug Window */}
+      <DebugWindow
+        route={route}
+        isVisible={debugWindowVisible}
+        onToggle={() => setDebugWindowVisible(!debugWindowVisible)}
+      />
     </div>
   )
 }
