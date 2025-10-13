@@ -1,102 +1,55 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Settings, Zap, Info, RotateCcw } from 'lucide-react'
-import { PSOConfig, DEFAULT_PSO_CONFIG } from '@/lib/pso'
+import { Zap, AlertTriangle, Shield, CheckCircle } from 'lucide-react'
 
 interface PSOControlPanelProps {
-  config: PSOConfig
-  onConfigChange: (config: PSOConfig) => void
-  isEnabled: boolean
-  onEnabledChange: (enabled: boolean) => void
   isOptimizing?: boolean
   optimizationProgress?: { iteration: number; bestFitness: number; maxIterations: number }
+  hasCollisions?: boolean
+  routeGenerated?: boolean
 }
 
 export const PSOControlPanel: React.FC<PSOControlPanelProps> = ({
-  config,
-  onConfigChange,
-  isEnabled,
-  onEnabledChange,
   isOptimizing = false,
-  optimizationProgress
+  optimizationProgress,
+  hasCollisions = false,
+  routeGenerated = false
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  const handleConfigUpdate = (key: keyof PSOConfig, value: number) => {
-    onConfigChange({
-      ...config,
-      [key]: value
-    })
-  }
-
-  const resetToDefaults = () => {
-    onConfigChange(DEFAULT_PSO_CONFIG)
-  }
-
-  const presetConfigs = {
-    fast: {
-      populationSize: 30,
-      maxIterations: 80,
-      w: 0.7,
-      c1: 1.5,
-      c2: 1.0,
-      maxVelocity: 0.008,
-      waypointCount: 5,
-      collisionWeight: 5000,
-      distanceWeight: 3,
-      smoothnessWeight: 3
-    },
-    balanced: DEFAULT_PSO_CONFIG,
-    precise: {
-      populationSize: 80,
-      maxIterations: 200,
-      w: 0.4,
-      c1: 2.5,
-      c2: 0.8,
-      maxVelocity: 0.003,
-      waypointCount: 12,
-      collisionWeight: 15000,
-      distanceWeight: 8,
-      smoothnessWeight: 1
-    }
-  }
-
-  const applyPreset = (preset: keyof typeof presetConfigs) => {
-    onConfigChange(presetConfigs[preset])
-  }
-
   return (
     <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg shadow-lg overflow-hidden max-w-sm">
       {/* Header */}
       <div className="p-3 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <Zap className={`w-4 h-4 mr-2 ${isEnabled ? 'text-purple-500' : 'text-gray-400'}`} />
-            <h3 className="font-semibold text-sm text-gray-900">PSO Settings</h3>
-            <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-              isEnabled
-                ? 'bg-green-100 text-green-700'
-                : 'bg-gray-100 text-gray-500'
-            }`}>
-              {isEnabled ? 'Active' : 'Inactive'}
+            <Zap className="w-4 h-4 mr-2 text-purple-500" />
+            <h3 className="font-semibold text-sm text-gray-900">Auto Route Optimizer</h3>
+            <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-green-100 text-green-700">
+              Automatic
             </span>
           </div>
-          <button
-            className="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition-colors"
-            onClick={() => setIsExpanded(!isExpanded)}
-            title="Toggle Settings"
-          >
-            <Settings className={`w-3 h-3 transition-transform ${isExpanded ? 'rotate-45' : ''}`} />
-          </button>
+          <div className="flex items-center gap-1">
+            {routeGenerated && !hasCollisions && (
+              <div className="px-2 py-1 bg-green-100 border border-green-200 rounded text-xs">
+                <CheckCircle className="w-3 h-3 text-green-600 inline mr-1" />
+                Optimal
+              </div>
+            )}
+            {hasCollisions && (
+              <div className="px-2 py-1 bg-red-100 border border-red-200 rounded text-xs">
+                <AlertTriangle className="w-3 h-3 text-red-600 inline mr-1" />
+                Recalculating
+              </div>
+            )}
+          </div>
         </div>
         
         {/* Status */}
         {isOptimizing && optimizationProgress && (
           <div className="mt-2 space-y-1">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-purple-600">Optimizing...</span>
+              <span className="text-purple-600">Finding optimal route...</span>
               <span className="text-gray-600">
                 {optimizationProgress.iteration}/{optimizationProgress.maxIterations}
               </span>
@@ -118,9 +71,9 @@ export const PSOControlPanel: React.FC<PSOControlPanelProps> = ({
         )}
       </div>
 
-      {/* Expanded Settings */}
+      {/* Status Messages */}
       <AnimatePresence>
-        {isExpanded && isEnabled && (
+        {isOptimizing && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -128,115 +81,85 @@ export const PSOControlPanel: React.FC<PSOControlPanelProps> = ({
             transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <div className="p-2 space-y-2 max-h-60 overflow-y-auto">
-              {/* Preset Buttons */}
-              <div className="flex gap-1">
-                <button
-                  className="flex-1 px-1 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs transition-colors"
-                  onClick={() => applyPreset('fast')}
-                  title="Quick route planning with good building avoidance"
-                >
-                  Fast
-                </button>
-                <button
-                  className="flex-1 px-1 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs transition-colors"
-                  onClick={() => applyPreset('balanced')}
-                  title="Optimal balance between distance and avoidance"
-                >
-                  Balanced
-                </button>
-                <button
-                  className="flex-1 px-1 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs transition-colors"
-                  onClick={() => applyPreset('precise')}
-                  title="Maximum building avoidance, shortest routes"
-                >
-                  Precise
-                </button>
-              </div>
-
-              {/* Configuration Sliders */}
-              <div className="space-y-1">
-                <div>
-                  <label className="text-xs text-gray-600 flex justify-between">
-                    <span>Population</span>
-                    <span className="font-medium">{config.populationSize}</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="10"
-                    max="100"
-                    value={config.populationSize}
-                    onChange={(e) => handleConfigUpdate('populationSize', parseInt(e.target.value))}
-                    className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    disabled={isOptimizing}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs text-gray-600 flex justify-between">
-                    <span>Iterations</span>
-                    <span className="font-medium">{config.maxIterations}</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="20"
-                    max="200"
-                    value={config.maxIterations}
-                    onChange={(e) => handleConfigUpdate('maxIterations', parseInt(e.target.value))}
-                    className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    disabled={isOptimizing}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs text-gray-600 flex justify-between">
-                    <span>Waypoints</span>
-                    <span className="font-medium">{config.waypointCount}</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="2"
-                    max="10"
-                    value={config.waypointCount}
-                    onChange={(e) => handleConfigUpdate('waypointCount', parseInt(e.target.value))}
-                    className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    disabled={isOptimizing}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs text-gray-600 flex justify-between">
-                    <span>Safety Distance</span>
-                    <span className="font-medium">{config.collisionWeight/100}</span>
-                  </label>
-                  <input
-                    type="range"
-                    min="1000"
-                    max="20000"
-                    step="1000"
-                    value={config.collisionWeight}
-                    onChange={(e) => handleConfigUpdate('collisionWeight', parseInt(e.target.value))}
-                    className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    disabled={isOptimizing}
-                  />
+            <div className="px-3 py-2 bg-blue-50 border-b border-blue-200">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-blue-600" />
+                <div className="text-xs text-blue-800">
+                  <p className="font-medium">Auto-Optimization Active</p>
+                  <p>Calculating safest, straightest route...</p>
                 </div>
               </div>
-
-              {/* Reset Button */}
-              <button
-                className="w-full flex items-center justify-center gap-1 px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded text-xs transition-colors"
-                onClick={resetToDefaults}
-                disabled={isOptimizing}
-              >
-                <RotateCcw className="w-3 h-3" />
-                Reset
-              </button>
+            </div>
+          </motion.div>
+        )}
+        
+        {routeGenerated && !hasCollisions && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="px-3 py-2 bg-green-50 border-b border-green-200">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <div className="text-xs text-green-800">
+                  <p className="font-medium">Optimal Route Found</p>
+                  <p>Straightest path with maximum safety</p>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+            </div>
+          </motion.div>
+        )}
+        
+        {hasCollisions && !isOptimizing && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="px-3 py-2 bg-red-50 border-b border-red-200">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-red-600" />
+                <div className="text-xs text-red-800">
+                  <p className="font-medium">Route Optimization Required</p>
+                  <p>Auto-adjusting for collision-free path...</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Info Section */}
+      <div className="p-3 bg-gray-50">
+        <div className="text-xs text-gray-600 space-y-1">
+          <p className="font-medium text-gray-700">Automatic Features:</p>
+          <ul className="space-y-1">
+            <li className="flex items-center gap-1">
+              <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+              <span>Straightest possible routes</span>
+            </li>
+            <li className="flex items-center gap-1">
+              <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+              <span>Maximum collision avoidance</span>
+            </li>
+            <li className="flex items-center gap-1">
+              <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+              <span>Optimal waypoint generation</span>
+            </li>
+            <li className="flex items-center gap-1">
+              <div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+              <span>Auto parameter tuning</span>
+            </li>
+          </ul>
         </div>
-      )
-    }
+      </div>
+    </div>
+  )
+}
 
 export default PSOControlPanel

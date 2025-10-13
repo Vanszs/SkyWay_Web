@@ -9,12 +9,14 @@ interface DebugWindowProps {
   route: Point[]
   isVisible: boolean
   onToggle: () => void
+  isBelowMap?: boolean
 }
 
 export const DebugWindow: React.FC<DebugWindowProps> = ({
   route,
   isVisible,
-  onToggle
+  onToggle,
+  isBelowMap = false
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -54,7 +56,7 @@ export const DebugWindow: React.FC<DebugWindowProps> = ({
     return (
       <button
         onClick={onToggle}
-        className="fixed bottom-4 right-4 z-[1000] bg-gray-800 text-white p-3 rounded-lg shadow-lg hover:bg-gray-700 transition-colors"
+        className={`${isBelowMap ? 'relative' : 'fixed bottom-4 right-4'} z-[1000] bg-gray-800 text-white p-3 rounded-lg shadow-lg hover:bg-gray-700 transition-colors`}
         title="Show Debug Window"
       >
         <Bug className="w-4 h-4" />
@@ -63,7 +65,7 @@ export const DebugWindow: React.FC<DebugWindowProps> = ({
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[1000] bg-gray-900 text-white rounded-lg shadow-xl max-w-md max-h-96 overflow-hidden">
+    <div className={`${isBelowMap ? 'relative w-full' : 'fixed bottom-4 right-4'} z-[1000] bg-gray-900 text-white rounded-lg shadow-xl max-w-md max-h-96 overflow-hidden`}>
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-gray-700">
         <div className="flex items-center gap-2">

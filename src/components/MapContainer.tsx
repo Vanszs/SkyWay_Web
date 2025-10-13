@@ -5,11 +5,11 @@ import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import { RefreshCw, MapPin, Navigation, X, Zap, Settings, Bug } from 'lucide-react'
 import { generateSafeRoute, calculateRouteDistance } from '@/lib/pathfinding'
-import { optimizeRouteWithPSO, DEFAULT_PSO_CONFIG, PSOConfig } from '@/lib/pso'
+import { calculateSimpleRoute, isRouteSafe } from '@/lib/simpleRoute'
 import DebugWindow from './DebugWindow'
 import { Point, Waypoint, BuildingFeature, RouteData, RoutePoint } from '@/types/route'
 import { googleMapsService } from '@/lib/googleMapsService'
-import PSOControlPanel from './PSOControlPanel'
+import * as turf from '@turf/turf'
 import 'leaflet/dist/leaflet.css'
 
 // Dynamically import Leaflet components to avoid SSR issues
@@ -87,11 +87,10 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
   const [buildings, setBuildings] = useState<BuildingFeature[]>([])
   const [elevationData, setElevationData] = useState<any[]>([])
   const [googleMapsEnabled, setGoogleMapsEnabled] = useState(enableGoogleMaps)
-  const [psoEnabled, setPsoEnabled] = useState(enablePSO)
-  const [psoConfig, setPsoConfig] = useState<PSOConfig>(DEFAULT_PSO_CONFIG)
   const [psoProgress, setPsoProgress] = useState<{ iteration: number; bestFitness: number; maxIterations: number } | null>(null)
   const [showCreateRouteButton, setShowCreateRouteButton] = useState(false)
   const [debugWindowVisible, setDebugWindowVisible] = useState(false)
+  const [hasCollisions, setHasCollisions] = useState(false)
 
   // Load building data
   useEffect(() => {
@@ -239,67 +238,27 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
         } catch (googleError) {
           console.warn('Google Maps routing failed, falling back to local pathfinding:', googleError)
           
-          // Fallback to local pathfinding or PSO
-          if (psoEnabled) {
-            // PSO with progress tracking (async)
-            const psoResult = await optimizeRouteWithPSO(
-              start,
-              end,
-              buildings,
-              psoConfig,
-              (iteration, bestFitness) => {
-                setPsoProgress({
-                  iteration,
-                  bestFitness,
-                  maxIterations: psoConfig.maxIterations
-                })
-              }
-            )
-            finalRoute = psoResult.route
-            distance = calculateRouteDistance(finalRoute)
-            console.log('PSO route calculated:', psoResult)
-          } else {
-            const safeRoute = generateSafeRoute(start, end, buildings, {
-              bufferDistance: 0.0001, // ~10m buffer
-              gridSize: 0.0002 // ~20m grid
-            })
-            
-            finalRoute = safeRoute
-            distance = calculateRouteDistance(safeRoute)
-          }
+          // Fallback to simple route calculation
+          console.log('Using simple route calculation with 50m safe distance')
+          const simpleRoute = calculateSimpleRoute(start, end, buildings, 50)
+          finalRoute = simpleRoute
+          distance = calculateRouteDistance(finalRoute)
+          console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 50) })
         }
       } else {
-        // Use local pathfinding or PSO
-        if (psoEnabled) {
-          // PSO with progress tracking (async)
-          const psoResult = await optimizeRouteWithPSO(
-            start,
-            end,
-            buildings,
-            psoConfig,
-            (iteration, bestFitness) => {
-              setPsoProgress({
-                iteration,
-                bestFitness,
-                maxIterations: psoConfig.maxIterations
-              })
-            }
-          )
-          finalRoute = psoResult.route
-          distance = calculateRouteDistance(finalRoute)
-          console.log('PSO route calculated:', psoResult)
-        } else {
-          const safeRoute = generateSafeRoute(start, end, buildings, {
-            bufferDistance: 0.0001, // ~10m buffer
-            gridSize: 0.0002 // ~20m grid
-          })
-          
-          finalRoute = safeRoute
-          distance = calculateRouteDistance(safeRoute)
-        }
+        // Use simple route calculation
+        console.log('Using simple route calculation with 50m safe distance')
+        const simpleRoute = calculateSimpleRoute(start, end, buildings, 50)
+        finalRoute = simpleRoute
+        distance = calculateRouteDistance(finalRoute)
+        console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 50) })
       }
       
       setRoute(finalRoute)
+      
+      // Check for collisions in the final route
+      const routeHasCollisions = checkRouteCollisions(finalRoute, buildings)
+      setHasCollisions(routeHasCollisions)
       
       // Create RouteData object
       const routeData: RouteData = {
@@ -316,7 +275,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
         waypoints: finalRoute,
         distance: distance,
         estimatedDuration: Math.ceil(distance * 2), // Rough estimate: 2 minutes per km
-        isSafe: true, // Assuming the calculated route is safe
+        isSafe: !routeHasCollisions,
         path: finalRoute.map((wp: any) => [wp.lat, wp.lng] as [number, number])
       }
       
@@ -324,7 +283,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
       onRouteCalculated?.(finalRoute, distance)
       onRouteSelect?.(routeData)
       
-      console.log('Route calculated successfully:', { route: finalRoute, distance, routeData })
+      console.log('Route calculated successfully:', { route: finalRoute, distance, routeData, hasCollisions: routeHasCollisions })
     } catch (error) {
       console.error('Error calculating route:', error)
     } finally {
@@ -333,11 +292,26 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
     }
   }, [buildings, onRouteCalculated, onRouteSelect, googleMapsEnabled])
 
+  // Check for collisions in a route
+  const checkRouteCollisions = useCallback((route: Point[], buildings: any[]): boolean => {
+    for (let i = 0; i < route.length - 1; i++) {
+      const segment = [route[i], route[i + 1]]
+      for (const building of buildings) {
+        const line = turf.lineString([[segment[0].lng, segment[0].lat], [segment[1].lng, segment[1].lat]])
+        if (turf.booleanIntersects(line, building)) {
+          return true
+        }
+      }
+    }
+    return false
+  }, [])
+
   // Clear route and points
   const clearRoute = useCallback(() => {
     setStartPoint(null)
     setEndPoint(null)
     setRoute([])
+    setHasCollisions(false)
     onPointSelected?.(null as any, 'start')
     onPointSelected?.(null as any, 'end')
   }, [onPointSelected])
@@ -371,254 +345,236 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
     )
   }
 
+  // Return container with map and debug window below
   return (
-    <div className="relative h-full w-full rounded-xl overflow-hidden border border-gray-200" style={{ minHeight: '500px' }}>
-      <MapContainer
-        center={initialCenter}
-        zoom={initialZoom}
-        style={{ height: '100%', width: '100%' }}
-        zoomControl={true}
-        scrollWheelZoom={true}
-        attributionControl={false}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        
-        <MapEvents onMapClick={handleMapClick} />
-        
-        {/* Render buildings as no-fly zones */}
-        {buildings.map((building, index) => (
-          <Polygon
-            key={index}
-            positions={building.geometry.coordinates[0].map(coord => [coord[1], coord[0]] as [number, number])}
-            pathOptions={{
-              color: '#ff0000',
-              fillColor: '#ff0000',
-              fillOpacity: 0.3,
-              weight: 2
-            }}
-          />
-        ))}
-        
-        {/* Start point marker */}
-        {startPoint && (
-          <Marker
-            position={[startPoint.lat, startPoint.lng]}
-            icon={createStartIcon()}
-          />
-        )}
-        
-        {/* End point marker */}
-        {endPoint && (
-          <Marker
-            position={[endPoint.lat, endPoint.lng]}
-            icon={createEndIcon()}
-          />
-        )}
-        
-        {/* Route polyline */}
-        {route.length > 1 && (
-          <Polyline
-            positions={route.map(point => [point.lat, point.lng] as [number, number])}
-            pathOptions={{
-              color: psoEnabled ? '#9333ea' : '#0066ff',
-              weight: 4,
-              opacity: 0.8,
-              dashArray: psoEnabled ? '5, 5' : '10, 5'
-            }}
-          />
-        )}
-      </MapContainer>
-      
-      {/* Map Controls - Moved to top right to avoid interference */}
-      <div className="absolute top-4 right-16 z-[1000] flex flex-col gap-2">
-        <button
-          className={`w-10 h-10 backdrop-blur-sm border rounded-lg flex items-center justify-center transition-colors shadow-lg ${
-            psoEnabled
-              ? 'bg-purple-500 text-white border-purple-500 hover:bg-purple-600'
-              : 'bg-white/95 text-gray-700 border-gray-200 hover:bg-white'
-          }`}
-          onClick={() => setPsoEnabled(!psoEnabled)}
-          title={psoEnabled ? "Disable PSO Optimization" : "Enable PSO Optimization"}
+    <div className="flex flex-col w-full h-full">
+      <div className="relative h-full w-full rounded-xl overflow-hidden border border-gray-200" style={{ minHeight: '500px' }}>
+        <MapContainer
+          center={initialCenter}
+          zoom={initialZoom}
+          style={{ height: '100%', width: '100%' }}
+          zoomControl={true}
+          scrollWheelZoom={true}
+          attributionControl={false}
         >
-          <Zap className="w-4 h-4" />
-        </button>
-        <button
-          className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
-          onClick={clearRoute}
-          title="Clear Route"
-        >
-          <X className="w-4 h-4" />
-        </button>
-        <button
-          className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
-          onClick={resetMap}
-          title="Reset Map"
-        >
-          <RefreshCw className="w-4 h-4" />
-        </button>
-        <button
-          className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
-          onClick={() => setDebugWindowVisible(!debugWindowVisible)}
-          title="Toggle Debug Window"
-        >
-          <Bug className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Create Route Button - Appears when both points are selected */}
-      {showCreateRouteButton && startPoint && endPoint && (
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-[1000]">
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-600 transition-colors flex items-center gap-2"
-            onClick={handleCreateRoute}
-            disabled={isCalculating}
-          >
-            {isCalculating ? (
-              <>
-                <motion.div
-                  className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                />
-                Optimizing Route...
-              </>
-            ) : (
-              <>
-                <Zap className="w-4 h-4" />
-                Create PSO Route
-              </>
-            )}
-          </motion.button>
-        </div>
-      )}
-      
-      {/* Instructions Panel - Smaller and positioned to not interfere */}
-      <div className="absolute top-4 right-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-3 shadow-lg max-w-[200px]">
-        <h3 className="font-semibold text-gray-900 mb-2 flex items-center text-sm">
-          <MapPin className="w-3 h-3 mr-1" />
-          How to Use
-        </h3>
-        <div className="text-xs text-gray-600 space-y-1">
-          <p>1. Click map for START</p>
-          <p>2. Click again for END</p>
-          <p>3. Click "Create PSO Route"</p>
-          <p>4. Red = no-fly zones</p>
-        </div>
-        
-        {psoEnabled && (
-          <div className="mt-2 p-1 bg-purple-50 border border-purple-200 rounded text-xs">
-            <p className="text-purple-800 font-medium flex items-center">
-              <Zap className="w-3 h-3 mr-1" />
-              PSO Active
-            </p>
-            <p className="text-purple-600">100m safety distance</p>
-          </div>
-        )}
-        
-        {showCreateRouteButton && (
-          <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
-            <p className="text-blue-800 font-medium">
-              📍 Points selected!
-            </p>
-            <p className="text-blue-600">Click "Create PSO Route"</p>
-          </div>
-        )}
-        
-        {isCalculating && (
-          <div className="mt-2 flex items-center text-blue-600">
-            <motion.div
-              className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full mr-1"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          
+          <MapEvents onMapClick={handleMapClick} />
+          
+          {/* Render buildings as no-fly zones */}
+          {buildings.map((building, index) => (
+            <Polygon
+              key={index}
+              positions={building.geometry.coordinates[0].map(coord => [coord[1], coord[0]] as [number, number])}
+              pathOptions={{
+                color: '#ff0000',
+                fillColor: '#ff0000',
+                fillOpacity: 0.3,
+                weight: 2
+              }}
             />
-            <span className="text-xs">
-              PSO Optimizing...
-            </span>
+          ))}
+          
+          {/* Start point marker */}
+          {startPoint && (
+            <Marker
+              position={[startPoint.lat, startPoint.lng]}
+              icon={createStartIcon()}
+            />
+          )}
+          
+          {/* End point marker */}
+          {endPoint && (
+            <Marker
+              position={[endPoint.lat, endPoint.lng]}
+              icon={createEndIcon()}
+            />
+          )}
+          
+          {/* Route polyline */}
+          {route.length > 1 && (
+            <Polyline
+              positions={route.map(point => [point.lat, point.lng] as [number, number])}
+              pathOptions={{
+                color: '#0066ff',
+                weight: 4,
+                opacity: 0.8,
+                dashArray: '10, 5'
+              }}
+            />
+          )}
+        </MapContainer>
+        
+        {/* Map Controls - Moved to top right to avoid interference */}
+        <div className="absolute top-4 right-16 z-[1000] flex flex-col gap-2">
+          <button
+            className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
+            onClick={clearRoute}
+            title="Clear Route"
+          >
+            <X className="w-4 h-4" />
+          </button>
+          <button
+            className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
+            onClick={resetMap}
+            title="Reset Map"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
+          <button
+            className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
+            onClick={() => setDebugWindowVisible(!debugWindowVisible)}
+            title="Toggle Debug Window"
+          >
+            <Bug className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Create Route Button - Appears when both points are selected */}
+        {showCreateRouteButton && startPoint && endPoint && (
+          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-[1000]">
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+              onClick={handleCreateRoute}
+              disabled={isCalculating}
+            >
+              {isCalculating ? (
+                <>
+                  <motion.div
+                    className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  />
+                  Calculating Route...
+                </>
+              ) : (
+                <>
+                  <Navigation className="w-4 h-4" />
+                  Create Route
+                </>
+              )}
+            </motion.button>
           </div>
         )}
         
-        {route.length > 0 && (
-          <div className="mt-2 p-1 bg-green-50 border border-green-200 rounded text-xs">
-            <p className="text-green-800 font-medium">
-              ✓ PSO Route ready!
+        {/* Instructions Panel - Smaller and positioned to not interfere */}
+        <div className="absolute top-4 right-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-3 shadow-lg max-w-[200px]">
+          <h3 className="font-semibold text-gray-900 mb-2 flex items-center text-sm">
+            <MapPin className="w-3 h-3 mr-1" />
+            How to Use
+          </h3>
+          <div className="text-xs text-gray-600 space-y-1">
+            <p>1. Click map for START</p>
+            <p>2. Click again for END</p>
+            <p>3. Click "Create Route"</p>
+            <p>4. Red = no-fly zones</p>
+          </div>
+          
+          <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
+            <p className="text-blue-800 font-medium flex items-center">
+              <Navigation className="w-3 h-3 mr-1" />
+              Simple Route Active
             </p>
-            <p className="text-green-600">
-              {calculateRouteDistance(route).toFixed(2)} km
-            </p>
+            <p className="text-blue-600">50m safety distance</p>
           </div>
-        )}
-      </div>
-      
-      {/* Legend - Smaller and positioned at bottom left */}
-      <div className="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-2 shadow-lg">
-        <h4 className="font-semibold text-gray-900 mb-1 text-xs">Legend</h4>
-        <div className="grid grid-cols-2 gap-1 text-xs">
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
-            <span>Start</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-orange-500 rounded-full mr-1"></div>
-            <span>End</span>
-          </div>
-          <div className="flex items-center">
-            <div className={`w-3 h-0.5 mr-1 ${psoEnabled ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
-            <span>{psoEnabled ? 'PSO' : 'Route'}</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 bg-red-500 opacity-30 border border-red-500 mr-1"></div>
-            <span>No-Fly</span>
-          </div>
-        </div>
-      </div>
-      
-      {/* Elevation Profile (if available) - Positioned at bottom right */}
-      {elevationData.length > 0 && (
-        <div className="absolute bottom-4 right-16 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-2 shadow-lg">
-          <h4 className="font-semibold text-gray-900 mb-1 text-xs">Elevation</h4>
-          <div className="space-y-1 text-xs">
-            <div className="flex justify-between">
-              <span>Max:</span>
-              <span className="font-medium">{Math.max(...elevationData.map((e: any) => e.elevation)).toFixed(1)}m</span>
+          
+          {showCreateRouteButton && (
+            <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
+              <p className="text-blue-800 font-medium">
+                📍 Points selected!
+              </p>
+              <p className="text-blue-600">Click "Create Route"</p>
             </div>
-            <div className="flex justify-between">
-              <span>Min:</span>
-              <span className="font-medium">{Math.min(...elevationData.map((e: any) => e.elevation)).toFixed(1)}m</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Change:</span>
-              <span className="font-medium">
-                {(Math.max(...elevationData.map((e: any) => e.elevation)) -
-                  Math.min(...elevationData.map((e: any) => e.elevation))).toFixed(1)}m
+          )}
+          
+          {isCalculating && (
+            <div className="mt-2 flex items-center text-blue-600">
+              <motion.div
+                className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full mr-1"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              />
+              <span className="text-xs">
+                Calculating Route...
               </span>
             </div>
+          )}
+          
+          {route.length > 0 && (
+            <div className="mt-2 p-1 bg-green-50 border border-green-200 rounded text-xs">
+              <p className="text-green-800 font-medium">
+                ✓ Route ready!
+              </p>
+              <p className="text-green-600">
+                {calculateRouteDistance(route).toFixed(2)} km
+              </p>
+            </div>
+          )}
+        </div>
+        
+        {/* Legend - Smaller and positioned at bottom left */}
+        <div className="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-2 shadow-lg">
+          <h4 className="font-semibold text-gray-900 mb-1 text-xs">Legend</h4>
+          <div className="grid grid-cols-2 gap-1 text-xs">
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+              <span>Start</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-orange-500 rounded-full mr-1"></div>
+              <span>End</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-0.5 mr-1 bg-blue-500"></div>
+              <span>Simple Route</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-red-500 opacity-30 border border-red-500 mr-1"></div>
+              <span>No-Fly</span>
+            </div>
           </div>
         </div>
-      )}
+        
+        {/* Elevation Profile (if available) - Positioned at bottom right */}
+        {elevationData.length > 0 && (
+          <div className="absolute bottom-4 right-16 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-2 shadow-lg">
+            <h4 className="font-semibold text-gray-900 mb-1 text-xs">Elevation</h4>
+            <div className="space-y-1 text-xs">
+              <div className="flex justify-between">
+                <span>Max:</span>
+                <span className="font-medium">{Math.max(...elevationData.map((e: any) => e.elevation)).toFixed(1)}m</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Min:</span>
+                <span className="font-medium">{Math.min(...elevationData.map((e: any) => e.elevation)).toFixed(1)}m</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Change:</span>
+                <span className="font-medium">
+                  {(Math.max(...elevationData.map((e: any) => e.elevation)) -
+                    Math.min(...elevationData.map((e: any) => e.elevation))).toFixed(1)}m
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
-      {/* PSO Control Panel - Positioned to avoid interference */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-[1000]">
-        <PSOControlPanel
-          config={psoConfig}
-          onConfigChange={setPsoConfig}
-          isEnabled={psoEnabled}
-          onEnabledChange={setPsoEnabled}
-          isOptimizing={isCalculating && psoEnabled}
-          optimizationProgress={psoProgress || undefined}
-        />
       </div>
 
-      {/* Debug Window */}
-      <DebugWindow
-        route={route}
-        isVisible={debugWindowVisible}
-        onToggle={() => setDebugWindowVisible(!debugWindowVisible)}
-      />
+      {/* Waypoint JSON Container - Below Map */}
+      <div className="mt-4 w-full">
+        <DebugWindow
+          route={route}
+          isVisible={debugWindowVisible}
+          onToggle={() => setDebugWindowVisible(!debugWindowVisible)}
+          isBelowMap={true}
+        />
+      </div>
     </div>
   )
 }

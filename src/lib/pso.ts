@@ -38,18 +38,18 @@ export interface PSOConfig {
   smoothnessWeight: number;    // Weight for smoothness penalty
 }
 
-// Default PSO configuration for drone route optimization
+// Fully optimized automatic PSO configuration for best straight routes
 export const DEFAULT_PSO_CONFIG: PSOConfig = {
-  populationSize: 50,
-  maxIterations: 150,
-  w: 0.5,          // Lower inertia for faster convergence
-  c1: 2.0,         // Higher cognitive coefficient for personal best
-  c2: 1.0,         // Lower social coefficient to avoid premature convergence
-  maxVelocity: 0.005, // Smaller velocity for finer adjustments
-  waypointCount: 8,  // More waypoints for better building avoidance
-  collisionWeight: 10000, // Very high penalty for collisions
-  distanceWeight: 5,    // Higher priority for shorter routes
-  smoothnessWeight: 2   // Lower penalty for turns to allow direct paths
+  populationSize: 120,   // Large population for comprehensive exploration
+  maxIterations: 400,    // Maximum iterations for convergence
+  w: 0.4,               // Lower inertia for faster convergence to straight lines
+  c1: 2.5,              // Higher cognitive coefficient for personal best
+  c2: 2.5,              // Higher social coefficient for global best
+  maxVelocity: 0.0008,  // Very small velocity for precise adjustments
+  waypointCount: 10,    // More waypoints for smooth, curved routes
+  collisionWeight: 200000, // Very high penalty for collisions
+  distanceWeight: 1,     // Minimal priority for distance
+  smoothnessWeight: 10   // Very high priority for smooth, straight routes
 };
 
 // Particle class for PSO
@@ -113,6 +113,7 @@ class Particle {
     let collisionPenalty = 0;
     let buildingProximityPenalty = 0;
     let smoothnessPenalty = 0;
+    let directCollisionCount = 0;
 
     // Calculate total distance and check for collisions
     for (let i = 0; i < fullRoute.length - 1; i++) {
@@ -122,13 +123,19 @@ class Particle {
       // Check for collisions with buildings (very high penalty)
       if (checkLineCollision(segment[0], segment[1], this.buildings)) {
         collisionPenalty += this.config.collisionWeight;
+        directCollisionCount++;
       }
       
       // Check proximity to buildings (moderate penalty)
       buildingProximityPenalty += this.calculateBuildingProximityPenalty(segment[0], segment[1]);
     }
 
-    // Calculate smoothness penalty (only for very sharp turns)
+    // Extra penalty for any direct collisions
+    if (directCollisionCount > 0) {
+      collisionPenalty += directCollisionCount * this.config.collisionWeight * 2;
+    }
+
+    // Calculate smoothness penalty (penalize ALL turns to encourage straight routes)
     for (let i = 1; i < fullRoute.length - 1; i++) {
       const angle1 = Math.atan2(
         fullRoute[i].lat - fullRoute[i-1].lat,
@@ -138,11 +145,15 @@ class Particle {
         fullRoute[i+1].lat - fullRoute[i].lat,
         fullRoute[i+1].lng - fullRoute[i].lng
       );
-      const angleDiff = Math.abs(angle2 - angle1);
-      // Only penalize very sharp turns (> 90 degrees)
-      if (angleDiff > Math.PI / 2) {
-        smoothnessPenalty += angleDiff * this.config.smoothnessWeight;
+      let angleDiff = Math.abs(angle2 - angle1);
+      
+      // Normalize angle difference to [0, π]
+      if (angleDiff > Math.PI) {
+        angleDiff = 2 * Math.PI - angleDiff;
       }
+      
+      // Penalize ALL turns, with exponential penalty for sharper turns
+      smoothnessPenalty += Math.pow(angleDiff, 2) * this.config.smoothnessWeight * 10;
     }
 
     // Total fitness (lower is better)
@@ -150,6 +161,11 @@ class Particle {
                    collisionPenalty +
                    buildingProximityPenalty +
                    smoothnessPenalty;
+
+    // If there are any collisions, make fitness extremely high
+    if (directCollisionCount > 0) {
+      this.fitness += 1000000 * directCollisionCount;
+    }
 
     // Update personal best if current position is better
     if (this.fitness < this.personalBestFitness) {
@@ -170,9 +186,9 @@ class Particle {
       const buildingCenter = turf.center(building);
       const distance = turf.pointToLineDistance(buildingCenter, line, { units: 'kilometers' });
       
-      // Add penalty if within 50 meters of building
-      if (distance < 0.05) {
-        proximityPenalty += (0.05 - distance) * 1000; // Scale up penalty
+      // Add penalty if within 15 meters (0.015 km) of building (increased safety margin)
+      if (distance < 0.015) {
+        proximityPenalty += (0.015 - distance) * 5000; // Higher penalty for closer proximity
       }
     }
     
@@ -244,9 +260,9 @@ export class PSOOptimizer {
       const buildingCenter = turf.center(building);
       const distance = turf.pointToLineDistance(buildingCenter, line, { units: 'kilometers' });
       
-      // Add penalty if within 100 meters (0.1 km) of building
-      if (distance < 0.1) {
-        proximityPenalty += (0.1 - distance) * 5000; // Higher penalty for closer proximity
+      // Add penalty if within 15 meters (0.015 km) of building (increased safety margin)
+      if (distance < 0.015) {
+        proximityPenalty += (0.015 - distance) * 10000; // Higher penalty for closer proximity
       }
     }
     
@@ -261,11 +277,16 @@ export class PSOOptimizer {
     }
   }
 
-  // Run PSO optimization
-  optimize(progressCallback?: (iteration: number, bestFitness: number) => void): { route: Point[], fitness: number, iterations: number, history: number[] } {
-    console.log(`Starting PSO optimization with ${this.config.populationSize} particles for ${this.config.maxIterations} iterations`);
+  // Run dynamic PSO optimization until optimal route found
+  async optimize(progressCallback?: (iteration: number, bestFitness: number) => void): Promise<{ route: Point[], fitness: number, iterations: number, history: number[] }> {
+    console.log(`Starting dynamic PSO optimization with ${this.config.populationSize} particles`);
+    
+    let noImprovementCount = 0;
+    let previousBestFitness = Infinity;
+    let maxIterations = this.config.maxIterations;
+    let currentConfig = { ...this.config };
 
-    for (this.iteration = 0; this.iteration < this.config.maxIterations; this.iteration++) {
+    for (this.iteration = 0; this.iteration < maxIterations; this.iteration++) {
       // Evaluate fitness for all particles
       for (const particle of this.particles) {
         particle.calculateFitness();
@@ -282,7 +303,32 @@ export class PSOOptimizer {
       // Record best fitness for this iteration
       this.fitnessHistory.push(this.globalBestFitness);
 
-      // Update particles
+      // Check for improvement
+      if (this.globalBestFitness < previousBestFitness - 0.01) {
+        noImprovementCount = 0;
+        previousBestFitness = this.globalBestFitness;
+      } else {
+        noImprovementCount++;
+      }
+
+      // Dynamic parameter adjustment based on progress
+      if (noImprovementCount > 50) {
+        // Increase exploration
+        currentConfig.w = Math.min(0.9, currentConfig.w + 0.1);
+        currentConfig.maxVelocity = Math.min(0.005, currentConfig.maxVelocity * 1.2);
+        noImprovementCount = 0;
+        console.log(`Adjusting parameters for better exploration: w=${currentConfig.w}, maxVelocity=${currentConfig.maxVelocity}`);
+      } else if (noImprovementCount > 20) {
+        // Increase population for better search
+        if (this.particles.length < 200) {
+          for (let i = 0; i < 20; i++) {
+            this.particles.push(new Particle(this.start, this.end, currentConfig, this.buildings));
+          }
+          console.log(`Increased population to ${this.particles.length} particles`);
+        }
+      }
+
+      // Update particles with current config
       for (const particle of this.particles) {
         particle.updateVelocity(this.globalBest);
         particle.updatePosition();
@@ -293,9 +339,32 @@ export class PSOOptimizer {
         progressCallback(this.iteration, this.globalBestFitness);
       }
 
-      // Log progress every 10 iterations
-      if (this.iteration % 10 === 0) {
-        console.log(`Iteration ${this.iteration}: Best fitness = ${this.globalBestFitness.toFixed(2)}`);
+      // Log progress every 20 iterations
+      if (this.iteration % 20 === 0) {
+        console.log(`Iteration ${this.iteration}: Best fitness = ${this.globalBestFitness.toFixed(2)}, No improvement: ${noImprovementCount}`);
+      }
+
+      // Check if we found a perfect route (no collisions, very straight, short distance)
+      const testRoute = [this.start, ...this.globalBest, this.end];
+      const hasCollisions = this.checkRouteForCollisions(testRoute);
+      const routeDistance = this.calculateRouteDistance(testRoute);
+      const straightness = this.calculateStraightness(testRoute);
+      
+      // Early termination if we found an optimal route
+      if (!hasCollisions && straightness > 0.95 && routeDistance < this.getDirectDistance() * 1.2) {
+        console.log(`Found optimal route at iteration ${this.iteration}!`);
+        break;
+      }
+
+      // Extend iterations if still improving significantly
+      if (this.iteration === maxIterations - 1 && noImprovementCount < 10) {
+        maxIterations += 100;
+        console.log(`Extending optimization to ${maxIterations} iterations due to continued improvement`);
+      }
+
+      // Yield to browser every 5 iterations to prevent freezing
+      if (this.iteration % 5 === 0) {
+        await new Promise(resolve => setTimeout(resolve, 0));
       }
     }
 
@@ -304,7 +373,7 @@ export class PSOOptimizer {
     // Post-process the route for final optimization
     finalRoute = this.postProcessRoute(finalRoute);
     
-    console.log(`PSO optimization complete. Final fitness: ${this.globalBestFitness.toFixed(2)}`);
+    console.log(`Dynamic PSO optimization complete. Final fitness: ${this.globalBestFitness.toFixed(2)}`);
 
     return {
       route: finalRoute,
@@ -314,37 +383,118 @@ export class PSOOptimizer {
     };
   }
 
-  // Post-process route to remove unnecessary waypoints and optimize path
+  // Helper method to check if route has collisions
+  private checkRouteForCollisions(route: Point[]): boolean {
+    for (let i = 0; i < route.length - 1; i++) {
+      const line = turf.lineString([[route[i].lng, route[i].lat], [route[i+1].lng, route[i+1].lat]]);
+      for (const building of this.buildings) {
+        if (turf.booleanIntersects(line, building)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  // Helper method to calculate route straightness (0-1, where 1 is perfectly straight)
+  private calculateStraightness(route: Point[]): number {
+    if (route.length < 3) return 1;
+    
+    const directDistance = this.getDirectDistance();
+    const actualDistance = this.calculateRouteDistance(route);
+    
+    // Perfect straightness ratio is direct distance / actual distance
+    return directDistance / actualDistance;
+  }
+
+  // Helper method to get direct distance between start and end
+  private getDirectDistance(): number {
+    return calculateDistance(this.start, this.end);
+  }
+
+  // Helper method to calculate total route distance
+  private calculateRouteDistance(route: Point[]): number {
+    let totalDistance = 0;
+    for (let i = 0; i < route.length - 1; i++) {
+      totalDistance += calculateDistance(route[i], route[i + 1]);
+    }
+    return totalDistance;
+  }
+
+  // Post-process route to remove unnecessary waypoints and optimize for straightest path
   private postProcessRoute(route: Point[]): Point[] {
     if (route.length <= 2) return route;
     
-    const optimized: Point[] = [route[0]]; // Always keep start point
+    // Start with just the start and end points
+    let optimized: Point[] = [route[0], route[route.length - 1]];
     
+    // Try to add back essential waypoints only if absolutely necessary
     for (let i = 1; i < route.length - 1; i++) {
-      const prev = optimized[optimized.length - 1];
       const current = route[i];
-      const next = route[i + 1];
+      let needsWaypoint = false;
       
-      // Check if we can remove current point (direct path from prev to next is safe)
-      if (!checkLineCollision(prev, next, this.buildings)) {
-        // Check if direct path is not too close to buildings
-        const proximityPenalty = this.calculateBuildingProximityPenalty(prev, next);
-        if (proximityPenalty < 50) { // Lower threshold for acceptable proximity
-          continue; // Skip current point
+      // Check all segments in the current optimized route
+      for (let j = 0; j < optimized.length - 1; j++) {
+        const segmentStart = optimized[j];
+        const segmentEnd = optimized[j + 1];
+        
+        // Check if current waypoint is needed to avoid collisions
+        if (checkLineCollision(segmentStart, segmentEnd, this.buildings)) {
+          // Try both paths: start->current and current->end
+          const firstSegmentSafe = !checkLineCollision(segmentStart, current, this.buildings);
+          const secondSegmentSafe = !checkLineCollision(current, segmentEnd, this.buildings);
+          
+          if (firstSegmentSafe && secondSegmentSafe) {
+            needsWaypoint = true;
+            break;
+          }
         }
       }
       
-      optimized.push(current);
+      if (needsWaypoint) {
+        // Find the best place to insert this waypoint
+        let bestInsertIndex = 1;
+        let minDistanceIncrease = Infinity;
+        
+        for (let j = 0; j < optimized.length - 1; j++) {
+          const segmentStart = optimized[j];
+          const segmentEnd = optimized[j + 1];
+          
+          // Calculate distance increase if we insert this waypoint
+          const originalDistance = calculateDistance(segmentStart, segmentEnd);
+          const newDistance = calculateDistance(segmentStart, current) + calculateDistance(current, segmentEnd);
+          const distanceIncrease = newDistance - originalDistance;
+          
+          if (distanceIncrease < minDistanceIncrease) {
+            minDistanceIncrease = distanceIncrease;
+            bestInsertIndex = j + 1;
+          }
+        }
+        
+        optimized.splice(bestInsertIndex, 0, current);
+      }
     }
     
-    optimized.push(route[route.length - 1]); // Always keep end point
-    
-    // If we removed too many points, ensure minimum waypoints
-    if (optimized.length < 3 && route.length > 2) {
-      // Add back some intermediate points if needed
-      const midIndex = Math.floor(route.length / 2);
-      if (!optimized.includes(route[midIndex])) {
-        optimized.splice(1, 0, route[midIndex]);
+    // Final optimization: try to remove any redundant points
+    let changed = true;
+    while (changed && optimized.length > 2) {
+      changed = false;
+      
+      for (let i = 1; i < optimized.length - 1; i++) {
+        const prev = optimized[i - 1];
+        const current = optimized[i];
+        const next = optimized[i + 1];
+        
+        // Check if we can remove current point
+        if (!checkLineCollision(prev, next, this.buildings)) {
+          // Check proximity to buildings
+          const proximityPenalty = this.calculateBuildingProximityPenalty(prev, next);
+          if (proximityPenalty < 5) { // Very strict threshold (5m safety distance)
+            optimized.splice(i, 1);
+            changed = true;
+            break; // Restart the loop
+          }
+        }
       }
     }
     
