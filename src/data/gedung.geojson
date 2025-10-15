@@ -702,6 +702,744 @@
           [112.7380, -7.2680]
         ]]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Telkom Indonesia Surabaya",
+        "height": 80,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7500, -7.2900],
+          [112.7520, -7.2900],
+          [112.7520, -7.2920],
+          [112.7500, -7.2920],
+          [112.7500, -7.2900]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung BNI Surabaya",
+        "height": 72,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7450, -7.2850],
+          [112.7470, -7.2850],
+          [112.7470, -7.2870],
+          [112.7450, -7.2870],
+          [112.7450, -7.2850]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Bank Indonesia Surabaya",
+        "height": 65,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7400, -7.2750],
+          [112.7420, -7.2750],
+          [112.7420, -7.2770],
+          [112.7400, -7.2770],
+          [112.7400, -7.2750]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung PLN Distribusi Jatim",
+        "height": 55,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7480, -7.2950],
+          [112.7500, -7.2950],
+          [112.7500, -7.2970],
+          [112.7480, -7.2970],
+          [112.7480, -7.2950]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung PDAM Sidoarjo",
+        "height": 32,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7100, -7.4550],
+          [112.7120, -7.4550],
+          [112.7120, -7.4570],
+          [112.7100, -7.4570],
+          [112.7100, -7.4550]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stadion Gelora Delta Sidoarjo",
+        "height": 45,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7050, -7.4400],
+          [112.7100, -7.4400],
+          [112.7100, -7.4450],
+          [112.7050, -7.4450],
+          [112.7050, -7.4400]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Pusat Kuliner Sidoarjo",
+        "height": 28,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7180, -7.4480],
+          [112.7195, -7.4480],
+          [112.7195, -7.4495],
+          [112.7180, -7.4495],
+          [112.7180, -7.4480]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Dinas Perhubungan Surabaya",
+        "height": 48,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7350, -7.2950],
+          [112.7370, -7.2950],
+          [112.7370, -7.2970],
+          [112.7350, -7.2970],
+          [112.7350, -7.2950]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Kejaksaan Negeri Surabaya",
+        "height": 42,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7420, -7.2800],
+          [112.7440, -7.2800],
+          [112.7440, -7.2820],
+          [112.7420, -7.2820],
+          [112.7420, -7.2800]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Pengadilan Negeri Surabaya",
+        "height": 50,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7380, -7.2900],
+          [112.7400, -7.2900],
+          [112.7400, -7.2920],
+          [112.7380, -7.2920],
+          [112.7380, -7.2900]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "UPN Veteran Jatim Kampus Bela Negara",
+        "height": 45,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7925, -7.3450],
+          [112.7940, -7.3450],
+          [112.7940, -7.3465],
+          [112.7925, -7.3465],
+          [112.7925, -7.3450]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Techno Park Sidoarjo",
+        "height": 38,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7950, -7.3480],
+          [112.7965, -7.3480],
+          [112.7965, -7.3495],
+          [112.7950, -7.3495],
+          [112.7950, -7.3480]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Rungkut Town Square",
+        "height": 42,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7850, -7.3350],
+          [112.7870, -7.3350],
+          [112.7870, -7.3370],
+          [112.7850, -7.3370],
+          [112.7850, -7.3350]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen East Coast Center",
+        "height": 85,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7880, -7.3380],
+          [112.7895, -7.3380],
+          [112.7895, -7.3395],
+          [112.7880, -7.3395],
+          [112.7880, -7.3380]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung BCA Karya Rungkut",
+        "height": 55,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7910, -7.3400],
+          [112.7925, -7.3400],
+          [112.7925, -7.3415],
+          [112.7910, -7.3415],
+          [112.7910, -7.3400]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RSIA Kendi Sidoarjo",
+        "height": 35,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7935, -7.3420],
+          [112.7950, -7.3420],
+          [112.7950, -7.3435],
+          [112.7935, -7.3435],
+          [112.7935, -7.3420]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Kemenag Sidoarjo",
+        "height": 40,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7960, -7.3500],
+          [112.7975, -7.3500],
+          [112.7975, -7.3515],
+          [112.7960, -7.3515],
+          [112.7960, -7.3500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Puncak Kertajaya",
+        "height": 90,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7875, -7.3430],
+          [112.7890, -7.3430],
+          [112.7890, -7.3445],
+          [112.7875, -7.3445],
+          [112.7875, -7.3430]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Dinas Pendidikan Jatim",
+        "height": 48,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7895, -7.3460],
+          [112.7910, -7.3460],
+          [112.7910, -7.3475],
+          [112.7895, -7.3475],
+          [112.7895, -7.3460]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ruko Rungkut Megah",
+        "height": 32,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7845, -7.3390],
+          [112.7860, -7.3390],
+          [112.7860, -7.3405],
+          [112.7845, -7.3405],
+          [112.7845, -7.3390]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung BRI Rungkut",
+        "height": 45,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7900, -7.3365],
+          [112.7915, -7.3365],
+          [112.7915, -7.3380],
+          [112.7900, -7.3380],
+          [112.7900, -7.3365]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Taman Gapura",
+        "height": 75,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7920, -7.3345],
+          [112.7935, -7.3345],
+          [112.7935, -7.3360],
+          [112.7920, -7.3360],
+          [112.7920, -7.3345]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Telkom Rungkut",
+        "height": 52,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7945, -7.3375],
+          [112.7960, -7.3375],
+          [112.7960, -7.3390],
+          [112.7945, -7.3390],
+          [112.7945, -7.3375]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS Mitra Keluarga Waru",
+        "height": 50,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7970, -7.3455],
+          [112.7985, -7.3455],
+          [112.7985, -7.3470],
+          [112.7970, -7.3470],
+          [112.7970, -7.3455]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung PLN Rungkut",
+        "height": 38,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7855, -7.3425],
+          [112.7870, -7.3425],
+          [112.7870, -7.3440],
+          [112.7855, -7.3440],
+          [112.7855, -7.3425]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen East Coast Residence",
+        "height": 80,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7885, -7.3490],
+          [112.7900, -7.3490],
+          [112.7900, -7.3505],
+          [112.7885, -7.3505],
+          [112.7885, -7.3490]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung PDAM Surabaya Timur",
+        "height": 35,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7915, -7.3475],
+          [112.7930, -7.3475],
+          [112.7930, -7.3490],
+          [112.7915, -7.3490],
+          [112.7915, -7.3475]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Bank Mandiri Rungkut",
+        "height": 42,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7930, -7.3355],
+          [112.7945, -7.3355],
+          [112.7945, -7.3370],
+          [112.7930, -7.3370],
+          [112.7930, -7.3355]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kawasan Industri Maspion Rungkut",
+        "height": 45,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7980, -7.3520],
+          [112.8020, -7.3520],
+          [112.8020, -7.3560],
+          [112.7980, -7.3560],
+          [112.7980, -7.3520]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Samsung Service Center",
+        "height": 28,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7865, -7.3455],
+          [112.7880, -7.3455],
+          [112.7880, -7.3470],
+          [112.7865, -7.3470],
+          [112.7865, -7.3455]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Gateway Ahmad Yani",
+        "height": 95,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7995, -7.3390],
+          [112.8010, -7.3390],
+          [112.8010, -7.3405],
+          [112.7995, -7.3405],
+          [112.7995, -7.3390]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Honda Rungkut",
+        "height": 32,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7940, -7.3510],
+          [112.7955, -7.3510],
+          [112.7955, -7.3525],
+          [112.7940, -7.3525],
+          [112.7940, -7.3510]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Toyota Auto2000 Rungkut",
+        "height": 30,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7955, -7.3535],
+          [112.7970, -7.3535],
+          [112.7970, -7.3550],
+          [112.7955, -7.3550],
+          [112.7955, -7.3535]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Samsat Sidoarjo",
+        "height": 40,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7985, -7.3485],
+          [112.8000, -7.3485],
+          [112.8000, -7.3500],
+          [112.7985, -7.3500],
+          [112.7985, -7.3485]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Pertamina Rungkut",
+        "height": 35,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7870, -7.3505],
+          [112.7885, -7.3505],
+          [112.7885, -7.3520],
+          [112.7870, -7.3520],
+          [112.7870, -7.3505]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung BNI Rungkut",
+        "height": 48,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.8005, -7.3445],
+          [112.8020, -7.3445],
+          [112.8020, -7.3460],
+          [112.8005, -7.3460],
+          [112.8005, -7.3445]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Bank Central Asia Rungkut",
+        "height": 45,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7990, -7.3465],
+          [112.8005, -7.3465],
+          [112.8005, -7.3480],
+          [112.7990, -7.3480],
+          [112.7990, -7.3465]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Puri Surya Jaya",
+        "height": 70,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.8015, -7.3505],
+          [112.8030, -7.3505],
+          [112.8030, -7.3520],
+          [112.8015, -7.3520],
+          [112.8015, -7.3505]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Giant Express Rungkut",
+        "height": 25,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7850, -7.3465],
+          [112.7865, -7.3465],
+          [112.7865, -7.3480],
+          [112.7850, -7.3480],
+          [112.7850, -7.3465]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Alfamart Rungkut",
+        "height": 22,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7825, -7.3435],
+          [112.7840, -7.3435],
+          [112.7840, -7.3450],
+          [112.7825, -7.3450],
+          [112.7825, -7.3435]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Indomaret Rungkut",
+        "height": 20,
+        "restricted": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7830, -7.3470],
+          [112.7845, -7.3470],
+          [112.7845, -7.3485],
+          [112.7830, -7.3485],
+          [112.7830, -7.3470]
+        ]]
+      }
     }
   ]
 }
