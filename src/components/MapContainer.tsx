@@ -238,20 +238,20 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
         } catch (googleError) {
           console.warn('Google Maps routing failed, falling back to local pathfinding:', googleError)
           
-          // Fallback to simple route calculation
-          console.log('Using simple route calculation with 50m safe distance')
-          const simpleRoute = calculateSimpleRoute(start, end, buildings, 50)
+          // Fallback to simple route calculation with enhanced building avoidance
+          console.log('Using simple route calculation with 100m safe distance for enhanced building avoidance')
+          const simpleRoute = calculateSimpleRoute(start, end, buildings, 100)
           finalRoute = simpleRoute
           distance = calculateRouteDistance(finalRoute)
-          console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 50) })
+          console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 100) })
         }
       } else {
-        // Use simple route calculation
-        console.log('Using simple route calculation with 50m safe distance')
-        const simpleRoute = calculateSimpleRoute(start, end, buildings, 50)
+        // Use simple route calculation with enhanced building avoidance
+        console.log('Using simple route calculation with 100m safe distance for enhanced building avoidance')
+        const simpleRoute = calculateSimpleRoute(start, end, buildings, 100)
         finalRoute = simpleRoute
         distance = calculateRouteDistance(finalRoute)
-        console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 50) })
+        console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 100) })
       }
       
       setRoute(finalRoute)
@@ -480,7 +480,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
               <Navigation className="w-3 h-3 mr-1" />
               Simple Route Active
             </p>
-            <p className="text-blue-600">50m safety distance</p>
+            <p className="text-blue-600">100m safety distance</p>
           </div>
           
           {showCreateRouteButton && (
