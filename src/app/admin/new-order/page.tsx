@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { 
   ArrowLeft, 
@@ -16,10 +15,13 @@ import {
   CheckCircle, 
   AlertCircle, 
   DollarSign,
-  Navigation,
   Clock,
-  Code
+  Code,
+  Copy,
+  Check
 } from 'lucide-react'
+import { ModernSidebar } from '@/components/admin/ModernSidebar'
+import { ChartCard } from '@/components/admin/ChartCard'
 import { RouteMapContainer } from '@/components/MapContainer'
 import type { RouteData } from '@/types/route'
 
@@ -37,7 +39,8 @@ interface Errors {
   [key: string]: string
 }
 
-export default function NewOrder() {
+export default function NewOrderPage() {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     customerName: '',
     customerPhone: '',
@@ -47,11 +50,20 @@ export default function NewOrder() {
     priority: 'medium',
     notes: ''
   })
-
   const [routeData, setRouteData] = useState<RouteData | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Errors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
+  const [jsonCopied, setJsonCopied] = useState(false)
+
+  useEffect(() => {
+    // Hide main navigation on admin pages
+    const nav = document.querySelector('nav')
+    if (nav) nav.style.display = 'none'
+    return () => {
+      if (nav) nav.style.display = 'block'
+    }
+  }, [])
 
   const validateField = (name: string, value: string) => {
     let error = ''
@@ -95,7 +107,6 @@ export default function NewOrder() {
       [name]: value
     }))
     
-    // Real-time validation
     if (touched[name]) {
       const error = validateField(name, value)
       setErrors(prev => ({
@@ -148,18 +159,17 @@ export default function NewOrder() {
     
     // Show success and redirect
     alert('Order created successfully!')
-    window.location.href = '/admin#shipments'
+    window.location.href = '/admin/shipments'
     
     setIsSubmitting(false)
   }
 
-  // Calculate estimated price
   const calculateEstimatedPrice = () => {
     if (!routeData || !formData.weight) return 0
     
-    const basePrice = 15000 // Base price in IDR
-    const distanceRate = 5000 // Per km
-    const weightRate = 2000 // Per kg
+    const basePrice = 15000
+    const distanceRate = 5000
+    const weightRate = 2000
     const priorityMultipliers: Record<string, number> = {
       low: 1,
       medium: 1.2,
@@ -184,7 +194,6 @@ export default function NewOrder() {
                     formData.origin && formData.destination && routeData &&
                     !errors.customerName && !errors.customerPhone && !errors.weight
 
-  // Generate waypoint JSON for display
   const getWaypointJSON = () => {
     if (!routeData || !routeData.waypoints) return null
     
@@ -204,8 +213,7 @@ export default function NewOrder() {
           index,
           lat: point.lat,
           lng: point.lng,
-          elevation: 0, // Default elevation since Waypoint doesn't have elevation property
-          timestamp: index * 30 // Estimated 30 seconds per waypoint
+          timestamp: index * 30
         })),
         metadata: {
           totalDistance: routeData.distance,
@@ -219,59 +227,80 @@ export default function NewOrder() {
     }, null, 2)
   }
 
+  const copyJSON = () => {
+    const json = getWaypointJSON()
+    if (json) {
+      navigator.clipboard.writeText(json)
+      setJsonCopied(true)
+      setTimeout(() => setJsonCopied(false), 2000)
+    }
+  }
+
   return (
-    <div className="min-h-screen" style={{background: 'linear-gradient(135deg, #fafbfc 0%, #f8fafc 50%, #f1f5f9 100%)'}}>
-      <div className="admin-header">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link href="/admin#shipments" className="admin-btn admin-btn-outline group">
-              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Back to Shipments
-            </Link>
-            <div>
-              <h1 className="admin-title">Create New Order</h1>
-              <p className="admin-subtitle">Complete the form to create a new delivery order</p>
+    <div className="min-h-screen bg-[#F0F0F0]">
+      {/* Modern Sidebar */}
+      <ModernSidebar
+        isCollapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+      />
+
+      {/* Main Content */}
+      <div
+        className={`min-h-screen transition-all duration-300 ${
+          sidebarCollapsed ? 'lg:ml-20' : 'lg:ml-72'
+        }`}
+      >
+        {/* Top Bar */}
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-[60]">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Link
+                  href="/admin/shipments"
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5 text-gray-600" />
+                </Link>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    Create New Order
+                  </h1>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Complete the form to create a new delivery order
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex-1 p-8">
-        <div className="max-w-6xl mx-auto">
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Form */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
-                className="lg:col-span-2 space-y-6"
-              >
-                {/* Customer Information */}
-                <div className="admin-card" style={{background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'}}>
-                  <div className="admin-card-header border-b border-gray-100">
-                    <h2 className="admin-card-title flex items-center">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center mr-3">
-                        <User className="w-4 h-4 text-blue-600" />
-                      </div>
-                      Customer Information
-                    </h2>
-                  </div>
-
-                  <div className="admin-card-body">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Content */}
+        <div className="p-6">
+          <div className="max-w-[1400px] mx-auto">
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Main Form */}
+                <div className="lg:col-span-2 space-y-6">
+                  {/* Customer Information */}
+                  <ChartCard title="Customer Information">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Customer Name <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
+                          <User className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                           <input
                             type="text"
                             name="customerName"
                             value={formData.customerName}
                             onChange={handleInputChange}
                             onBlur={handleBlur}
-                            className={`admin-input ${errors.customerName && touched.customerName ? 'border-red-300 focus:border-red-500' : ''}`}
+                            className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
+                              errors.customerName && touched.customerName
+                                ? 'border-red-300 focus:border-red-500'
+                                : 'border-gray-300 focus:border-indigo-500'
+                            } focus:outline-none focus:ring-2 focus:ring-indigo-500/20`}
                             placeholder="Enter customer name"
                           />
                           {formData.customerName && !errors.customerName && (
@@ -279,10 +308,10 @@ export default function NewOrder() {
                           )}
                         </div>
                         {errors.customerName && touched.customerName && (
-                          <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center">
+                          <p className="text-red-500 text-xs mt-1 flex items-center">
                             <AlertCircle className="w-3 h-3 mr-1" />
                             {errors.customerName}
-                          </motion.p>
+                          </p>
                         )}
                       </div>
 
@@ -298,7 +327,11 @@ export default function NewOrder() {
                             value={formData.customerPhone}
                             onChange={handleInputChange}
                             onBlur={handleBlur}
-                            className={`admin-input pl-10 ${errors.customerPhone && touched.customerPhone ? 'border-red-300 focus:border-red-500' : ''}`}
+                            className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
+                              errors.customerPhone && touched.customerPhone
+                                ? 'border-red-300 focus:border-red-500'
+                                : 'border-gray-300 focus:border-indigo-500'
+                            } focus:outline-none focus:ring-2 focus:ring-indigo-500/20`}
                             placeholder="+62 812-3456-7890"
                           />
                           {formData.customerPhone && !errors.customerPhone && (
@@ -306,29 +339,18 @@ export default function NewOrder() {
                           )}
                         </div>
                         {errors.customerPhone && touched.customerPhone && (
-                          <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center">
+                          <p className="text-red-500 text-xs mt-1 flex items-center">
                             <AlertCircle className="w-3 h-3 mr-1" />
                             {errors.customerPhone}
-                          </motion.p>
+                          </p>
                         )}
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </ChartCard>
 
-                {/* Package Details */}
-                <div className="admin-card" style={{background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'}}>
-                  <div className="admin-card-header border-b border-gray-100">
-                    <h2 className="admin-card-title flex items-center">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center mr-3">
-                        <Package className="w-4 h-4 text-orange-600" />
-                      </div>
-                      Package Information
-                    </h2>
-                  </div>
-                  
-                  <div className="admin-card-body">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Package Information */}
+                  <ChartCard title="Package Information">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Weight (kg) <span className="text-red-500">*</span>
@@ -341,7 +363,11 @@ export default function NewOrder() {
                             value={formData.weight}
                             onChange={handleInputChange}
                             onBlur={handleBlur}
-                            className={`admin-input pl-10 ${errors.weight && touched.weight ? 'border-red-300 focus:border-red-500' : ''}`}
+                            className={`w-full pl-10 pr-4 py-2.5 rounded-lg border ${
+                              errors.weight && touched.weight
+                                ? 'border-red-300 focus:border-red-500'
+                                : 'border-gray-300 focus:border-indigo-500'
+                            } focus:outline-none focus:ring-2 focus:ring-indigo-500/20`}
                             placeholder="0.0"
                             step="0.1"
                             min="0.1"
@@ -351,12 +377,12 @@ export default function NewOrder() {
                             <CheckCircle className="w-5 h-5 text-green-500 absolute right-3 top-1/2 -translate-y-1/2" />
                           )}
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">Maximum weight: 5.0 kg</p>
+                        <p className="text-xs text-gray-500 mt-1">Maximum: 5.0 kg</p>
                         {errors.weight && touched.weight && (
-                          <motion.p initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="text-red-500 text-xs mt-1 flex items-center">
+                          <p className="text-red-500 text-xs mt-1 flex items-center">
                             <AlertCircle className="w-3 h-3 mr-1" />
                             {errors.weight}
-                          </motion.p>
+                          </p>
                         )}
                       </div>
 
@@ -368,110 +394,84 @@ export default function NewOrder() {
                           name="priority"
                           value={formData.priority}
                           onChange={handleInputChange}
-                          className="admin-input"
+                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                         >
-                          <option value="low">🟢 Low Priority</option>
-                          <option value="medium">🟡 Medium Priority</option>
-                          <option value="high">🟠 High Priority</option>
-                          <option value="urgent">🔴 Urgent</option>
+                          <option value="low">🟢 Low - Economy (4-8h)</option>
+                          <option value="medium">🟡 Medium - Standard (2-4h)</option>
+                          <option value="high">🟠 High - Priority (1-2h)</option>
+                          <option value="urgent">🔴 Urgent - Express (&lt;30min)</option>
                         </select>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {formData.priority === 'urgent' && 'Delivery in under 30 minutes'}
-                          {formData.priority === 'high' && 'Priority processing (1-2 hours)'}
-                          {formData.priority === 'medium' && 'Standard delivery (2-4 hours)'}
-                          {formData.priority === 'low' && 'Economy delivery (4-8 hours)'}
-                        </p>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </ChartCard>
 
-                {/* Route Information */}
-                <div className="admin-card" style={{background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'}}>
-                  <div className="admin-card-header border-b border-gray-100">
-                    <h2 className="admin-card-title flex items-center">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center mr-3">
-                        <MapPin className="w-4 h-4 text-purple-600" />
+                  {/* Route Planning */}
+                  <ChartCard title="Route Planning - AI PSO Optimization">
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Pickup Location <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="origin"
+                            value={formData.origin}
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-gray-50"
+                            placeholder="Click on map to select"
+                            readOnly
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Delivery Location <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="destination"
+                            value={formData.destination}
+                            className="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-gray-50"
+                            placeholder="Click on map to select"
+                            readOnly
+                          />
+                        </div>
                       </div>
-                      Route Planning
-                    </h2>
-                  </div>
-                  
-                  <div className="admin-card-body space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Pickup Location <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="origin"
-                          value={formData.origin}
-                          className="admin-input"
-                          placeholder="Click on map to select"
-                          readOnly
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Delivery Location <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="destination"
-                          value={formData.destination}
-                          className="admin-input"
-                          placeholder="Click on map to select"
-                          readOnly
-                        />
-                      </div>
-                    </div>
 
-                    {routeData && (
-                      <motion.div 
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        className="grid grid-cols-3 gap-4 p-4 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100"
-                      >
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-blue-600">{routeData.distance.toFixed(2)} km</div>
-                          <div className="text-xs text-gray-600 mt-1">Distance</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-purple-600">{routeData.estimatedDuration} min</div>
-                          <div className="text-xs text-gray-600 mt-1">Est. Duration</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-green-600">{routeData.isSafe ? '✓' : '⚠'}</div>
-                          <div className="text-xs text-gray-600 mt-1">{routeData.isSafe ? 'Safe Route' : 'Check Route'}</div>
-                        </div>
-                      </motion.div>
-                    )}
-
-                    {/* Map */}
-                    <div className="admin-card border-2 border-purple-100">
-                      <div className="admin-card-header bg-gradient-to-r from-purple-50 to-blue-50 border-b border-purple-100">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="admin-card-title flex items-center text-purple-900">
-                              <Zap className="w-4 h-4 mr-2 text-purple-500" />
-                              AI-Powered Route Map
-                            </h4>
-                            <p className="text-xs text-purple-700 mt-1">
-                              Click to set pickup → Click to set delivery
-                            </p>
+                      {routeData && (
+                        <div className="grid grid-cols-3 gap-4 p-4 rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-blue-600">{routeData.distance.toFixed(2)}</div>
+                            <div className="text-xs text-gray-600 mt-1">Distance (km)</div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <div className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium flex items-center">
-                              <Zap className="w-3 h-3 mr-1" />
-                              PSO Active
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-purple-600">{routeData.estimatedDuration}</div>
+                            <div className="text-xs text-gray-600 mt-1">Duration (min)</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-green-600">{routeData.isSafe ? '✓' : '⚠'}</div>
+                            <div className="text-xs text-gray-600 mt-1">{routeData.isSafe ? 'Safe' : 'Check'}</div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Map */}
+                      <div className="border border-gray-200 rounded-xl overflow-hidden relative z-10">
+                        <div className="bg-gradient-to-r from-purple-50 to-blue-50 px-4 py-3 border-b border-gray-200">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Zap className="w-4 h-4 text-purple-600" />
+                              <span className="text-sm font-medium text-gray-900">AI-Powered Route Map</span>
                             </div>
+                            <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
+                              PSO Active
+                            </span>
                           </div>
+                          <p className="text-xs text-gray-600 mt-1">
+                            Click to set pickup → Click to set delivery
+                          </p>
                         </div>
-                      </div>
-                      <div className="admin-card-body p-0">
-                        <div className="admin-map-container" style={{height: '400px'}}>
+                        <div className="relative z-0" style={{height: '400px'}}>
                           <RouteMapContainer
                             onRouteSelect={handleRouteSelect}
                             enablePSO={true}
@@ -480,73 +480,53 @@ export default function NewOrder() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </ChartCard>
 
-                {/* Additional Notes */}
-                <div className="admin-card" style={{background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'}}>
-                  <div className="admin-card-header border-b border-gray-100">
-                    <h3 className="admin-card-title">Additional Notes (Optional)</h3>
-                  </div>
-                  <div className="admin-card-body">
-                    <textarea
-                      name="notes"
-                      value={formData.notes}
-                      onChange={handleInputChange}
-                      className="admin-input"
-                      rows={3}
-                      placeholder="Any special delivery instructions..."
-                    />
-                  </div>
-                </div>
-
-                {/* Waypoint JSON Section */}
-                <div className="admin-card" style={{background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'}}>
-                  <div className="admin-card-header border-b border-gray-100">
-                    <h3 className="admin-card-title flex items-center">
-                      <Code className="w-5 h-5 mr-2 text-indigo-600" />
-                      Route Waypoints (JSON)
-                    </h3>
-                  </div>
-                  <div className="admin-card-body">
+                  {/* Waypoint JSON */}
+                  <ChartCard title="Route Waypoints (JSON)">
                     {getWaypointJSON() ? (
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <p className="text-sm text-gray-600">
-                            Complete route data with waypoint coordinates and metadata
+                            Complete route data with waypoint coordinates
                           </p>
                           <button
                             type="button"
-                            onClick={() => {
-                              navigator.clipboard.writeText(getWaypointJSON() || '')
-                              alert('Waypoint JSON copied to clipboard!')
-                            }}
-                            className="admin-btn admin-btn-outline text-xs px-3 py-1"
+                            onClick={copyJSON}
+                            className="px-3 py-1.5 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-xs font-medium flex items-center gap-2"
                           >
-                            Copy JSON
+                            {jsonCopied ? (
+                              <>
+                                <Check className="w-3 h-3" />
+                                Copied!
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                Copy JSON
+                              </>
+                            )}
                           </button>
                         </div>
-                        <div className="relative">
-                          <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-xs font-mono max-h-64 scrollbar-thin">
-                            {getWaypointJSON()}
-                          </pre>
-                        </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                          <div className="bg-blue-50 p-2 rounded text-blue-700">
-                            <div className="font-semibold">Waypoints</div>
-                            <div>{routeData?.waypoints?.length || 0}</div>
+                        <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-xs font-mono max-h-64 scrollbar-thin">
+                          {getWaypointJSON()}
+                        </pre>
+                        <div className="grid grid-cols-4 gap-2">
+                          <div className="bg-blue-50 p-2 rounded text-center">
+                            <div className="text-xs font-semibold text-blue-900">Waypoints</div>
+                            <div className="text-sm text-blue-700">{routeData?.waypoints?.length || 0}</div>
                           </div>
-                          <div className="bg-green-50 p-2 rounded text-green-700">
-                            <div className="font-semibold">Distance</div>
-                            <div>{routeData?.distance?.toFixed(2) || 0} km</div>
+                          <div className="bg-green-50 p-2 rounded text-center">
+                            <div className="text-xs font-semibold text-green-900">Distance</div>
+                            <div className="text-sm text-green-700">{routeData?.distance?.toFixed(2)} km</div>
                           </div>
-                          <div className="bg-purple-50 p-2 rounded text-purple-700">
-                            <div className="font-semibold">Duration</div>
-                            <div>{routeData?.estimatedDuration || 0} min</div>
+                          <div className="bg-purple-50 p-2 rounded text-center">
+                            <div className="text-xs font-semibold text-purple-900">Duration</div>
+                            <div className="text-sm text-purple-700">{routeData?.estimatedDuration} min</div>
                           </div>
-                          <div className="bg-orange-50 p-2 rounded text-orange-700">
-                            <div className="font-semibold">Safety</div>
-                            <div>{routeData?.isSafe ? 'Safe' : 'Check'}</div>
+                          <div className="bg-orange-50 p-2 rounded text-center">
+                            <div className="text-xs font-semibold text-orange-900">Safety</div>
+                            <div className="text-sm text-orange-700">{routeData?.isSafe ? 'Safe' : 'Check'}</div>
                           </div>
                         </div>
                       </div>
@@ -559,163 +539,157 @@ export default function NewOrder() {
                         </p>
                       </div>
                     )}
+                  </ChartCard>
+
+                  {/* Notes */}
+                  <ChartCard title="Additional Notes (Optional)">
+                    <textarea
+                      name="notes"
+                      value={formData.notes}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                      rows={3}
+                      placeholder="Any special delivery instructions..."
+                    />
+                  </ChartCard>
+
+                  {/* Action Buttons */}
+                  <div className="flex items-center justify-between">
+                    <Link
+                      href="/admin/shipments"
+                      className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium flex items-center gap-2"
+                    >
+                      <X className="w-4 h-4" />
+                      Cancel
+                    </Link>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || !isFormValid}
+                      className="px-6 py-2 rounded-lg bg-gradient-to-r from-[#E0A458] to-[#c98d42] text-white hover:shadow-lg transition-all text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Creating...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4" />
+                          Create Order
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex items-center justify-between">
-                  <Link href="/admin#shipments" className="admin-btn admin-btn-outline group">
-                    <X className="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform" />
-                    Cancel Order
-                  </Link>
-                  <button 
-                    type="submit"
-                    disabled={isSubmitting || !isFormValid}
-                    className="admin-btn admin-btn-primary disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
-                        Creating Order...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                        Create Order
-                      </>
-                    )}
-                  </button>
-                </div>
-              </motion.div>
-
-              {/* Sidebar - Summary */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
-                className="space-y-6"
-              >
-                {/* Order Summary */}
-                <div className="admin-card sticky top-24" style={{background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'}}>
-                  <div className="admin-card-header bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
-                    <h3 className="admin-card-title flex items-center">
-                      <DollarSign className="w-5 h-5 mr-2 text-blue-600" />
-                      Order Summary
-                    </h3>
-                  </div>
-                  <div className="admin-card-body space-y-4">
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Customer:</span>
-                        <span className="font-medium text-gray-900">{formData.customerName || '-'}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Phone:</span>
-                        <span className="font-medium text-gray-900">{formData.customerPhone || '-'}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Weight:</span>
-                        <span className="font-medium text-gray-900">{formData.weight ? `${formData.weight} kg` : '-'}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Priority:</span>
-                        <span className={`font-medium ${
-                          formData.priority === 'urgent' ? 'text-red-600' :
-                          formData.priority === 'high' ? 'text-orange-600' :
-                          formData.priority === 'medium' ? 'text-yellow-600' :
-                          'text-green-600'
-                        }`}>
-                          {formData.priority.charAt(0).toUpperCase() + formData.priority.slice(1)}
-                        </span>
-                      </div>
-                    </div>
-
-                    {routeData && (
-                      <>
-                        <div className="border-t border-gray-200 pt-3 mt-3 space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Distance:</span>
-                            <span className="font-medium text-gray-900">{routeData.distance.toFixed(2)} km</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Est. Time:</span>
-                            <span className="font-medium text-gray-900">{routeData.estimatedDuration} min</span>
-                          </div>
+                {/* Sidebar - Summary */}
+                <div className="space-y-6">
+                  {/* Order Summary */}
+                  <ChartCard title="Order Summary">{/* Removed sticky */}
+                    <div className="space-y-4">
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Customer:</span>
+                          <span className="font-medium text-gray-900">{formData.customerName || '-'}</span>
                         </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Phone:</span>
+                          <span className="font-medium text-gray-900">{formData.customerPhone || '-'}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Weight:</span>
+                          <span className="font-medium text-gray-900">{formData.weight ? `${formData.weight} kg` : '-'}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Priority:</span>
+                          <span className={`font-medium ${
+                            formData.priority === 'urgent' ? 'text-red-600' :
+                            formData.priority === 'high' ? 'text-orange-600' :
+                            formData.priority === 'medium' ? 'text-yellow-600' :
+                            'text-green-600'
+                          }`}>
+                            {formData.priority.charAt(0).toUpperCase() + formData.priority.slice(1)}
+                          </span>
+                        </div>
+                      </div>
 
-                        <div className="border-t-2 border-gray-300 pt-3 mt-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-gray-600">Estimated Cost:</span>
-                            <div className="text-right">
-                              <div className="text-2xl font-bold text-blue-600">
-                                {formattedPrice(calculateEstimatedPrice())}
-                              </div>
-                              <div className="text-xs text-gray-500">Including all fees</div>
+                      {routeData && (
+                        <>
+                          <div className="border-t border-gray-200 pt-3 space-y-2">
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-600">Distance:</span>
+                              <span className="font-medium text-gray-900">{routeData.distance.toFixed(2)} km</span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-600">Est. Time:</span>
+                              <span className="font-medium text-gray-900">{routeData.estimatedDuration} min</span>
                             </div>
                           </div>
-                        </div>
-                      </>
-                    )}
 
-                    {!routeData && (
-                      <div className="text-center py-6">
-                        <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                          <MapPin className="w-8 h-8 text-gray-400" />
-                        </div>
-                        <p className="text-sm text-gray-500">Select route on map</p>
-                        <p className="text-xs text-gray-400 mt-1">to calculate pricing</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                          <div className="border-t-2 border-gray-300 pt-3">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-gray-600">Estimated Cost:</span>
+                              <div className="text-right">
+                                <div className="text-2xl font-bold text-indigo-600">
+                                  {formattedPrice(calculateEstimatedPrice())}
+                                </div>
+                                <div className="text-xs text-gray-500">Including fees</div>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      )}
 
-                {/* PSO Info */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="admin-card" 
-                  style={{background: 'linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)'}}
-                >
-                  <div className="admin-card-body">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                      {!routeData && (
+                        <div className="text-center py-6">
+                          <MapPin className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                          <p className="text-sm text-gray-500">Select route on map</p>
+                          <p className="text-xs text-gray-400 mt-1">to calculate pricing</p>
+                        </div>
+                      )}
+                    </div>
+                  </ChartCard>
+
+                  {/* PSO Info */}
+                  <div className="rounded-xl bg-gradient-to-br from-purple-50 to-blue-50 p-5 border border-purple-200">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
                         <Zap className="w-5 h-5 text-white" />
                       </div>
                       <div>
                         <h4 className="font-semibold text-purple-900 mb-1">AI Route Optimization</h4>
                         <p className="text-sm text-purple-700 mb-3">
-                          Our Particle Swarm Optimization automatically finds the safest and most efficient route with enhanced building avoidance.
+                          PSO algorithm finds the safest and most efficient route avoiding buildings and no-fly zones.
                         </p>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="flex items-center space-x-1">
+                          <div className="flex items-center gap-1">
                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                             <span className="text-purple-700">Collision Free</span>
                           </div>
-                          <div className="flex items-center space-x-1">
+                          <div className="flex items-center gap-1">
                             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-purple-700">Optimized Path</span>
+                            <span className="text-purple-700">Optimized</span>
                           </div>
-                          <div className="flex items-center space-x-1">
+                          <div className="flex items-center gap-1">
                             <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                             <span className="text-purple-700">Smooth Flight</span>
                           </div>
-                          <div className="flex items-center space-x-1">
+                          <div className="flex items-center gap-1">
                             <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                             <span className="text-purple-700">No-Fly Avoid</span>
                           </div>
                         </div>
                         <div className="mt-3 p-2 bg-purple-100 rounded-lg">
                           <p className="text-xs text-purple-800 font-medium">Building Clearance: 100m</p>
-                          <p className="text-xs text-purple-600">Routes maintain safe distance from structures</p>
+                          <p className="text-xs text-purple-600">Safe distance maintained</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              </motion.div>
-            </div>
-          </form>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
