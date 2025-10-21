@@ -1,5 +1,5 @@
 import * as turf from '@turf/turf';
-import { AStar } from 'pathfinding';
+import * as PF from 'pathfinding';
 import { Point, Waypoint, BuildingFeature, GridNode, RouteOptions } from '@/types/route';
 
 /**
@@ -58,8 +58,8 @@ export function generateSafeRoute(
     const pathfindingGrid = createPathfindingGrid(grid, expandedBounds, gridSize);
     
     // Run A* pathfinding
-    const finder = new AStar(pathfindingGrid);
-    const path = finder.findPath(startNode.x, startNode.y, endNode.x, endNode.y);
+    const finder = new PF.AStarFinder();
+    const path = finder.findPath(startNode.x, startNode.y, endNode.x, endNode.y, new PF.Grid(pathfindingGrid));
     
     if (!path || path.length === 0) {
       console.warn('No path found, returning direct route');

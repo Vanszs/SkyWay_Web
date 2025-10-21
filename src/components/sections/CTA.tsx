@@ -172,8 +172,8 @@ export default function CTA() {
                 </div>
               </div>
               <blockquote className="text-white/90 italic">
-                "SkyWay transformed our business overnight. We went from 2-hour deliveries 
-                to 15 minutes, and our customers love the real-time tracking experience."
+                &quot;SkyWay transformed our business overnight. We went from 2-hour deliveries 
+                to 15 minutes, and our customers love the real-time tracking experience.&quot;
               </blockquote>
             </motion.div>
 
@@ -206,7 +206,7 @@ export default function CTA() {
           transition={{ delay: 1.2 }}
         >
           <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-            Join the future of urban logistics today. Whether you're an e-commerce platform, 
+            Join the future of urban logistics today. Whether you&apos;re an e-commerce platform, 
             logistics company, or UMKM, SkyWay has the right solution for your delivery needs.
           </p>
           

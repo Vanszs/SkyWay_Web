@@ -70,7 +70,7 @@ export default function WhatWeProvide() {
           </h2>
           <p className="text-xl text-neutral-300 max-w-4xl mx-auto leading-relaxed">
             SkyWay delivers complete drone hardware + integrated monitoring system 
-            for logistics partners in Surabaya's urban environment
+            for logistics partners in Surabaya&apos;s urban environment
           </p>
         </motion.div>
 

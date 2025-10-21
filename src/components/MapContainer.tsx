@@ -174,6 +174,22 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
     })
   }, [L])
 
+  // Clear route and points
+  const clearRoute = useCallback(() => {
+    setStartPoint(null)
+    setEndPoint(null)
+    setRoute([])
+    setHasCollisions(false)
+    onPointSelected?.(null as any, 'start')
+    onPointSelected?.(null as any, 'end')
+  }, [onPointSelected])
+
+  // Reset map
+  const resetMap = useCallback(() => {
+    clearRoute()
+    window.location.reload()
+  }, [clearRoute])
+
   // Handle map clicks
   const handleMapClick = useCallback((lat: number, lng: number) => {
     const clickedPoint: Point = { lat, lng }
@@ -193,15 +209,21 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
       onPointSelected?.(clickedPoint, 'start')
       setShowCreateRouteButton(false)
     }
-  }, [startPoint, endPoint, onPointSelected])
+  }, [startPoint, endPoint, onPointSelected, clearRoute])
 
-  // Handle create route button click
-  const handleCreateRoute = useCallback(() => {
-    if (startPoint && endPoint) {
-      calculateRoute(startPoint, endPoint)
-      setShowCreateRouteButton(false)
+  // Check for collisions in a route
+  const checkRouteCollisions = useCallback((route: Point[], buildings: any[]): boolean => {
+    for (let i = 0; i < route.length - 1; i++) {
+      const segment = [route[i], route[i + 1]]
+      for (const building of buildings) {
+        const line = turf.lineString([[segment[0].lng, segment[0].lat], [segment[1].lng, segment[1].lat]])
+        if (turf.booleanIntersects(line, building)) {
+          return true
+        }
+      }
     }
-  }, [startPoint, endPoint])
+    return false
+  }, [])
 
   // Calculate safe route with PSO support
   const calculateRoute = useCallback(async (start: Point, end: Point) => {
@@ -271,37 +293,15 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
       setIsCalculating(false)
       setPsoProgress(null) // Clear progress when done
     }
-  }, [buildings, onRouteCalculated, onRouteSelect, googleMapsEnabled, enablePSO])
+  }, [buildings, onRouteCalculated, onRouteSelect, enablePSO, checkRouteCollisions])
 
-  // Check for collisions in a route
-  const checkRouteCollisions = useCallback((route: Point[], buildings: any[]): boolean => {
-    for (let i = 0; i < route.length - 1; i++) {
-      const segment = [route[i], route[i + 1]]
-      for (const building of buildings) {
-        const line = turf.lineString([[segment[0].lng, segment[0].lat], [segment[1].lng, segment[1].lat]])
-        if (turf.booleanIntersects(line, building)) {
-          return true
-        }
-      }
+  // Handle create route button click
+  const handleCreateRoute = useCallback(() => {
+    if (startPoint && endPoint) {
+      calculateRoute(startPoint, endPoint)
+      setShowCreateRouteButton(false)
     }
-    return false
-  }, [])
-
-  // Clear route and points
-  const clearRoute = useCallback(() => {
-    setStartPoint(null)
-    setEndPoint(null)
-    setRoute([])
-    setHasCollisions(false)
-    onPointSelected?.(null as any, 'start')
-    onPointSelected?.(null as any, 'end')
-  }, [onPointSelected])
-
-  // Reset map
-  const resetMap = useCallback(() => {
-    clearRoute()
-    window.location.reload()
-  }, [clearRoute])
+  }, [startPoint, endPoint, calculateRoute])
 
   if (!mapReady) {
     return (
@@ -473,7 +473,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           <div className="text-xs text-gray-600 space-y-1">
             <p>1. Click map for START</p>
             <p>2. Click again for END</p>
-            <p>3. Click "Create Route"</p>
+            <p>3. Click &quot;Create Route&quot;</p>
             <p>4. Red = no-fly zones</p>
           </div>
           
@@ -490,7 +490,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
               <p className="text-blue-800 font-medium">
                 📍 Points selected!
               </p>
-              <p className="text-blue-600">Click "Create Route"</p>
+              <p className="text-blue-600">Click &quot;Create Route&quot;</p>
             </div>
           )}
           

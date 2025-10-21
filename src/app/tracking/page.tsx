@@ -355,7 +355,7 @@ export default function TrackingPage() {
                 <h3 className="text-lg font-semibold text-white mb-3">How accurate is real-time tracking?</h3>
                 <p className="text-neutral-300 text-sm leading-relaxed">
                   Our drones update location every 30 seconds with GPS accuracy of ±3 meters. 
-                  You'll see near real-time position updates throughout the delivery journey.
+                  You&apos;ll see near real-time position updates throughout the delivery journey.
                 </p>
               </BubbleCard>
               
@@ -363,7 +363,7 @@ export default function TrackingPage() {
                 <h3 className="text-lg font-semibold text-white mb-3">What if weather affects delivery?</h3>
                 <p className="text-neutral-300 text-sm leading-relaxed">
                   Our system monitors weather conditions 24/7. If conditions become unsafe, 
-                  your delivery will be automatically rescheduled and you'll receive instant notification.
+                  your delivery will be automatically rescheduled and you&apos;ll receive instant notification.
                 </p>
               </BubbleCard>
               
@@ -376,7 +376,7 @@ export default function TrackingPage() {
               </BubbleCard>
               
               <BubbleCard className="p-6 bg-white/10 backdrop-blur-md border-white/20">
-                <h3 className="text-lg font-semibold text-white mb-3">What's the delivery time range?</h3>
+                <h3 className="text-lg font-semibold text-white mb-3">What&apos;s the delivery time range?</h3>
                 <p className="text-neutral-300 text-sm leading-relaxed">
                   Most deliveries within Surabaya complete in 8-20 minutes depending on distance and traffic. 
                   Cross-district deliveries typically take 15-25 minutes.

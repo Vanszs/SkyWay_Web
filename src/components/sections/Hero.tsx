@@ -45,7 +45,7 @@ export default function Hero() {
               </h1>
               
               <p className="text-lg lg:text-xl text-neutral-200 leading-relaxed max-w-lg">
-                Complete drone fleet hardware + integrated monitoring system for Surabaya's logistics partners. 
+                Complete drone fleet hardware + integrated monitoring system for Surabaya&apos;s logistics partners. 
                 We provide the drones and technology - you manage the packages.
               </p>
             </motion.div>
