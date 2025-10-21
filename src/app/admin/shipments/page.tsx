@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   Package,
   Search,
@@ -220,10 +221,12 @@ export default function ShipmentsPage() {
                   <Filter className="w-4 h-4" />
                   Export
                 </button>
-                <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#E0A458] to-[#c98d42] text-white hover:shadow-lg transition-all text-sm font-medium flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
-                  New Shipment
-                </button>
+                <Link href="/admin/new-order">
+                  <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#E0A458] to-[#c98d42] text-white hover:shadow-lg transition-all text-sm font-medium flex items-center gap-2">
+                    <Plus className="w-4 h-4" />
+                    New Shipment
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

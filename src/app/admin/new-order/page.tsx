@@ -18,7 +18,8 @@ import {
   Clock,
   Code,
   Copy,
-  Check
+  Check,
+  Bug
 } from 'lucide-react'
 import { ModernSidebar } from '@/components/admin/ModernSidebar'
 import { ChartCard } from '@/components/admin/ChartCard'
@@ -55,6 +56,8 @@ export default function NewOrderPage() {
   const [errors, setErrors] = useState<Errors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [jsonCopied, setJsonCopied] = useState(false)
+  const [psoEnabled, setPsoEnabled] = useState(true)
+  const [showPsoPopup, setShowPsoPopup] = useState(false)
 
   useEffect(() => {
     // Hide main navigation on admin pages
@@ -457,14 +460,20 @@ export default function NewOrderPage() {
 
                       {/* Map */}
                       <div className="border border-gray-200 rounded-xl overflow-hidden relative z-10">
-                        <div className="bg-gradient-to-r from-purple-50 to-blue-50 px-4 py-3 border-b border-gray-200">
+                        <div className={`bg-gradient-to-r px-4 py-3 border-b border-gray-200 ${psoEnabled ? 'from-purple-50 to-blue-50' : 'from-gray-50 to-gray-100'}`}>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <Zap className="w-4 h-4 text-purple-600" />
-                              <span className="text-sm font-medium text-gray-900">AI-Powered Route Map</span>
+                              <Zap className={`w-4 h-4 ${psoEnabled ? 'text-purple-600' : 'text-gray-500'}`} />
+                              <span className="text-sm font-medium text-gray-900">
+                                {psoEnabled ? 'AI-Powered Route Map' : 'Direct Route Map'}
+                              </span>
                             </div>
-                            <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-medium">
-                              PSO Active
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              psoEnabled 
+                                ? 'bg-purple-100 text-purple-700' 
+                                : 'bg-gray-200 text-gray-700'
+                            }`}>
+                              {psoEnabled ? 'PSO Active' : 'PSO Off'}
                             </span>
                           </div>
                           <p className="text-xs text-gray-600 mt-1">
@@ -474,7 +483,7 @@ export default function NewOrderPage() {
                         <div className="relative z-0" style={{height: '400px'}}>
                           <RouteMapContainer
                             onRouteSelect={handleRouteSelect}
-                            enablePSO={true}
+                            enablePSO={psoEnabled}
                             enableGoogleMaps={false}
                           />
                         </div>
@@ -651,38 +660,64 @@ export default function NewOrderPage() {
                   </ChartCard>
 
                   {/* PSO Info */}
-                  <div className="rounded-xl bg-gradient-to-br from-purple-50 to-blue-50 p-5 border border-purple-200">
+                  <div className={`rounded-xl p-5 border ${
+                    psoEnabled 
+                      ? 'bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200' 
+                      : 'bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200'
+                  }`}>
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                        psoEnabled ? 'bg-purple-600' : 'bg-gray-500'
+                      }`}>
                         <Zap className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-purple-900 mb-1">AI Route Optimization</h4>
-                        <p className="text-sm text-purple-700 mb-3">
-                          PSO algorithm finds the safest and most efficient route avoiding buildings and no-fly zones.
+                        <h4 className={`font-semibold mb-1 ${psoEnabled ? 'text-purple-900' : 'text-gray-900'}`}>
+                          {psoEnabled ? 'AI Route Optimization' : 'Direct Route Mode'}
+                        </h4>
+                        <p className={`text-sm mb-3 ${psoEnabled ? 'text-purple-700' : 'text-gray-700'}`}>
+                          {psoEnabled 
+                            ? 'PSO algorithm finds the safest and most efficient route avoiding buildings and no-fly zones.'
+                            : 'Route will be calculated as a straight line between pickup and delivery points.'
+                          }
                         </p>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="flex items-center gap-1">
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                            <span className="text-purple-700">Collision Free</span>
+                        {psoEnabled && (
+                          <>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                <span className="text-purple-700">Collision Free</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <span className="text-purple-700">Optimized</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                                <span className="text-purple-700">Smooth Flight</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                                <span className="text-purple-700">No-Fly Avoid</span>
+                              </div>
+                            </div>
+                            <div className="mt-3 p-2 bg-purple-100 rounded-lg">
+                              <p className="text-xs text-purple-800 font-medium">Building Clearance: 100m</p>
+                              <p className="text-xs text-purple-600">Safe distance maintained</p>
+                            </div>
+                          </>
+                        )}
+                        {!psoEnabled && (
+                          <div className="mt-3 p-2 bg-orange-100 rounded-lg border border-orange-200">
+                            <div className="flex items-start gap-2">
+                              <AlertCircle className="w-3 h-3 text-orange-700 mt-0.5 flex-shrink-0" />
+                              <div>
+                                <p className="text-xs text-orange-800 font-medium">Warning: No Obstacle Avoidance</p>
+                                <p className="text-xs text-orange-700">Route may pass through buildings or restricted zones</p>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            <span className="text-purple-700">Optimized</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                            <span className="text-purple-700">Smooth Flight</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                            <span className="text-purple-700">No-Fly Avoid</span>
-                          </div>
-                        </div>
-                        <div className="mt-3 p-2 bg-purple-100 rounded-lg">
-                          <p className="text-xs text-purple-800 font-medium">Building Clearance: 100m</p>
-                          <p className="text-xs text-purple-600">Safe distance maintained</p>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -690,6 +725,96 @@ export default function NewOrderPage() {
               </div>
             </form>
           </div>
+        </div>
+
+        {/* PSO Toggle Floating Button */}
+        <div className="fixed bottom-6 right-6 z-50">
+          {/* Popup Card */}
+          {showPsoPopup && (
+            <div className="absolute bottom-16 right-0 mb-2 animate-in slide-in-from-bottom-2 fade-in duration-200">
+              <div className="bg-white rounded-xl shadow-2xl border border-gray-200 p-4 w-64">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Bug className="w-5 h-5 text-purple-600" />
+                    <h3 className="font-semibold text-gray-900">Route Optimizer</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowPsoPopup(false)}
+                    className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X className="w-4 h-4 text-gray-500" />
+                  </button>
+                </div>
+                
+                <div className="space-y-3">
+                  <p className="text-xs text-gray-600">
+                    Toggle PSO (Particle Swarm Optimization) for intelligent route planning
+                  </p>
+                  
+                  {/* Toggle Switch */}
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <Zap className={`w-4 h-4 ${psoEnabled ? 'text-purple-600' : 'text-gray-400'}`} />
+                      <span className="text-sm font-medium text-gray-900">PSO Mode</span>
+                    </div>
+                    <button
+                      onClick={() => setPsoEnabled(!psoEnabled)}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        psoEnabled ? 'bg-purple-600' : 'bg-gray-300'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          psoEnabled ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {/* Status Description */}
+                  <div className={`p-3 rounded-lg ${psoEnabled ? 'bg-purple-50 border border-purple-200' : 'bg-gray-50 border border-gray-200'}`}>
+                    <div className="flex items-start gap-2">
+                      {psoEnabled ? (
+                        <CheckCircle className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
+                      ) : (
+                        <AlertCircle className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                      )}
+                      <div>
+                        <p className={`text-xs font-medium ${psoEnabled ? 'text-purple-900' : 'text-gray-900'}`}>
+                          {psoEnabled ? 'Smart Route Active' : 'Direct Route Mode'}
+                        </p>
+                        <p className={`text-xs mt-1 ${psoEnabled ? 'text-purple-700' : 'text-gray-600'}`}>
+                          {psoEnabled 
+                            ? 'AI avoids buildings with 100m clearance for safe flight path'
+                            : 'Straight line route without obstacle avoidance'
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Floating Bug Button */}
+          <button
+            onClick={() => setShowPsoPopup(!showPsoPopup)}
+            className={`p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 ${
+              psoEnabled 
+                ? 'bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800' 
+                : 'bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700'
+            }`}
+            title="Toggle Route Optimization"
+          >
+            <Bug className="w-6 h-6 text-white" />
+            {psoEnabled && (
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+              </span>
+            )}
+          </button>
         </div>
       </div>
     </div>
