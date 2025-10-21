@@ -32,109 +32,139 @@ export function calculateFakePSORoute(
     return [start, end]
   }
   
-  // Otherwise, create waypoints to avoid buildings
-  console.log('Direct line unsafe, creating avoidance waypoints')
+  // Otherwise, create waypoints to avoid buildings with smooth curves
+  console.log('Direct line unsafe, creating smooth avoidance waypoints')
   
-  // Calculate intermediate waypoints
-  const numWaypoints = 5 // Fixed number of waypoints for simplicity
-  const totalDistance = turf.distance(
-    turf.point([start.lng, start.lat]),
-    turf.point([end.lng, end.lat]),
-    { units: 'kilometers' }
-  )
+  // Find all buildings that intersect with the direct line
+  const intersectingBuildings = []
+  for (const building of buildings) {
+    const buffered = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
+    if (buffered && turf.booleanIntersects(directLine, buffered)) {
+      intersectingBuildings.push(building)
+    }
+  }
   
-  for (let i = 1; i < numWaypoints; i++) {
-    const fraction = i / numWaypoints
-    const targetPoint = turf.along(directLine, fraction * totalDistance, { units: 'kilometers' })
+  // Sort buildings by distance from start
+  intersectingBuildings.sort((a, b) => {
+    const centerA = turf.center(a)
+    const centerB = turf.center(b)
+    const distA = turf.distance(
+      turf.point([start.lng, start.lat]),
+      centerA,
+      { units: 'kilometers' }
+    )
+    const distB = turf.distance(
+      turf.point([start.lng, start.lat]),
+      centerB,
+      { units: 'kilometers' }
+    )
+    return distA - distB
+  })
+  
+  let currentPoint = start
+  
+  // Create smooth waypoints around each building
+  for (const building of intersectingBuildings) {
+    const buildingCenter = turf.center(building)
+    const buildingBounds = turf.bbox(building)
     
-    // Check if this segment intersects with any building buffer
-    const prevPoint = route[route.length - 1]
-    const testLine = turf.lineString([
-      [prevPoint.lng, prevPoint.lat],
-      [targetPoint.geometry.coordinates[0], targetPoint.geometry.coordinates[1]]
-    ])
+    // Calculate building dimensions
+    const buildingWidth = Math.abs(buildingBounds[2] - buildingBounds[0]) // lng difference
+    const buildingHeight = Math.abs(buildingBounds[3] - buildingBounds[1]) // lat difference
     
-    let hasCollision = false
-    let closestBuilding = null
-    let minDistance = Infinity
+    // Calculate safe distance (building size + safety margin)
+    const safeDistance = Math.max(
+      safeDistanceKm * 2, // 200m minimum
+      Math.max(buildingWidth, buildingHeight) + safeDistanceKm
+    )
     
-    for (const building of buildings) {
-      const buffered = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
-      if (buffered && turf.booleanIntersects(testLine, buffered)) {
-        hasCollision = true
-        const buildingCenter = turf.center(building)
-        const distance = turf.distance(
-          turf.point([prevPoint.lng, prevPoint.lat]),
-          buildingCenter,
-          { units: 'kilometers' }
-        )
-        
-        if (distance < minDistance) {
-          minDistance = distance
-          closestBuilding = building
-        }
-      }
+    // Calculate approach and exit angles for smooth turns
+    const approachAngle = turf.bearing(
+      turf.point([currentPoint.lng, currentPoint.lat]),
+      buildingCenter
+    )
+    
+    const exitAngle = turf.bearing(
+      buildingCenter,
+      turf.point([end.lng, end.lat])
+    )
+    
+    // Determine which side to go around (left or right)
+    const angleDiff = ((exitAngle - approachAngle + 180) % 360) - 180
+    const goLeft = angleDiff > 0
+    
+    // Calculate smooth arc waypoints
+    const arcRadius = safeDistance
+    const arcAngle = 90 // 90 degree arc around building
+    const numArcPoints = 3 // Number of points in the arc for smoothness
+    
+    // Start point of arc (before building)
+    const startArcAngle = approachAngle + (goLeft ? -90 : 90)
+    const startArcPoint = turf.destination(
+      buildingCenter,
+      arcRadius,
+      startArcAngle,
+      { units: 'kilometers' }
+    )
+    
+    // Add approach waypoint to smooth the turn
+    const approachDistance = Math.min(arcRadius * 0.5, 0.1) // Max 100m approach
+    const approachPoint = turf.destination(
+      turf.point([currentPoint.lng, currentPoint.lat]),
+      approachDistance,
+      startArcAngle,
+      { units: 'kilometers' }
+    )
+    
+    route.push({
+      lat: approachPoint.geometry.coordinates[1],
+      lng: approachPoint.geometry.coordinates[0]
+    })
+    
+    // Add arc waypoints for smooth turn around building
+    for (let i = 1; i <= numArcPoints; i++) {
+      const arcProgress = i / numArcPoints
+      const currentArcAngle = startArcAngle + (goLeft ? arcAngle : -arcAngle) * arcProgress
+      
+      const arcPoint = turf.destination(
+        buildingCenter,
+        arcRadius,
+        currentArcAngle,
+        { units: 'kilometers' }
+      )
+      
+      route.push({
+        lat: arcPoint.geometry.coordinates[1],
+        lng: arcPoint.geometry.coordinates[0]
+      })
     }
     
-    if (hasCollision && closestBuilding) {
-      // Create avoidance waypoint
-      const buildingCenter = turf.center(closestBuilding)
-      const avoidanceDistance = safeDistanceKm * 2 // 200m buffer for avoidance
-      
-      // Calculate perpendicular direction to go around building
-      const toBuilding = turf.bearing(
-        turf.point([prevPoint.lng, prevPoint.lat]),
-        buildingCenter
-      )
-      
-      // Go around the building (left or right)
-      const leftBearing = (toBuilding - 90 + 360) % 360
-      const rightBearing = (toBuilding + 90) % 360
-      
-      // Try both directions
-      const leftPoint = turf.destination(
-        buildingCenter,
-        avoidanceDistance,
-        leftBearing,
-        { units: 'kilometers' }
-      )
-      
-      const rightPoint = turf.destination(
-        buildingCenter,
-        avoidanceDistance,
-        rightBearing,
-        { units: 'kilometers' }
-      )
-      
-      // Choose the better option
-      const leftDistance = turf.distance(
-        leftPoint,
-        turf.point([end.lng, end.lat]),
-        { units: 'kilometers' }
-      )
-      
-      const rightDistance = turf.distance(
-        rightPoint,
-        turf.point([end.lng, end.lat]),
-        { units: 'kilometers' }
-      )
-      
-      const chosenPoint = leftDistance < rightDistance ? leftPoint : rightPoint
-      
-      const waypoint: Point = {
-        lat: chosenPoint.geometry.coordinates[1],
-        lng: chosenPoint.geometry.coordinates[0]
-      }
-      
-      route.push(waypoint)
-    } else {
-      // No collision, add the target point
-      const waypoint: Point = {
-        lat: targetPoint.geometry.coordinates[1],
-        lng: targetPoint.geometry.coordinates[0]
-      }
-      
-      route.push(waypoint)
+    // Exit point of arc (after building)
+    const exitArcAngle = startArcAngle + (goLeft ? arcAngle : -arcAngle)
+    const exitArcPoint = turf.destination(
+      buildingCenter,
+      arcRadius,
+      exitArcAngle,
+      { units: 'kilometers' }
+    )
+    
+    // Add exit waypoint to smooth the turn
+    const exitDistance = Math.min(arcRadius * 0.5, 0.1) // Max 100m exit
+    const exitPoint = turf.destination(
+      exitArcPoint,
+      exitDistance,
+      exitArcAngle,
+      { units: 'kilometers' }
+    )
+    
+    route.push({
+      lat: exitPoint.geometry.coordinates[1],
+      lng: exitPoint.geometry.coordinates[0]
+    })
+    
+    currentPoint = {
+      lat: exitPoint.geometry.coordinates[1],
+      lng: exitPoint.geometry.coordinates[0]
     }
   }
   
@@ -145,7 +175,7 @@ export function calculateFakePSORoute(
   return optimizeSimpleRoute(route, buildings, safeDistance)
 }
 
-// Simple route optimization
+// Enhanced route optimization with smooth curve preservation
 function optimizeSimpleRoute(
   route: Point[],
   buildings: any[],
@@ -161,25 +191,77 @@ function optimizeSimpleRoute(
     const current = route[i]
     const next = route[i + 1]
     
-    // Check if we can remove current point
-    const directLine = turf.lineString([[prev.lng, prev.lat], [next.lng, next.lat]])
-    let canRemove = true
+    // Calculate turn angle to preserve smooth curves
+    const angle1 = Math.atan2(
+      current.lat - prev.lat,
+      current.lng - prev.lng
+    )
+    const angle2 = Math.atan2(
+      next.lat - current.lat,
+      next.lng - current.lng
+    )
+    let angleDiff = Math.abs(angle2 - angle1)
     
-    for (const building of buildings) {
-      const buffered = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
-      if (buffered && turf.booleanIntersects(directLine, buffered)) {
-        canRemove = false
-        break
-      }
+    // Normalize angle difference to [0, π]
+    if (angleDiff > Math.PI) {
+      angleDiff = 2 * Math.PI - angleDiff
     }
     
-    if (!canRemove) {
+    // Keep waypoints that create sharp turns (> 30 degrees)
+    const isSharpTurn = angleDiff > (Math.PI / 6) // 30 degrees
+    
+    // Check if we can remove current point (only if not a sharp turn)
+    if (!isSharpTurn) {
+      const directLine = turf.lineString([[prev.lng, prev.lat], [next.lng, next.lat]])
+      let canRemove = true
+      
+      for (const building of buildings) {
+        const buffered = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
+        if (buffered && turf.booleanIntersects(directLine, buffered)) {
+          canRemove = false
+          break
+        }
+      }
+      
+      if (!canRemove) {
+        optimized.push(current)
+      }
+    } else {
+      // Keep sharp turn waypoints for smooth navigation
       optimized.push(current)
     }
   }
   
   optimized.push(route[route.length - 1])
   
-  console.log(`Fake PSO: Optimized from ${route.length} to ${optimized.length} waypoints`)
-  return optimized
+  // Add intermediate points for very long straight segments to maintain smoothness
+  const finalOptimized: Point[] = [optimized[0]]
+  for (let i = 1; i < optimized.length; i++) {
+    const prev = finalOptimized[finalOptimized.length - 1]
+    const current = optimized[i]
+    
+    const segmentDistance = turf.distance(
+      turf.point([prev.lng, prev.lat]),
+      turf.point([current.lng, current.lat]),
+      { units: 'kilometers' }
+    )
+    
+    // Add intermediate point if segment is too long (> 500m)
+    if (segmentDistance > 0.5) {
+      const midPoint = turf.midpoint(
+        turf.point([prev.lng, prev.lat]),
+        turf.point([current.lng, current.lat])
+      )
+      
+      finalOptimized.push({
+        lat: midPoint.geometry.coordinates[1],
+        lng: midPoint.geometry.coordinates[0]
+      })
+    }
+    
+    finalOptimized.push(current)
+  }
+  
+  console.log(`Fake PSO: Optimized from ${route.length} to ${finalOptimized.length} waypoints with smooth curves`)
+  return finalOptimized
 }
