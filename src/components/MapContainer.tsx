@@ -206,52 +206,61 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
   const calculateRoute = useCallback(async (start: Point, end: Point) => {
     setIsCalculating(true)
     try {
-      console.log('Calculating route from', start, 'to', end)
+      console.log('Calculating route from', start, 'to', end, 'PSO enabled:', enablePSO)
       
       let finalRoute = []
       let distance = 0
       let startAddress = `Lat: ${start.lat.toFixed(6)}, Lng: ${start.lng.toFixed(6)}`
       let endAddress = `Lat: ${end.lat.toFixed(6)}, Lng: ${end.lng.toFixed(6)}`
       
-      // Try to use Google Maps if enabled
-      if (googleMapsEnabled) {
-        try {
-          const googleRouteData = await googleMapsService.getDroneOptimizedRoute(
-            { lat: start.lat, lng: start.lng },
-            { lat: end.lat, lng: end.lng }
-          )
-          
-          // Convert Google Maps route to our format
-          const decodedPath = googleRouteData.route.legs[0].steps.flatMap(step =>
-            decodePolyline(step.polyline.encodedPolyline)
-          )
-          
-          finalRoute = decodedPath.map(point => ({ lat: point.lat, lng: point.lng }))
-          distance = googleRouteData.route.distanceMeters / 1000 // Convert to km
-          startAddress = googleRouteData.addresses.origin
-          endAddress = googleRouteData.addresses.destination
-          
-          // Store elevation data for visualization
-          setElevationData(googleRouteData.terrainAnalysis.elevationProfile)
-          
-          console.log('Google Maps route calculated:', { googleRouteData })
-        } catch (googleError) {
-          console.warn('Google Maps routing failed, falling back to local pathfinding:', googleError)
-          
-          // Fallback to simple route calculation with enhanced building avoidance
+      // If PSO is disabled, create a straight line route
+      if (!enablePSO) {
+        console.log('PSO disabled - creating straight line route')
+        finalRoute = [start, end]
+        distance = calculateRouteDistance(finalRoute)
+        console.log('Straight line route calculated:', { route: finalRoute, distance })
+      } else {
+        // PSO is enabled - use optimized route calculation
+        // Try to use Google Maps if enabled
+        if (googleMapsEnabled) {
+          try {
+            const googleRouteData = await googleMapsService.getDroneOptimizedRoute(
+              { lat: start.lat, lng: start.lng },
+              { lat: end.lat, lng: end.lng }
+            )
+            
+            // Convert Google Maps route to our format
+            const decodedPath = googleRouteData.route.legs[0].steps.flatMap(step =>
+              decodePolyline(step.polyline.encodedPolyline)
+            )
+            
+            finalRoute = decodedPath.map(point => ({ lat: point.lat, lng: point.lng }))
+            distance = googleRouteData.route.distanceMeters / 1000 // Convert to km
+            startAddress = googleRouteData.addresses.origin
+            endAddress = googleRouteData.addresses.destination
+            
+            // Store elevation data for visualization
+            setElevationData(googleRouteData.terrainAnalysis.elevationProfile)
+            
+            console.log('Google Maps route calculated:', { googleRouteData })
+          } catch (googleError) {
+            console.warn('Google Maps routing failed, falling back to local pathfinding:', googleError)
+            
+            // Fallback to simple route calculation with enhanced building avoidance
+            console.log('Using simple route calculation with 100m safe distance for enhanced building avoidance')
+            const simpleRoute = calculateSimpleRoute(start, end, buildings, 100)
+            finalRoute = simpleRoute
+            distance = calculateRouteDistance(finalRoute)
+            console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 100) })
+          }
+        } else {
+          // Use simple route calculation with enhanced building avoidance
           console.log('Using simple route calculation with 100m safe distance for enhanced building avoidance')
           const simpleRoute = calculateSimpleRoute(start, end, buildings, 100)
           finalRoute = simpleRoute
           distance = calculateRouteDistance(finalRoute)
           console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 100) })
         }
-      } else {
-        // Use simple route calculation with enhanced building avoidance
-        console.log('Using simple route calculation with 100m safe distance for enhanced building avoidance')
-        const simpleRoute = calculateSimpleRoute(start, end, buildings, 100)
-        finalRoute = simpleRoute
-        distance = calculateRouteDistance(finalRoute)
-        console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 100) })
       }
       
       setRoute(finalRoute)
@@ -290,7 +299,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
       setIsCalculating(false)
       setPsoProgress(null) // Clear progress when done
     }
-  }, [buildings, onRouteCalculated, onRouteSelect, googleMapsEnabled])
+  }, [buildings, onRouteCalculated, onRouteSelect, googleMapsEnabled, enablePSO])
 
   // Check for collisions in a route
   const checkRouteCollisions = useCallback((route: Point[], buildings: any[]): boolean => {
@@ -478,9 +487,9 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
             <p className="text-blue-800 font-medium flex items-center">
               <Navigation className="w-3 h-3 mr-1" />
-              Simple Route Active
+              {enablePSO ? 'PSO Route Active' : 'Direct Route Active'}
             </p>
-            <p className="text-blue-600">100m safety distance</p>
+            <p className="text-blue-600">{enablePSO ? 'AI-optimized path' : 'Straight line path'}</p>
           </div>
           
           {showCreateRouteButton && (
@@ -531,7 +540,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
             </div>
             <div className="flex items-center">
               <div className="w-3 h-0.5 mr-1 bg-blue-500"></div>
-              <span>Simple Route</span>
+              <span>{enablePSO ? 'Optimized Route' : 'Direct Route'}</span>
             </div>
             <div className="flex items-center">
               <div className="w-3 h-3 bg-red-500 opacity-30 border border-red-500 mr-1"></div>
