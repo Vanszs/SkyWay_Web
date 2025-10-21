@@ -11,13 +11,39 @@ function calculateDistance(point1: Point, point2: Point): number {
   );
 }
 
-// Helper function to check if a line segment collides with any building
+// Helper function to check if a line segment collides with any building or is too close
 function checkLineCollision(start: Point, end: Point, buildings: any[]): boolean {
   const line = turf.lineString([[start.lng, start.lat], [end.lng, end.lat]]);
   
   for (const building of buildings) {
+    // Check direct intersection with building
     if (turf.booleanIntersects(line, building)) {
       return true;
+    }
+    
+    // Create buffer zone for this building
+    const buffered = turf.buffer(building, 0.1, { units: 'kilometers' });
+    if (buffered && turf.booleanIntersects(line, buffered)) {
+      return true;
+    }
+    
+    // Check multiple points along the line segment for better collision detection
+    const segmentLength = turf.distance(
+      turf.point([start.lng, start.lat]),
+      turf.point([end.lng, end.lat]),
+      { units: 'kilometers' }
+    );
+    
+    // Sample points every 20 meters along the segment (reduced for performance)
+    const numSamples = Math.max(2, Math.ceil(segmentLength / 0.02));
+    for (let i = 0; i <= numSamples; i++) {
+      const fraction = i / numSamples;
+      const interpolatedPoint = turf.along(line, fraction * segmentLength, { units: 'kilometers' });
+      
+      // Check if point is within buffer zone
+      if (buffered && turf.booleanContains(buffered, interpolatedPoint)) {
+        return true;
+      }
     }
   }
   
@@ -38,18 +64,18 @@ export interface PSOConfig {
   smoothnessWeight: number;    // Weight for smoothness penalty
 }
 
-// Fully optimized automatic PSO configuration for best straight routes
+// Fully optimized automatic PSO configuration for best routes with 100m building avoidance
 export const DEFAULT_PSO_CONFIG: PSOConfig = {
-  populationSize: 120,   // Large population for comprehensive exploration
-  maxIterations: 400,    // Maximum iterations for convergence
-  w: 0.4,               // Lower inertia for faster convergence to straight lines
-  c1: 2.5,              // Higher cognitive coefficient for personal best
-  c2: 2.5,              // Higher social coefficient for global best
-  maxVelocity: 0.0008,  // Very small velocity for precise adjustments
-  waypointCount: 10,    // More waypoints for smooth, curved routes
-  collisionWeight: 200000, // Very high penalty for collisions
-  distanceWeight: 1,     // Minimal priority for distance
-  smoothnessWeight: 10   // Very high priority for smooth, straight routes
+  populationSize: 80,    // Reduced population to prevent freezing
+  maxIterations: 200,    // Reduced iterations for faster performance
+  w: 0.7,               // Higher inertia for better exploration
+  c1: 1.5,              // Cognitive coefficient for personal best
+  c2: 1.5,              // Social coefficient for global best
+  maxVelocity: 0.002,   // Higher velocity for faster exploration
+  waypointCount: 8,     // Fewer waypoints for faster computation
+  collisionWeight: 2000000, // Even higher penalty for collisions
+  distanceWeight: 1,     // Moderate priority for distance
+  smoothnessWeight: 3    // Lower priority for smooth routes
 };
 
 // Particle class for PSO
@@ -85,8 +111,8 @@ class Particle {
       const baseLat = this.start.lat + (latStep * i);
       const baseLng = this.start.lng + (lngStep * i);
       
-      // Add smaller random variation for more focused search
-      const variation = 0.002; // ~200m variation (reduced from 500m)
+      // Add random variation with larger range for better obstacle avoidance
+      const variation = 0.005; // ~500m variation for better exploration
       waypoints.push({
         lat: baseLat + (Math.random() - 0.5) * variation,
         lng: baseLng + (Math.random() - 0.5) * variation
@@ -96,11 +122,11 @@ class Particle {
     return waypoints;
   }
 
-  // Initialize velocity with smaller random values
+  // Initialize velocity with appropriate random values for better exploration
   private initializeVelocity(): number[][] {
     return Array(this.config.waypointCount).fill(null).map(() => [
-      (Math.random() - 0.5) * 0.0005, // lat velocity (reduced)
-      (Math.random() - 0.5) * 0.0005  // lng velocity (reduced)
+      (Math.random() - 0.5) * 0.001, // lat velocity
+      (Math.random() - 0.5) * 0.001  // lng velocity
     ]);
   }
 
@@ -186,9 +212,16 @@ class Particle {
       const buildingCenter = turf.center(building);
       const distance = turf.pointToLineDistance(buildingCenter, line, { units: 'kilometers' });
       
-      // Add penalty if within 15 meters (0.015 km) of building (increased safety margin)
-      if (distance < 0.015) {
-        proximityPenalty += (0.015 - distance) * 5000; // Higher penalty for closer proximity
+      // Add penalty if within 100 meters (0.1 km) of building - strict safety margin
+      if (distance < 0.1) {
+        // Exponential penalty for closer proximity
+        const penaltyMultiplier = Math.pow((0.1 - distance) * 10, 2);
+        proximityPenalty += penaltyMultiplier * 10000; // Much higher penalty
+      }
+      
+      // Additional penalty for direct intersection
+      if (turf.booleanIntersects(line, building)) {
+        proximityPenalty += 500000; // Extreme penalty for intersection
       }
     }
     
@@ -250,19 +283,42 @@ export class PSOOptimizer {
     this.initializeSwarm();
   }
 
-  // Calculate penalty for being too close to buildings (moved from Particle class)
+  // Calculate penalty for being too close to buildings with individual buffer zones
   private calculateBuildingProximityPenalty(start: Point, end: Point): number {
     const line = turf.lineString([[start.lng, start.lat], [end.lng, end.lat]]);
     let proximityPenalty = 0;
     
     for (const building of this.buildings) {
-      // Calculate distance from line segment to building
-      const buildingCenter = turf.center(building);
-      const distance = turf.pointToLineDistance(buildingCenter, line, { units: 'kilometers' });
+      // Create buffer zone for this building
+      const buffered = turf.buffer(building, 0.1, { units: 'kilometers' });
       
-      // Add penalty if within 15 meters (0.015 km) of building (increased safety margin)
-      if (distance < 0.015) {
-        proximityPenalty += (0.015 - distance) * 10000; // Higher penalty for closer proximity
+      // Check against buffer zone
+      if (buffered && turf.booleanIntersects(line, buffered)) {
+        proximityPenalty += 1000000; // Extreme penalty for entering buffer zone
+      }
+      
+      // Additional check for direct building intersection
+      if (turf.booleanIntersects(line, building)) {
+        proximityPenalty += 2000000; // Extreme penalty for building intersection
+      }
+      
+      // Check multiple points along the line segment for better collision detection
+      const segmentLength = turf.distance(
+        turf.point([start.lng, start.lat]),
+        turf.point([end.lng, end.lat]),
+        { units: 'kilometers' }
+      );
+      
+      // Sample points every 20 meters along the segment (reduced for performance)
+      const numSamples = Math.max(2, Math.ceil(segmentLength / 0.02));
+      for (let i = 0; i <= numSamples; i++) {
+        const fraction = i / numSamples;
+        const interpolatedPoint = turf.along(line, fraction * segmentLength, { units: 'kilometers' });
+        
+        // Check if point is within buffer zone
+        if (buffered && turf.booleanContains(buffered, interpolatedPoint)) {
+          proximityPenalty += 500000; // High penalty for point in buffer
+        }
       }
     }
     
@@ -487,9 +543,9 @@ export class PSOOptimizer {
         
         // Check if we can remove current point
         if (!checkLineCollision(prev, next, this.buildings)) {
-          // Check proximity to buildings
+          // Check proximity to buildings with strict 100m safety distance
           const proximityPenalty = this.calculateBuildingProximityPenalty(prev, next);
-          if (proximityPenalty < 5) { // Very strict threshold (5m safety distance)
+          if (proximityPenalty === 0) { // Only remove if completely safe (100m+ distance)
             optimized.splice(i, 1);
             changed = true;
             break; // Restart the loop

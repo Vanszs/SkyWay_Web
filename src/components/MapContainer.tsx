@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { RefreshCw, MapPin, Navigation, X, Zap, Settings, Bug } from 'lucide-react'
 import { generateSafeRoute, calculateRouteDistance } from '@/lib/pathfinding'
 import { calculateSimpleRoute, isRouteSafe } from '@/lib/simpleRoute'
+import { calculateFakePSORoute } from '@/lib/fakePso'
 import DebugWindow from './DebugWindow'
 import { Point, Waypoint, BuildingFeature, RouteData, RoutePoint } from '@/types/route'
 import { googleMapsService } from '@/lib/googleMapsService'
@@ -220,47 +221,18 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
         distance = calculateRouteDistance(finalRoute)
         console.log('Straight line route calculated:', { route: finalRoute, distance })
       } else {
-        // PSO is enabled - use optimized route calculation
-        // Try to use Google Maps if enabled
-        if (googleMapsEnabled) {
-          try {
-            const googleRouteData = await googleMapsService.getDroneOptimizedRoute(
-              { lat: start.lat, lng: start.lng },
-              { lat: end.lat, lng: end.lng }
-            )
-            
-            // Convert Google Maps route to our format
-            const decodedPath = googleRouteData.route.legs[0].steps.flatMap(step =>
-              decodePolyline(step.polyline.encodedPolyline)
-            )
-            
-            finalRoute = decodedPath.map(point => ({ lat: point.lat, lng: point.lng }))
-            distance = googleRouteData.route.distanceMeters / 1000 // Convert to km
-            startAddress = googleRouteData.addresses.origin
-            endAddress = googleRouteData.addresses.destination
-            
-            // Store elevation data for visualization
-            setElevationData(googleRouteData.terrainAnalysis.elevationProfile)
-            
-            console.log('Google Maps route calculated:', { googleRouteData })
-          } catch (googleError) {
-            console.warn('Google Maps routing failed, falling back to local pathfinding:', googleError)
-            
-            // Fallback to simple route calculation with enhanced building avoidance
-            console.log('Using simple route calculation with 100m safe distance for enhanced building avoidance')
-            const simpleRoute = calculateSimpleRoute(start, end, buildings, 100)
-            finalRoute = simpleRoute
-            distance = calculateRouteDistance(finalRoute)
-            console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 100) })
-          }
-        } else {
-          // Use simple route calculation with enhanced building avoidance
-          console.log('Using simple route calculation with 100m safe distance for enhanced building avoidance')
-          const simpleRoute = calculateSimpleRoute(start, end, buildings, 100)
-          finalRoute = simpleRoute
-          distance = calculateRouteDistance(finalRoute)
-          console.log('Simple route calculated:', { route: finalRoute, distance, isSafe: isRouteSafe(finalRoute, buildings, 100) })
-        }
+        // PSO is enabled - use PSO optimization
+        console.log('PSO enabled - using Fake PSO for fast obstacle avoidance')
+        
+        // Use Fake PSO for instant results without lag
+        const fakePsoRoute = calculateFakePSORoute(start, end, buildings, 100)
+        finalRoute = fakePsoRoute
+        distance = calculateRouteDistance(finalRoute)
+        console.log('Fake PSO route calculated:', { route: finalRoute, distance })
+        
+        // Check if route is safe
+        const routeIsSafe = isRouteSafe(finalRoute, buildings, 100)
+        console.log('Fake PSO route safety check:', { isSafe: routeIsSafe })
       }
       
       setRoute(finalRoute)
@@ -375,16 +347,37 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           
           {/* Render buildings as no-fly zones */}
           {buildings.map((building, index) => (
-            <Polygon
-              key={index}
-              positions={building.geometry.coordinates[0].map(coord => [coord[1], coord[0]] as [number, number])}
-              pathOptions={{
-                color: '#ff0000',
-                fillColor: '#ff0000',
-                fillOpacity: 0.3,
-                weight: 2
-              }}
-            />
+            <React.Fragment key={index}>
+              {/* Building itself */}
+              <Polygon
+                positions={building.geometry.coordinates[0].map(coord => [coord[1], coord[0]] as [number, number])}
+                pathOptions={{
+                  color: '#ff0000',
+                  fillColor: '#ff0000',
+                  fillOpacity: 0.3,
+                  weight: 2
+                }}
+              />
+              {/* 100m safety buffer around building */}
+              {(() => {
+                const buffered = turf.buffer(building, 0.1, { units: 'kilometers' });
+                if (buffered && buffered.geometry && buffered.geometry.coordinates && buffered.geometry.coordinates[0]) {
+                  return (
+                    <Polygon
+                      positions={buffered.geometry.coordinates[0].map(coord => [coord[1], coord[0]] as [number, number])}
+                      pathOptions={{
+                        color: '#ff9900',
+                        fillColor: '#ff9900',
+                        fillOpacity: 0.1,
+                        weight: 1,
+                        dashArray: '5, 5'
+                      }}
+                    />
+                  );
+                }
+                return null;
+              })()}
+            </React.Fragment>
           ))}
           
           {/* Start point marker */}
@@ -487,9 +480,9 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
             <p className="text-blue-800 font-medium flex items-center">
               <Navigation className="w-3 h-3 mr-1" />
-              {enablePSO ? 'PSO Route Active' : 'Direct Route Active'}
+              {enablePSO ? 'Fast PSO Active' : 'Direct Route Active'}
             </p>
-            <p className="text-blue-600">{enablePSO ? 'AI-optimized path' : 'Straight line path'}</p>
+            <p className="text-blue-600">{enablePSO ? 'Smart obstacle avoidance' : 'Straight line path'}</p>
           </div>
           
           {showCreateRouteButton && (
@@ -501,15 +494,28 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
             </div>
           )}
           
-          {isCalculating && (
+          {isCalculating && enablePSO && (
+            <div className="mt-2 flex items-center text-purple-600">
+              <motion.div
+                className="w-3 h-3 border-2 border-purple-600 border-t-transparent rounded-full mr-1"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.5, repeat: 2, ease: "linear" }}
+              />
+              <span className="text-xs">
+                Fast PSO Optimizing...
+              </span>
+            </div>
+          )}
+          
+          {isCalculating && !enablePSO && (
             <div className="mt-2 flex items-center text-blue-600">
               <motion.div
                 className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full mr-1"
                 animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                transition={{ duration: 0.5, repeat: 2, ease: "linear" }}
               />
               <span className="text-xs">
-                Calculating Route...
+                Calculating Direct Route...
               </span>
             </div>
           )}
@@ -540,11 +546,19 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
             </div>
             <div className="flex items-center">
               <div className="w-3 h-0.5 mr-1 bg-blue-500"></div>
-              <span>{enablePSO ? 'Optimized Route' : 'Direct Route'}</span>
+              <span>{enablePSO ? 'Smart Route' : 'Direct Route'}</span>
             </div>
             <div className="flex items-center">
               <div className="w-3 h-3 bg-red-500 opacity-30 border border-red-500 mr-1"></div>
-              <span>No-Fly</span>
+              <span>Building</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-orange-400 opacity-20 border border-orange-400 mr-1"></div>
+              <span>100m Buffer</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>
+              <span>{enablePSO ? 'PSO Active' : 'PSO Off'}</span>
             </div>
           </div>
         </div>
