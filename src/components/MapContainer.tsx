@@ -422,27 +422,21 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
                 />
               )}
               
-              {/* Waypoint markers for PSO routes */}
-              {enablePSO && route.length > 2 && route.slice(1, -1).map((point, index) => (
+              {/* Waypoint markers for PSO routes - COMMENTED OUT */}
+              {/* {enablePSO && route.length > 2 && route.slice(1, -1).map((point, index) => (
                 <Marker
                   key={`waypoint-${index}`}
                   position={[point.lat, point.lng]}
                   icon={L?.divIcon({
                     className: 'custom-waypoint-marker',
-                    html: `
-                      <div class="relative">
-                        <div class="w-3 h-3 bg-purple-400 rounded-full border border-white shadow-md"></div>
-                        <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white text-xs px-1 rounded whitespace-nowrap">
-                          WP${index + 1}
-                        </div>
-                      </div>
-                    `,
+                    html: `<div class="relative"><div class="w-3 h-3 bg-purple-400 rounded-full border border-white shadow-md"></div></div>`,
                     iconSize: [20, 24],
                     iconAnchor: [10, 24],
-                    popupAnchor: [0, -24]
+                    popupAnchor: [0, -24],
+                    title: `Waypoint ${index + 1}`
                   })}
                 />
-              ))}
+              ))} */}
             </>
           )}
         </MapContainer>
