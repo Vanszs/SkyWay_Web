@@ -19,7 +19,9 @@ import {
   Code,
   Copy,
   Check,
-  Bug
+  Bug,
+  Maximize2,
+  Minimize2
 } from 'lucide-react'
 import { ModernSidebar } from '@/components/admin/ModernSidebar'
 import { ChartCard } from '@/components/admin/ChartCard'
@@ -58,6 +60,7 @@ export default function NewOrderPage() {
   const [jsonCopied, setJsonCopied] = useState(false)
   const [psoEnabled, setPsoEnabled] = useState(true)
   const [showPsoPopup, setShowPsoPopup] = useState(false)
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false)
 
   useEffect(() => {
     // Hide main navigation on admin pages
@@ -238,6 +241,32 @@ export default function NewOrderPage() {
       setTimeout(() => setJsonCopied(false), 2000)
     }
   }
+
+  const toggleMapFullscreen = () => {
+    console.log('🔍 Toggling fullscreen:', !isMapFullscreen)
+    setIsMapFullscreen(!isMapFullscreen)
+  }
+
+  // Close fullscreen with ESC key
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMapFullscreen) {
+        setIsMapFullscreen(false)
+      }
+    }
+    
+    if (isMapFullscreen) {
+      document.addEventListener('keydown', handleEsc)
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+    
+    return () => {
+      document.removeEventListener('keydown', handleEsc)
+      document.body.style.overflow = 'auto'
+    }
+  }, [isMapFullscreen])
 
   return (
     <div className="min-h-screen bg-[#F0F0F0]">
@@ -468,13 +497,15 @@ export default function NewOrderPage() {
                                 {psoEnabled ? 'AI-Powered Route Map' : 'Direct Route Map'}
                               </span>
                             </div>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              psoEnabled 
-                                ? 'bg-purple-100 text-purple-700' 
-                                : 'bg-gray-200 text-gray-700'
-                            }`}>
-                              {psoEnabled ? 'PSO Active' : 'PSO Off'}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                psoEnabled 
+                                  ? 'bg-purple-100 text-purple-700' 
+                                  : 'bg-gray-200 text-gray-700'
+                              }`}>
+                                {psoEnabled ? 'PSO Active' : 'PSO Off'}
+                              </span>
+                            </div>
                           </div>
                           <p className="text-xs text-gray-600 mt-1">
                             Click to set pickup → Click to set delivery
@@ -485,11 +516,35 @@ export default function NewOrderPage() {
                             onRouteSelect={handleRouteSelect}
                             enablePSO={psoEnabled}
                             enableGoogleMaps={false}
+                            onFullscreenToggle={toggleMapFullscreen}
                           />
                         </div>
                       </div>
                     </div>
                   </ChartCard>
+
+                  {/* Fullscreen Map Modal */}
+                  {isMapFullscreen && (
+                    <div className="fixed inset-0 z-[9999] bg-black">
+                      {/* Close Button Only - Top Right */}
+                      <div className="absolute top-4 right-4 z-[10000]">
+                        <button
+                          onClick={toggleMapFullscreen}
+                          className="p-3 bg-red-500 hover:bg-red-600 rounded-lg transition-colors shadow-lg"
+                          title="Close (ESC)"
+                        >
+                          <X className="w-5 h-5 text-white" />
+                        </button>
+                      </div>
+
+                      {/* Full Map - Directly without wrapper */}
+                      <RouteMapContainer
+                        onRouteSelect={handleRouteSelect}
+                        enablePSO={psoEnabled}
+                        enableGoogleMaps={false}
+                      />
+                    </div>
+                  )}
 
                   {/* Waypoint JSON */}
                   <ChartCard title="Route Waypoints (JSON)">

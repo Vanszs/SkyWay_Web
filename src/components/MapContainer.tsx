@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
-import { RefreshCw, MapPin, Navigation, X, Zap, Settings, Bug } from 'lucide-react'
+import { RefreshCw, MapPin, Navigation, X, Zap, Settings, Bug, Maximize2 } from 'lucide-react'
 import { generateSafeRoute, calculateRouteDistance } from '@/lib/pathfinding'
 import { calculateSimpleRoute, isRouteSafe } from '@/lib/simpleRoute'
 import { calculateFakePSORoute } from '@/lib/fakePso'
@@ -43,6 +43,7 @@ interface RouteMapProps {
   initialZoom?: number
   enableGoogleMaps?: boolean
   enablePSO?: boolean
+  onFullscreenToggle?: () => void
 }
 
 // Map click handler component
@@ -77,7 +78,8 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
   initialCenter = [-7.2575, 112.7521], // Default to Surabaya
   initialZoom = 13,
   enableGoogleMaps = true,
-  enablePSO = true // PSO default enabled
+  enablePSO = true, // PSO default enabled
+  onFullscreenToggle
 }) => {
   const [mapReady, setMapReady] = useState(false)
   const [L, setL] = useState<any>(null)
@@ -328,8 +330,13 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
 
   // Return container with map and debug window below
   return (
-    <div className="flex flex-col w-full h-full">
-      <div className="relative h-full w-full rounded-xl overflow-hidden border border-gray-200" style={{ minHeight: '500px' }}>
+    <div className={`flex flex-col ${!onFullscreenToggle ? 'fixed inset-0 w-screen h-screen' : 'w-full h-full'}`}>
+      <div 
+        className={`relative w-full overflow-hidden ${
+          !onFullscreenToggle ? 'h-screen' : 'h-full rounded-xl border border-gray-200'
+        }`} 
+        style={{ minHeight: !onFullscreenToggle ? '100vh' : '500px' }}
+      >
         <MapContainer
           center={initialCenter}
           zoom={initialZoom}
@@ -441,32 +448,145 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           )}
         </MapContainer>
         
-        {/* Map Controls - Moved to top right to avoid interference */}
-        <div className="absolute top-4 right-16 z-[1000] flex flex-col gap-2">
-          <button
-            className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
-            onClick={clearRoute}
-            title="Clear Route"
-          >
-            <X className="w-4 h-4" />
-          </button>
-          <button
-            className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
-            onClick={resetMap}
-            title="Reset Map"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
-          <button
-            className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
-            onClick={() => setDebugWindowVisible(!debugWindowVisible)}
-            title="Toggle Debug Window"
-          >
-            <Bug className="w-4 h-4" />
-          </button>
+        {/* TOP RIGHT - Map Controls (Clear, Reset, Debug) - Hidden in fullscreen */}
+        {onFullscreenToggle && (
+          <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
+            <button
+              className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
+              onClick={clearRoute}
+              title="Clear Route"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <button
+              className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
+              onClick={resetMap}
+              title="Reset Map"
+            >
+              <RefreshCw className="w-4 h-4" />
+            </button>
+            <button
+              className="w-10 h-10 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 hover:bg-white transition-colors shadow-lg"
+              onClick={() => setDebugWindowVisible(!debugWindowVisible)}
+              title="Toggle Debug Window"
+            >
+              <Bug className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {/* TOP LEFT - Instructions Panel - Always visible */}
+        <div className="absolute top-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-3 shadow-lg max-w-[220px]">
+          <h3 className="font-semibold text-gray-900 mb-2 flex items-center text-sm">
+            <MapPin className="w-3 h-3 mr-1" />
+            How to Use
+          </h3>
+          <div className="text-xs text-gray-600 space-y-1">
+            <p>1. Click map for START</p>
+            <p>2. Click again for END</p>
+            <p>3. Click &quot;Create Route&quot;</p>
+            <p>4. Red = no-fly zones</p>
+          </div>
+          
+          <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+            <p className={`font-medium flex items-center ${enablePSO ? 'text-purple-800' : 'text-blue-800'}`}>
+              <Navigation className="w-3 h-3 mr-1" />
+              {enablePSO ? 'Enhanced PSO Active' : 'Direct Route Active'}
+            </p>
+            <p className={enablePSO ? 'text-purple-600' : 'text-blue-600'}>
+              {enablePSO ? 'Smart avoidance' : 'Straight line'}
+            </p>
+          </div>
+          
+          {showCreateRouteButton && (
+            <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+              <p className="text-blue-800 font-medium">
+                📍 Points selected!
+              </p>
+              <p className="text-blue-600">Click &quot;Create Route&quot;</p>
+            </div>
+          )}
+          
+          {isCalculating && enablePSO && (
+            <div className="mt-2 flex items-center text-purple-600">
+              <motion.div
+                className="w-3 h-3 border-2 border-purple-600 border-t-transparent rounded-full mr-1"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.5, repeat: 2, ease: "linear" }}
+              />
+              <span className="text-xs">
+                PSO Optimizing...
+              </span>
+            </div>
+          )}
+          
+          {isCalculating && !enablePSO && (
+            <div className="mt-2 flex items-center text-blue-600">
+              <motion.div
+                className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full mr-1"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 0.5, repeat: 2, ease: "linear" }}
+              />
+              <span className="text-xs">
+                Calculating...
+              </span>
+            </div>
+          )}
+          
+          {route.length > 0 && (
+            <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded text-xs">
+              <p className="text-green-800 font-medium">
+                ✓ Route ready!
+              </p>
+              <p className="text-green-600">
+                {calculateRouteDistance(route).toFixed(2)} km
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Create Route Button - Appears when both points are selected */}
+        {/* BOTTOM LEFT - Legend - Always visible */}
+        <div className="absolute bottom-24 left-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-3 shadow-lg">
+          <h4 className="font-semibold text-gray-900 mb-2 text-xs">Legend</h4>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span>Start</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+              <span>End</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className={`w-3 h-0.5 ${enablePSO ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
+              <span className="truncate">{enablePSO ? 'PSO Route' : 'Direct'}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 bg-red-500 opacity-30 border border-red-500"></div>
+              <span>Building</span>
+            </div>
+            <div className="flex items-center gap-1 col-span-2">
+              <div className="w-3 h-3 bg-orange-400 opacity-20 border border-orange-400"></div>
+              <span>100m Buffer Zone</span>
+            </div>
+          </div>
+        </div>
+
+        {/* BOTTOM RIGHT - Fullscreen Button */}
+        {onFullscreenToggle && (
+          <div className="absolute bottom-24 right-4 z-[1000]">
+            <button
+              onClick={onFullscreenToggle}
+              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all shadow-lg hover:shadow-xl flex items-center gap-2 text-sm font-medium group"
+              title="Fullscreen Map (F)"
+            >
+              <Maximize2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              <span>Fullscreen</span>
+            </button>
+          </div>
+        )}
+
+        {/* BOTTOM CENTER - Create Route Button (appears when both points selected) - Always visible */}
         {showCreateRouteButton && startPoint && endPoint && (
           <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-[1000]">
             <motion.button
@@ -494,107 +614,6 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
             </motion.button>
           </div>
         )}
-        
-        {/* Instructions Panel - Smaller and positioned to not interfere */}
-        <div className="absolute top-4 right-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-3 shadow-lg max-w-[200px]">
-          <h3 className="font-semibold text-gray-900 mb-2 flex items-center text-sm">
-            <MapPin className="w-3 h-3 mr-1" />
-            How to Use
-          </h3>
-          <div className="text-xs text-gray-600 space-y-1">
-            <p>1. Click map for START</p>
-            <p>2. Click again for END</p>
-            <p>3. Click &quot;Create Route&quot;</p>
-            <p>4. Red = no-fly zones</p>
-          </div>
-          
-          <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
-            <p className={`font-medium flex items-center ${enablePSO ? 'text-purple-800' : 'text-blue-800'}`}>
-              <Navigation className="w-3 h-3 mr-1" />
-              {enablePSO ? 'Enhanced PSO Active' : 'Direct Route Active'}
-            </p>
-            <p className={enablePSO ? 'text-purple-600' : 'text-blue-600'}>
-              {enablePSO ? 'Smooth curves + smart avoidance' : 'Straight line path'}
-            </p>
-          </div>
-          
-          {showCreateRouteButton && (
-            <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
-              <p className="text-blue-800 font-medium">
-                📍 Points selected!
-              </p>
-              <p className="text-blue-600">Click &quot;Create Route&quot;</p>
-            </div>
-          )}
-          
-          {isCalculating && enablePSO && (
-            <div className="mt-2 flex items-center text-purple-600">
-              <motion.div
-                className="w-3 h-3 border-2 border-purple-600 border-t-transparent rounded-full mr-1"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 0.5, repeat: 2, ease: "linear" }}
-              />
-              <span className="text-xs">
-                Enhanced PSO Optimizing...
-              </span>
-            </div>
-          )}
-          
-          {isCalculating && !enablePSO && (
-            <div className="mt-2 flex items-center text-blue-600">
-              <motion.div
-                className="w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full mr-1"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 0.5, repeat: 2, ease: "linear" }}
-              />
-              <span className="text-xs">
-                Calculating Direct Route...
-              </span>
-            </div>
-          )}
-          
-          {route.length > 0 && (
-            <div className="mt-2 p-1 bg-green-50 border border-green-200 rounded text-xs">
-              <p className="text-green-800 font-medium">
-                ✓ Route ready!
-              </p>
-              <p className="text-green-600">
-                {calculateRouteDistance(route).toFixed(2)} km
-              </p>
-            </div>
-          )}
-        </div>
-        
-        {/* Legend - Smaller and positioned at bottom left */}
-        <div className="absolute bottom-4 left-4 z-[1000] bg-white/95 backdrop-blur-sm border border-gray-200 rounded-lg p-2 shadow-lg">
-          <h4 className="font-semibold text-gray-900 mb-1 text-xs">Legend</h4>
-          <div className="grid grid-cols-2 gap-1 text-xs">
-            <div className="flex items-center">
-              <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
-              <span>Start</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-3 h-3 bg-orange-500 rounded-full mr-1"></div>
-              <span>End</span>
-            </div>
-            <div className="flex items-center">
-              <div className={`w-3 h-0.5 mr-1 ${enablePSO ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
-              <span>{enablePSO ? 'Smooth PSO Route' : 'Direct Route'}</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-3 h-3 bg-red-500 opacity-30 border border-red-500 mr-1"></div>
-              <span>Building</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-3 h-3 bg-orange-400 opacity-20 border border-orange-400 mr-1"></div>
-              <span>100m Buffer</span>
-            </div>
-            <div className="flex items-center">
-              <div className={`w-3 h-3 rounded-full mr-1 ${enablePSO ? 'bg-purple-500' : 'bg-gray-500'}`}></div>
-              <span>{enablePSO ? 'Enhanced PSO' : 'PSO Off'}</span>
-            </div>
-          </div>
-        </div>
         
         {/* Elevation Profile (if available) - Positioned at bottom right */}
         {elevationData.length > 0 && (
