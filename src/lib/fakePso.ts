@@ -1,267 +1,551 @@
 import { Point } from '@/types/route'
 import * as turf from '@turf/turf'
 
-// Simple fake PSO that creates waypoints to avoid buildings without complex optimization
+// 🎯 Enhanced PSO: Rute mengikuti tepi buffer 100m, bukan masuk ke dalam
 export function calculateFakePSORoute(
   start: Point,
   end: Point,
   buildings: any[],
   safeDistance: number = 100 // 100 meters
 ): Point[] {
-  console.log('Using Fake PSO - simple obstacle avoidance')
+  console.log('🚁 Using Enhanced PSO - edge-following route around merged buffers')
   
   const safeDistanceKm = safeDistance / 1000
-  const route: Point[] = [start]
   
-  // Create direct line
-  const directLine = turf.lineString([[start.lng, start.lat], [end.lng, end.lat]])
+  // 1️⃣ Buat garis lurus start → end
+  const straightLine = turf.lineString([[start.lng, start.lat], [end.lng, end.lat]])
   
-  // Check if direct line is safe
-  let isSafe = true
-  for (const building of buildings) {
-    const buffered = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
-    if (buffered && turf.booleanIntersects(directLine, buffered)) {
-      isSafe = false
-      break
-    }
-  }
+  // 2️⃣ Buat buffer 100m untuk setiap gedung dan gabungkan yang saling tumpang tindih
+  const mergedBuffer = createMergedBuffer(buildings, safeDistanceKm)
   
-  // If direct line is safe, return it
-  if (isSafe) {
-    console.log('Direct line is safe, returning straight route')
+  // 3️⃣ Jika tidak ada buffer yang terbentuk, return garis lurus
+  if (!mergedBuffer) {
+    console.log('✅ No buildings to avoid, using straight line')
     return [start, end]
   }
   
-  // Otherwise, create waypoints to avoid buildings with smooth curves
-  console.log('Direct line unsafe, creating smooth avoidance waypoints')
+  // 4️⃣ Cek apakah garis lurus memotong buffer
+  const intersects = turf.booleanIntersects(straightLine, mergedBuffer)
   
-  // Find all buildings that intersect with the direct line
-  const intersectingBuildings = []
-  for (const building of buildings) {
-    const buffered = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
-    if (buffered && turf.booleanIntersects(directLine, buffered)) {
-      intersectingBuildings.push(building)
-    }
+  if (!intersects) {
+    console.log('✅ Direct line is safe, using straight route')
+    return [start, end]
   }
   
-  // Sort buildings by distance from start
-  intersectingBuildings.sort((a, b) => {
-    const centerA = turf.center(a)
-    const centerB = turf.center(b)
-    const distA = turf.distance(
-      turf.point([start.lng, start.lat]),
-      centerA,
-      { units: 'kilometers' }
-    )
-    const distB = turf.distance(
-      turf.point([start.lng, start.lat]),
-      centerB,
-      { units: 'kilometers' }
-    )
-    return distA - distB
-  })
+  // 5️⃣ Jika memotong, buat rute yang menempel di tepi buffer
+  console.log('⚠️ Direct line intersects buffer, calculating edge-following route')
+  return calculateBufferEdgeRoute(start, end, mergedBuffer, straightLine, safeDistanceKm)
+}
+
+// 📦 Gabungkan semua buffer gedung menjadi satu area (union buffer yang tumpang tindih)
+function createMergedBuffer(buildings: any[], safeDistanceKm: number): any {
+  if (buildings.length === 0) return null
   
-  let currentPoint = start
-  
-  // Create smooth waypoints around each building
-  for (const building of intersectingBuildings) {
-    const buildingCenter = turf.center(building)
-    const buildingBounds = turf.bbox(building)
+  try {
+    // Buat buffer untuk setiap gedung
+    const buffers = buildings
+      .map(building => {
+        try {
+          return turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
+        } catch (e) {
+          console.warn('Failed to buffer building:', e)
+          return null
+        }
+      })
+      .filter(b => b !== null)
     
-    // Calculate building dimensions
-    const buildingWidth = Math.abs(buildingBounds[2] - buildingBounds[0]) // lng difference
-    const buildingHeight = Math.abs(buildingBounds[3] - buildingBounds[1]) // lat difference
+    if (buffers.length === 0) return null
     
-    // Calculate safe distance (building size + safety margin)
-    const safeDistance = Math.max(
-      safeDistanceKm * 2, // 200m minimum
-      Math.max(buildingWidth, buildingHeight) + safeDistanceKm
-    )
+    // Gabungkan semua buffer menjadi satu area
+    let merged = buffers[0]
     
-    // Calculate approach and exit angles for smooth turns
-    const approachAngle = turf.bearing(
-      turf.point([currentPoint.lng, currentPoint.lat]),
-      buildingCenter
-    )
+    for (let i = 1; i < buffers.length; i++) {
+      try {
+        // @ts-ignore - turf.union terkadang punya type signature yang kompleks
+        const unionResult = turf.union(turf.featureCollection([merged, buffers[i]]))
+        if (unionResult) {
+          merged = unionResult
+        }
+      } catch (e) {
+        console.warn('Failed to union buffers:', e)
+        // Jika union gagal, tambahkan sebagai feature collection
+        continue
+      }
+    }
     
-    const exitAngle = turf.bearing(
-      buildingCenter,
-      turf.point([end.lng, end.lat])
-    )
+    console.log(`✅ Merged ${buildings.length} building buffers into single area`)
+    return merged
     
-    // Determine which side to go around (left or right)
-    const angleDiff = ((exitAngle - approachAngle + 180) % 360) - 180
-    const goLeft = angleDiff > 0
+  } catch (e) {
+    console.error('Error creating merged buffer:', e)
+    return null
+  }
+}
+
+// 🎯 Hitung rute yang menempel di tepi buffer (edge-following)
+function calculateBufferEdgeRoute(
+  start: Point,
+  end: Point,
+  mergedBuffer: any,
+  straightLine: any,
+  safeDistanceKm: number
+): Point[] {
+  try {
+    // 🎯 STRATEGI BARU: Tangent-based routing (seperti sinar cahaya yang memantul)
     
-    // Calculate smooth arc waypoints
-    const arcRadius = safeDistance
-    const arcAngle = 90 // 90 degree arc around building
-    const numArcPoints = 3 // Number of points in the arc for smoothness
+    // 1️⃣ Cari "tangent points" - titik di tepi buffer yang membuat jalur terpendek
+    const tangentRoute = calculateTangentRoute(start, end, mergedBuffer, safeDistanceKm)
     
-    // Start point of arc (before building)
-    const startArcAngle = approachAngle + (goLeft ? -90 : 90)
-    const startArcPoint = turf.destination(
-      buildingCenter,
-      arcRadius,
-      startArcAngle,
-      { units: 'kilometers' }
-    )
+    if (tangentRoute && tangentRoute.length > 2) {
+      console.log(`✅ Created tangent-based route with ${tangentRoute.length} waypoints`)
+      return tangentRoute
+    }
     
-    // Add approach waypoint to smooth the turn
-    const approachDistance = Math.min(arcRadius * 0.5, 0.1) // Max 100m approach
-    const approachPoint = turf.destination(
-      turf.point([currentPoint.lng, currentPoint.lat]),
-      approachDistance,
-      startArcAngle,
-      { units: 'kilometers' }
-    )
+    // Fallback ke metode lama jika tangent gagal
+    console.warn('Tangent method failed, using intersection-based method')
     
-    route.push({
-      lat: approachPoint.geometry.coordinates[1],
-      lng: approachPoint.geometry.coordinates[0]
-    })
+    // 1️⃣ Cari titik potong antara garis lurus dengan buffer
+    const intersectionPoints = turf.lineIntersect(straightLine, mergedBuffer)
     
-    // Add arc waypoints for smooth turn around building
-    for (let i = 1; i <= numArcPoints; i++) {
-      const arcProgress = i / numArcPoints
-      const currentArcAngle = startArcAngle + (goLeft ? arcAngle : -arcAngle) * arcProgress
-      
-      const arcPoint = turf.destination(
-        buildingCenter,
-        arcRadius,
-        currentArcAngle,
+    if (intersectionPoints.features.length === 0) {
+      console.warn('No intersection points found, using fallback route')
+      return createFallbackRoute(start, end, mergedBuffer, safeDistanceKm)
+    }
+    
+    // 2️⃣ Ambil titik masuk (entry) dan keluar (exit) dari buffer
+    const intersections = intersectionPoints.features.map(f => ({
+      lng: f.geometry.coordinates[0],
+      lat: f.geometry.coordinates[1]
+    }))
+    
+    // Urutkan berdasarkan jarak dari start
+    intersections.sort((a, b) => {
+      const distA = turf.distance(
+        turf.point([start.lng, start.lat]),
+        turf.point([a.lng, a.lat]),
         { units: 'kilometers' }
       )
-      
-      route.push({
-        lat: arcPoint.geometry.coordinates[1],
-        lng: arcPoint.geometry.coordinates[0]
+      const distB = turf.distance(
+        turf.point([start.lng, start.lat]),
+        turf.point([b.lng, b.lat]),
+        { units: 'kilometers' }
+      )
+      return distA - distB
+    })
+    
+    const entryPoint = intersections[0]
+    const exitPoint = intersections[intersections.length - 1]
+    
+    console.log(`📍 Entry point: [${entryPoint.lng}, ${entryPoint.lat}]`)
+    console.log(`📍 Exit point: [${exitPoint.lng}, ${exitPoint.lat}]`)
+    
+    // 3️⃣ Buat path mengikuti tepi buffer dari entry ke exit
+    const edgePath = calculateShortestEdgePath(
+      entryPoint,
+      exitPoint,
+      mergedBuffer,
+      start,
+      end
+    )
+    
+    // 4️⃣ Gabungkan: start → entry → edge path → exit → end
+    const route: Point[] = [start]
+    
+    const distToEntry = turf.distance(
+      turf.point([start.lng, start.lat]),
+      turf.point([entryPoint.lng, entryPoint.lat]),
+      { units: 'kilometers' }
+    )
+    
+    if (distToEntry > 0.01) {
+      route.push(entryPoint)
+    }
+    
+    route.push(...edgePath)
+    
+    const distToEnd = turf.distance(
+      turf.point([exitPoint.lng, exitPoint.lat]),
+      turf.point([end.lng, end.lat]),
+      { units: 'kilometers' }
+    )
+    
+    if (distToEnd > 0.01) {
+      route.push(exitPoint)
+    }
+    
+    route.push(end)
+    
+    console.log(`✅ Created edge-following route with ${route.length} waypoints`)
+    return route
+    
+  } catch (e) {
+    console.error('Error calculating buffer edge route:', e)
+    return createFallbackRoute(start, end, mergedBuffer, safeDistanceKm)
+  }
+}
+
+// 🎯 Hitung rute tangent (seperti cahaya memantul di cermin)
+function calculateTangentRoute(
+  start: Point,
+  end: Point,
+  buffer: any,
+  safeDistanceKm: number
+): Point[] | null {
+  try {
+    // Strategi: Cari titik di tepi buffer yang membentuk garis lurus terpendek
+    // dari start → tangent1 → tangent2 → end tanpa memotong buffer
+    
+    const startPoint = turf.point([start.lng, start.lat])
+    const endPoint = turf.point([end.lng, end.lat])
+    
+    // Ekstrak boundary points
+    let boundaryCoords: number[][] = []
+    
+    if (buffer.geometry.type === 'Polygon') {
+      boundaryCoords = buffer.geometry.coordinates[0]
+    } else if (buffer.geometry.type === 'MultiPolygon') {
+      // Gabungkan semua polygon boundaries
+      buffer.geometry.coordinates.forEach((poly: any) => {
+        boundaryCoords.push(...poly[0])
       })
     }
     
-    // Exit point of arc (after building)
-    const exitArcAngle = startArcAngle + (goLeft ? arcAngle : -arcAngle)
-    const exitArcPoint = turf.destination(
-      buildingCenter,
-      arcRadius,
-      exitArcAngle,
-      { units: 'kilometers' }
-    )
+    // Sampling boundary points (tidak perlu semua titik, ambil setiap N titik)
+    const sampledBoundary: Point[] = []
+    const sampleRate = Math.max(1, Math.floor(boundaryCoords.length / 20)) // Max 20 sample points
     
-    // Add exit waypoint to smooth the turn
-    const exitDistance = Math.min(arcRadius * 0.5, 0.1) // Max 100m exit
-    const exitPoint = turf.destination(
-      exitArcPoint,
-      exitDistance,
-      exitArcAngle,
-      { units: 'kilometers' }
-    )
-    
-    route.push({
-      lat: exitPoint.geometry.coordinates[1],
-      lng: exitPoint.geometry.coordinates[0]
-    })
-    
-    currentPoint = {
-      lat: exitPoint.geometry.coordinates[1],
-      lng: exitPoint.geometry.coordinates[0]
+    for (let i = 0; i < boundaryCoords.length; i += sampleRate) {
+      sampledBoundary.push({
+        lng: boundaryCoords[i][0],
+        lat: boundaryCoords[i][1]
+      })
     }
+    
+    // Coba berbagai kombinasi tangent points
+    let bestRoute: Point[] | null = null
+    let shortestDistance = Infinity
+    
+    // Single tangent point (jika buffer kecil)
+    for (const tangent of sampledBoundary) {
+      const tangentPoint = turf.point([tangent.lng, tangent.lat])
+      
+      // Cek apakah start→tangent dan tangent→end aman
+      const line1 = turf.lineString([[start.lng, start.lat], [tangent.lng, tangent.lat]])
+      const line2 = turf.lineString([[tangent.lng, tangent.lat], [end.lng, end.lat]])
+      
+      const safe1 = !turf.booleanIntersects(line1, buffer)
+      const safe2 = !turf.booleanIntersects(line2, buffer)
+      
+      if (safe1 && safe2) {
+        const totalDist = 
+          turf.distance(startPoint, tangentPoint, { units: 'kilometers' }) +
+          turf.distance(tangentPoint, endPoint, { units: 'kilometers' })
+        
+        if (totalDist < shortestDistance) {
+          shortestDistance = totalDist
+          bestRoute = [start, tangent, end]
+        }
+      }
+    }
+    
+    if (bestRoute) {
+      console.log(`✅ Found single tangent route, distance: ${(shortestDistance * 1000).toFixed(0)}m`)
+      return bestRoute
+    }
+    
+    // Double tangent points (jika perlu 2 titik belok)
+    for (let i = 0; i < sampledBoundary.length; i++) {
+      for (let j = i + 1; j < sampledBoundary.length; j++) {
+        const t1 = sampledBoundary[i]
+        const t2 = sampledBoundary[j]
+        
+        const tp1 = turf.point([t1.lng, t1.lat])
+        const tp2 = turf.point([t2.lng, t2.lat])
+        
+        // Cek semua segmen aman
+        const line1 = turf.lineString([[start.lng, start.lat], [t1.lng, t1.lat]])
+        const line2 = turf.lineString([[t1.lng, t1.lat], [t2.lng, t2.lat]])
+        const line3 = turf.lineString([[t2.lng, t2.lat], [end.lng, end.lat]])
+        
+        const safe1 = !turf.booleanIntersects(line1, buffer)
+        const safe2 = !turf.booleanIntersects(line2, buffer)
+        const safe3 = !turf.booleanIntersects(line3, buffer)
+        
+        if (safe1 && safe2 && safe3) {
+          const totalDist = 
+            turf.distance(startPoint, tp1, { units: 'kilometers' }) +
+            turf.distance(tp1, tp2, { units: 'kilometers' }) +
+            turf.distance(tp2, endPoint, { units: 'kilometers' })
+          
+          if (totalDist < shortestDistance) {
+            shortestDistance = totalDist
+            bestRoute = [start, t1, t2, end]
+          }
+        }
+      }
+    }
+    
+    if (bestRoute) {
+      console.log(`✅ Found double tangent route, distance: ${(shortestDistance * 1000).toFixed(0)}m`)
+      return bestRoute
+    }
+    
+    console.warn('❌ No tangent route found')
+    return null
+    
+  } catch (e) {
+    console.error('Error calculating tangent route:', e)
+    return null
   }
-  
-  // Add final destination
-  route.push(end)
-  
-  // Optimize route by removing unnecessary waypoints
-  return optimizeSimpleRoute(route, buildings, safeDistance)
 }
 
-// Enhanced route optimization with smooth curve preservation
-function optimizeSimpleRoute(
-  route: Point[],
-  buildings: any[],
-  safeDistance: number
+// 🔄 Hitung path terpendek mengikuti tepi buffer
+function calculateShortestEdgePath(
+  entry: Point,
+  exit: Point,
+  buffer: any,
+  start: Point,
+  end: Point
 ): Point[] {
-  if (route.length <= 2) return route
-  
-  const optimized: Point[] = [route[0]]
-  const safeDistanceKm = safeDistance / 1000
-  
-  for (let i = 1; i < route.length - 1; i++) {
-    const prev = optimized[optimized.length - 1]
-    const current = route[i]
-    const next = route[i + 1]
+  try {
+    // ⚡ STRATEGI BARU: Cek apakah garis langsung entry→exit aman
+    // Jika aman, langsung return kosong (straight line sudah cukup)
+    const directPath = turf.lineString([[entry.lng, entry.lat], [exit.lng, exit.lat]])
     
-    // Calculate turn angle to preserve smooth curves
-    const angle1 = Math.atan2(
-      current.lat - prev.lat,
-      current.lng - prev.lng
-    )
-    const angle2 = Math.atan2(
-      next.lat - current.lat,
-      next.lng - current.lng
-    )
-    let angleDiff = Math.abs(angle2 - angle1)
+    // Cek apakah direct path memotong buffer
+    const directIntersects = turf.booleanIntersects(directPath, buffer)
     
-    // Normalize angle difference to [0, π]
-    if (angleDiff > Math.PI) {
-      angleDiff = 2 * Math.PI - angleDiff
+    if (!directIntersects) {
+      // Direct path aman! Tidak perlu ikuti boundary
+      console.log('✅ Direct path between entry-exit is safe, no edge following needed')
+      return []
     }
     
-    // Keep waypoints that create sharp turns (> 30 degrees)
-    const isSharpTurn = angleDiff > (Math.PI / 6) // 30 degrees
+    // ⚠️ Direct path tidak aman, harus ikuti tepi buffer
+    console.log('⚠️ Direct path intersects buffer, following edge...')
     
-    // Check if we can remove current point (only if not a sharp turn)
-    if (!isSharpTurn) {
-      const directLine = turf.lineString([[prev.lng, prev.lat], [next.lng, next.lat]])
-      let canRemove = true
+    // Ekstrak boundary dari buffer
+    let boundary: any
+    
+    if (buffer.geometry.type === 'Polygon') {
+      boundary = turf.lineString(buffer.geometry.coordinates[0])
+    } else if (buffer.geometry.type === 'MultiPolygon') {
+      // Untuk MultiPolygon, ambil polygon yang dilalui garis lurus
+      const polygons = buffer.geometry.coordinates
+      let relevantPolygon = polygons[0]
       
-      for (const building of buildings) {
-        const buffered = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
-        if (buffered && turf.booleanIntersects(directLine, buffered)) {
-          canRemove = false
+      for (const poly of polygons) {
+        const testPoly = turf.polygon(poly)
+        if (turf.booleanIntersects(directPath, testPoly)) {
+          relevantPolygon = poly
           break
         }
       }
       
-      if (!canRemove) {
-        optimized.push(current)
-      }
+      boundary = turf.lineString(relevantPolygon[0])
     } else {
-      // Keep sharp turn waypoints for smooth navigation
-      optimized.push(current)
+      throw new Error('Unsupported geometry type: ' + buffer.geometry.type)
+    }
+    
+    // Cari titik terdekat di boundary untuk entry dan exit
+    const entryOnBoundary = turf.nearestPointOnLine(
+      boundary,
+      turf.point([entry.lng, entry.lat])
+    )
+    
+    const exitOnBoundary = turf.nearestPointOnLine(
+      boundary,
+      turf.point([exit.lng, exit.lat])
+    )
+    
+    // Ekstrak koordinat boundary
+    const boundaryCoords = boundary.geometry.coordinates
+    
+    // Cari index entry dan exit di boundary
+    const entryIndex = findClosestPointIndex(
+      boundaryCoords,
+      entryOnBoundary.geometry.coordinates
+    )
+    
+    const exitIndex = findClosestPointIndex(
+      boundaryCoords,
+      exitOnBoundary.geometry.coordinates
+    )
+    
+    // Hitung kedua jalur (clockwise & counterclockwise)
+    const pathClockwise = extractPath(boundaryCoords, entryIndex, exitIndex, true)
+    const pathCounterClockwise = extractPath(boundaryCoords, entryIndex, exitIndex, false)
+    
+    const distClockwise = calculatePathLength(pathClockwise)
+    const distCounterClockwise = calculatePathLength(pathCounterClockwise)
+    
+    // Pilih path terpendek
+    const shortestPath = distClockwise < distCounterClockwise 
+      ? pathClockwise 
+      : pathCounterClockwise
+    
+    // Konversi ke Point[] dan optimasi
+    const waypoints = shortestPath.map(coord => ({
+      lng: coord[0],
+      lat: coord[1]
+    }))
+    
+    // Aggressive simplification - hanya simpan titik penting
+    const optimized = simplifyPath(waypoints, 0.05) // 50 meters threshold untuk lebih lurus
+    
+    console.log(`🛤️ Edge path: ${optimized.length} waypoints (${distClockwise < distCounterClockwise ? 'clockwise' : 'counterclockwise'})`)
+    
+    return optimized
+    
+  } catch (e) {
+    console.error('Error calculating shortest edge path:', e)
+    return []
+  }
+}
+
+// 🔍 Cari index koordinat terdekat di boundary
+function findClosestPointIndex(coords: number[][], target: number[]): number {
+  let minDist = Infinity
+  let minIndex = 0
+  
+  for (let i = 0; i < coords.length; i++) {
+    const dist = Math.sqrt(
+      Math.pow(coords[i][0] - target[0], 2) +
+      Math.pow(coords[i][1] - target[1], 2)
+    )
+    
+    if (dist < minDist) {
+      minDist = dist
+      minIndex = i
     }
   }
   
-  optimized.push(route[route.length - 1])
+  return minIndex
+}
+
+// 📏 Ekstrak path dari boundary (clockwise atau counterclockwise)
+function extractPath(
+  coords: number[][],
+  startIdx: number,
+  endIdx: number,
+  clockwise: boolean
+): number[][] {
+  const path: number[][] = []
   
-  // Add intermediate points for very long straight segments to maintain smoothness
-  const finalOptimized: Point[] = [optimized[0]]
-  for (let i = 1; i < optimized.length; i++) {
-    const prev = finalOptimized[finalOptimized.length - 1]
-    const current = optimized[i]
+  if (clockwise) {
+    if (startIdx <= endIdx) {
+      for (let i = startIdx; i <= endIdx; i++) {
+        path.push(coords[i])
+      }
+    } else {
+      for (let i = startIdx; i < coords.length; i++) {
+        path.push(coords[i])
+      }
+      for (let i = 0; i <= endIdx; i++) {
+        path.push(coords[i])
+      }
+    }
+  } else {
+    if (startIdx >= endIdx) {
+      for (let i = startIdx; i >= endIdx; i--) {
+        path.push(coords[i])
+      }
+    } else {
+      for (let i = startIdx; i >= 0; i--) {
+        path.push(coords[i])
+      }
+      for (let i = coords.length - 1; i >= endIdx; i--) {
+        path.push(coords[i])
+      }
+    }
+  }
+  
+  return path
+}
+
+// 📐 Hitung panjang total path
+function calculatePathLength(path: number[][]): number {
+  let length = 0
+  
+  for (let i = 1; i < path.length; i++) {
+    const dist = turf.distance(
+      turf.point(path[i - 1]),
+      turf.point(path[i]),
+      { units: 'kilometers' }
+    )
+    length += dist
+  }
+  
+  return length
+}
+
+// 🎨 Simplifikasi path dengan menghapus titik yang terlalu dekat
+function simplifyPath(points: Point[], thresholdKm: number): Point[] {
+  if (points.length <= 2) return points
+  
+  const simplified: Point[] = [points[0]]
+  
+  for (let i = 1; i < points.length - 1; i++) {
+    const prev = simplified[simplified.length - 1]
+    const current = points[i]
     
-    const segmentDistance = turf.distance(
+    const dist = turf.distance(
       turf.point([prev.lng, prev.lat]),
       turf.point([current.lng, current.lat]),
       { units: 'kilometers' }
     )
     
-    // Add intermediate point if segment is too long (> 500m)
-    if (segmentDistance > 0.5) {
-      const midPoint = turf.midpoint(
-        turf.point([prev.lng, prev.lat]),
-        turf.point([current.lng, current.lat])
-      )
-      
-      finalOptimized.push({
-        lat: midPoint.geometry.coordinates[1],
-        lng: midPoint.geometry.coordinates[0]
-      })
+    // Hanya tambahkan jika jarak > threshold
+    if (dist > thresholdKm) {
+      simplified.push(current)
     }
-    
-    finalOptimized.push(current)
   }
   
-  console.log(`Fake PSO: Optimized from ${route.length} to ${finalOptimized.length} waypoints with smooth curves`)
-  return finalOptimized
+  simplified.push(points[points.length - 1])
+  
+  return simplified
+}
+
+// 🚨 Fallback route jika edge calculation gagal
+function createFallbackRoute(
+  start: Point,
+  end: Point,
+  buffer: any,
+  safeDistanceKm: number
+): Point[] {
+  console.log('⚠️ Using fallback perpendicular route')
+  
+  try {
+    // Cari center dari buffer
+    const bufferCenter = turf.center(buffer)
+    
+    // Hitung bearing dari start ke buffer center
+    const bearingToBuffer = turf.bearing(
+      turf.point([start.lng, start.lat]),
+      bufferCenter
+    )
+    
+    // Buat waypoint perpendicular (90 derajat dari arah ke buffer)
+    const perpendicularAngle = (bearingToBuffer + 90) % 360
+    
+    const waypoint = turf.destination(
+      bufferCenter,
+      safeDistanceKm * 1.5, // 150m dari center untuk safety
+      perpendicularAngle,
+      { units: 'kilometers' }
+    )
+    
+    return [
+      start,
+      {
+        lat: waypoint.geometry.coordinates[1],
+        lng: waypoint.geometry.coordinates[0]
+      },
+      end
+    ]
+    
+  } catch (e) {
+    console.error('Fallback route failed:', e)
+    return [start, end]
+  }
 }

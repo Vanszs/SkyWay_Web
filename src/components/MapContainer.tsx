@@ -396,17 +396,54 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
             />
           )}
           
-          {/* Route polyline */}
+          {/* Route polyline with enhanced styling */}
           {route.length > 1 && (
-            <Polyline
-              positions={route.map(point => [point.lat, point.lng] as [number, number])}
-              pathOptions={{
-                color: '#0066ff',
-                weight: 4,
-                opacity: 0.8,
-                dashArray: '10, 5'
-              }}
-            />
+            <>
+              {/* Main route line with gradient effect */}
+              <Polyline
+                positions={route.map(point => [point.lat, point.lng] as [number, number])}
+                pathOptions={{
+                  color: enablePSO ? '#8b5cf6' : '#0066ff', // Purple for PSO, blue for direct
+                  weight: 5,
+                  opacity: 0.9,
+                  dashArray: enablePSO ? undefined : '10, 5' // Solid line for PSO, dashed for direct
+                }}
+              />
+              
+              {/* Secondary glow effect for PSO routes */}
+              {enablePSO && (
+                <Polyline
+                  positions={route.map(point => [point.lat, point.lng] as [number, number])}
+                  pathOptions={{
+                    color: '#a78bfa',
+                    weight: 8,
+                    opacity: 0.3
+                  }}
+                />
+              )}
+              
+              {/* Waypoint markers for PSO routes */}
+              {enablePSO && route.length > 2 && route.slice(1, -1).map((point, index) => (
+                <Marker
+                  key={`waypoint-${index}`}
+                  position={[point.lat, point.lng]}
+                  icon={L?.divIcon({
+                    className: 'custom-waypoint-marker',
+                    html: `
+                      <div class="relative">
+                        <div class="w-3 h-3 bg-purple-400 rounded-full border border-white shadow-md"></div>
+                        <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white text-xs px-1 rounded whitespace-nowrap">
+                          WP${index + 1}
+                        </div>
+                      </div>
+                    `,
+                    iconSize: [20, 24],
+                    iconAnchor: [10, 24],
+                    popupAnchor: [0, -24]
+                  })}
+                />
+              ))}
+            </>
           )}
         </MapContainer>
         
@@ -478,11 +515,13 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
           </div>
           
           <div className="mt-2 p-1 bg-blue-50 border border-blue-200 rounded text-xs">
-            <p className="text-blue-800 font-medium flex items-center">
+            <p className={`font-medium flex items-center ${enablePSO ? 'text-purple-800' : 'text-blue-800'}`}>
               <Navigation className="w-3 h-3 mr-1" />
-              {enablePSO ? 'Fast PSO Active' : 'Direct Route Active'}
+              {enablePSO ? 'Enhanced PSO Active' : 'Direct Route Active'}
             </p>
-            <p className="text-blue-600">{enablePSO ? 'Smart obstacle avoidance' : 'Straight line path'}</p>
+            <p className={enablePSO ? 'text-purple-600' : 'text-blue-600'}>
+              {enablePSO ? 'Smooth curves + smart avoidance' : 'Straight line path'}
+            </p>
           </div>
           
           {showCreateRouteButton && (
@@ -502,7 +541,7 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
                 transition={{ duration: 0.5, repeat: 2, ease: "linear" }}
               />
               <span className="text-xs">
-                Fast PSO Optimizing...
+                Enhanced PSO Optimizing...
               </span>
             </div>
           )}
@@ -545,8 +584,8 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
               <span>End</span>
             </div>
             <div className="flex items-center">
-              <div className="w-3 h-0.5 mr-1 bg-blue-500"></div>
-              <span>{enablePSO ? 'Smart Route' : 'Direct Route'}</span>
+              <div className={`w-3 h-0.5 mr-1 ${enablePSO ? 'bg-purple-500' : 'bg-blue-500'}`}></div>
+              <span>{enablePSO ? 'Smooth PSO Route' : 'Direct Route'}</span>
             </div>
             <div className="flex items-center">
               <div className="w-3 h-3 bg-red-500 opacity-30 border border-red-500 mr-1"></div>
@@ -557,8 +596,8 @@ export const RouteMapContainer: React.FC<RouteMapProps> = ({
               <span>100m Buffer</span>
             </div>
             <div className="flex items-center">
-              <div className="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>
-              <span>{enablePSO ? 'PSO Active' : 'PSO Off'}</span>
+              <div className={`w-3 h-3 rounded-full mr-1 ${enablePSO ? 'bg-purple-500' : 'bg-gray-500'}`}></div>
+              <span>{enablePSO ? 'Enhanced PSO' : 'PSO Off'}</span>
             </div>
           </div>
         </div>
