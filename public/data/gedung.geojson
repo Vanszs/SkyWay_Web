@@ -1,255 +1,60 @@
-{
+﻿{
   "type": "FeatureCollection",
   "features": [
     {
       "type": "Feature",
       "properties": {
-        "name": "Alun-alun Sidoarjo",
-        "height": 25,
-        "restricted": true
+        "name": "Tunjungan Plaza",
+        "height": 150,
+        "restricted": true,
+        "category": "mall"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [112.7172, -7.4471],
-          [112.7178, -7.4471],
-          [112.7178, -7.4476],
-          [112.7172, -7.4476],
-          [112.7172, -7.4471]
+          [112.738889, -7.263056],
+          [112.739722, -7.263056],
+          [112.739722, -7.263889],
+          [112.738889, -7.263889],
+          [112.738889, -7.263056]
         ]]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "GOR Delta Sidoarjo",
-        "height": 35,
-        "restricted": true
+        "name": "Grand City Mall",
+        "height": 120,
+        "restricted": true,
+        "category": "mall"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [112.7185, -7.4450],
-          [112.7195, -7.4450],
-          [112.7195, -7.4460],
-          [112.7185, -7.4460],
-          [112.7185, -7.4450]
+          [112.736111, -7.264167],
+          [112.737222, -7.264167],
+          [112.737222, -7.265000],
+          [112.736111, -7.265000],
+          [112.736111, -7.264167]
         ]]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Lippo Plaza Sidoarjo",
-        "height": 45,
-        "restricted": true
+        "name": "Pakuwon Mall",
+        "height": 140,
+        "restricted": true,
+        "category": "mall"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [112.7140, -7.4485],
-          [112.7155, -7.4485],
-          [112.7155, -7.4495],
-          [112.7140, -7.4495],
-          [112.7140, -7.4485]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Universitas UPN Veteran Jatim",
-        "height": 40,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7130, -7.4440],
-          [112.7145, -7.4440],
-          [112.7145, -7.4450],
-          [112.7130, -7.4450],
-          [112.7130, -7.4440]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "City of Tomorrow Mall",
-        "height": 50,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7160, -7.4420],
-          [112.7175, -7.4420],
-          [112.7175, -7.4430],
-          [112.7160, -7.4430],
-          [112.7160, -7.4420]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Tunjungan Plaza Surabaya",
-        "height": 65,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7300, -7.2580],
-          [112.7320, -7.2580],
-          [112.7320, -7.2600],
-          [112.7300, -7.2600],
-          [112.7300, -7.2580]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Pakuwon Mall Surabaya",
-        "height": 60,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7350, -7.2700],
-          [112.7370, -7.2700],
-          [112.7370, -7.2720],
-          [112.7350, -7.2720],
-          [112.7350, -7.2700]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Galaxy Mall Surabaya",
-        "height": 55,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7250, -7.2750],
-          [112.7270, -7.2750],
-          [112.7270, -7.2770],
-          [112.7250, -7.2770],
-          [112.7250, -7.2750]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Grand City Surabaya",
-        "height": 58,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7400, -7.2650],
-          [112.7415, -7.2650],
-          [112.7415, -7.2670],
-          [112.7400, -7.2670],
-          [112.7400, -7.2650]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "TPS 3 Alun-alun Sidoarjo",
-        "height": 30,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7190, -7.4490],
-          [112.7198, -7.4490],
-          [112.7198, -7.4498],
-          [112.7190, -7.4498],
-          [112.7190, -7.4490]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "RSUD Sidoarjo",
-        "height": 42,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7120, -7.4500],
-          [112.7135, -7.4500],
-          [112.7135, -7.4515],
-          [112.7120, -7.4515],
-          [112.7120, -7.4500]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Kantor Pemkab Sidoarjo",
-        "height": 38,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7150, -7.4430],
-          [112.7165, -7.4430],
-          [112.7165, -7.4445],
-          [112.7150, -7.4445],
-          [112.7150, -7.4430]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Surabaya Town Square",
-        "height": 52,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7280, -7.2800],
-          [112.7295, -7.2800],
-          [112.7295, -7.2820],
-          [112.7280, -7.2820],
-          [112.7280, -7.2800]
-        ]]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "name": "Royal Plaza Surabaya",
-        "height": 48,
-        "restricted": true
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [[
-          [112.7325, -7.2780],
-          [112.7340, -7.2780],
-          [112.7340, -7.2800],
-          [112.7325, -7.2800],
-          [112.7325, -7.2780]
+          [112.668056, -7.296389],
+          [112.669167, -7.296389],
+          [112.669167, -7.297500],
+          [112.668056, -7.297500],
+          [112.668056, -7.296389]
         ]]
       }
     },
@@ -257,71 +62,1766 @@
       "type": "Feature",
       "properties": {
         "name": "Ciputra World Surabaya",
-        "height": 62,
-        "restricted": true
+        "height": 160,
+        "restricted": true,
+        "category": "mall"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [112.7375, -7.2620],
-          [112.7390, -7.2620],
-          [112.7390, -7.2640],
-          [112.7375, -7.2640],
-          [112.7375, -7.2620]
+          [112.720556, -7.287778],
+          [112.721667, -7.287778],
+          [112.721667, -7.288889],
+          [112.720556, -7.288889],
+          [112.720556, -7.287778]
         ]]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Gedung Graha Pena Surabaya",
-        "height": 70,
-        "restricted": true
+        "name": "Galaxy Mall",
+        "height": 130,
+        "restricted": true,
+        "category": "mall"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [112.7420, -7.2720],
-          [112.7435, -7.2720],
-          [112.7435, -7.2740],
-          [112.7420, -7.2740],
-          [112.7420, -7.2720]
+          [112.731389, -7.256667],
+          [112.732500, -7.256667],
+          [112.732500, -7.257778],
+          [112.731389, -7.257778],
+          [112.731389, -7.256667]
         ]]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "ITS Tower Surabaya",
+        "name": "Surabaya Town Square",
+        "height": 95,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.741111, -7.266667],
+          [112.742222, -7.266667],
+          [112.742222, -7.267778],
+          [112.741111, -7.267778],
+          [112.741111, -7.266667]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Royal Plaza Surabaya",
+        "height": 105,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.742222, -7.329167],
+          [112.743333, -7.329167],
+          [112.743333, -7.330278],
+          [112.742222, -7.330278],
+          [112.742222, -7.329167]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BG Junction",
+        "height": 100,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.741944, -7.325278],
+          [112.743056, -7.325278],
+          [112.743056, -7.326389],
+          [112.741944, -7.326389],
+          [112.741944, -7.325278]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lenmarc Mall",
+        "height": 110,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737222, -7.288333],
+          [112.738333, -7.288333],
+          [112.738333, -7.289444],
+          [112.737222, -7.289444],
+          [112.737222, -7.288333]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Plaza Marina",
+        "height": 82,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.666944, -7.297500],
+          [112.668056, -7.297500],
+          [112.668056, -7.298611],
+          [112.666944, -7.298611],
+          [112.666944, -7.297500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Supermall Pakuwon Indah",
+        "height": 90,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.669722, -7.296667],
+          [112.670833, -7.296667],
+          [112.670833, -7.297778],
+          [112.669722, -7.297778],
+          [112.669722, -7.296667]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "East Coast Center",
+        "height": 78,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.794444, -7.323611],
+          [112.795556, -7.323611],
+          [112.795556, -7.324722],
+          [112.794444, -7.324722],
+          [112.794444, -7.323611]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Golden City Mall",
+        "height": 72,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.721389, -7.320833],
+          [112.722500, -7.320833],
+          [112.722500, -7.321944],
+          [112.721389, -7.321944],
+          [112.721389, -7.320833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "City of Tomorrow",
+        "height": 88,
+        "restricted": true,
+        "category": "mall"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.770833, -7.328333],
+          [112.771944, -7.328333],
+          [112.771944, -7.329444],
+          [112.770833, -7.329444],
+          [112.770833, -7.328333]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RSUD Dr. Soetomo",
+        "height": 80,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.751389, -7.269444],
+          [112.753056, -7.269444],
+          [112.753056, -7.271111],
+          [112.751389, -7.271111],
+          [112.751389, -7.269444]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS Siloam Surabaya",
         "height": 75,
-        "restricted": true
+        "restricted": true,
+        "category": "hospital"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [112.7920, -7.2830],
-          [112.7935, -7.2830],
-          [112.7935, -7.2845],
-          [112.7920, -7.2845],
-          [112.7920, -7.2830]
+          [112.726667, -7.286111],
+          [112.727778, -7.286111],
+          [112.727778, -7.287222],
+          [112.726667, -7.287222],
+          [112.726667, -7.286111]
         ]]
       }
     },
     {
       "type": "Feature",
       "properties": {
-        "name": "Universitas Airlangga Kampus C",
-        "height": 45,
-        "restricted": true
+        "name": "RS Mitra Keluarga Surabaya",
+        "height": 70,
+        "restricted": true,
+        "category": "hospital"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [[
-          [112.7900, -7.2780],
-          [112.7915, -7.2780],
-          [112.7915, -7.2795],
-          [112.7900, -7.2795],
-          [112.7900, -7.2780]
+          [112.744167, -7.317222],
+          [112.745278, -7.317222],
+          [112.745278, -7.318333],
+          [112.744167, -7.318333],
+          [112.744167, -7.317222]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS Premier Surabaya",
+        "height": 72,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.736389, -7.327500],
+          [112.737500, -7.327500],
+          [112.737500, -7.328611],
+          [112.736389, -7.328611],
+          [112.736389, -7.327500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS William Booth",
+        "height": 68,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.734722, -7.263611],
+          [112.735833, -7.263611],
+          [112.735833, -7.264722],
+          [112.734722, -7.264722],
+          [112.734722, -7.263611]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS Husada Utama",
+        "height": 65,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.719444, -7.293889],
+          [112.720556, -7.293889],
+          [112.720556, -7.295000],
+          [112.719444, -7.295000],
+          [112.719444, -7.293889]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS PHC Surabaya",
+        "height": 66,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.747222, -7.321667],
+          [112.748333, -7.321667],
+          [112.748333, -7.322778],
+          [112.747222, -7.322778],
+          [112.747222, -7.321667]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS Adi Husada Undaan Wetan",
+        "height": 64,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.744722, -7.252500],
+          [112.745833, -7.252500],
+          [112.745833, -7.253611],
+          [112.744722, -7.253611],
+          [112.744722, -7.252500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS Manyar Medical Centre",
+        "height": 62,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.755833, -7.305000],
+          [112.756944, -7.305000],
+          [112.756944, -7.306111],
+          [112.755833, -7.306111],
+          [112.755833, -7.305000]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS Islam Surabaya",
+        "height": 70,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.741667, -7.319444],
+          [112.742778, -7.319444],
+          [112.742778, -7.320556],
+          [112.741667, -7.320556],
+          [112.741667, -7.319444]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "RS Wiyung Sejahtera",
+        "height": 58,
+        "restricted": true,
+        "category": "hospital"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.670278, -7.313889],
+          [112.671389, -7.313889],
+          [112.671389, -7.315000],
+          [112.670278, -7.315000],
+          [112.670278, -7.313889]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Balai Kota Surabaya",
+        "height": 90,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.738056, -7.257500],
+          [112.739444, -7.257500],
+          [112.739444, -7.258889],
+          [112.738056, -7.258889],
+          [112.738056, -7.257500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Grahadi",
+        "height": 85,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.741667, -7.258333],
+          [112.743056, -7.258333],
+          [112.743056, -7.259722],
+          [112.741667, -7.259722],
+          [112.741667, -7.258333]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung DPRD Surabaya",
+        "height": 68,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.739167, -7.257222],
+          [112.740278, -7.257222],
+          [112.740278, -7.258333],
+          [112.739167, -7.258333],
+          [112.739167, -7.257222]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kantor Pos Besar Surabaya",
+        "height": 55,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.739722, -7.258611],
+          [112.740556, -7.258611],
+          [112.740556, -7.259444],
+          [112.739722, -7.259444],
+          [112.739722, -7.258611]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kantor Samsat Surabaya Selatan",
+        "height": 48,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.726389, -7.345833],
+          [112.727500, -7.345833],
+          [112.727500, -7.346944],
+          [112.726389, -7.346944],
+          [112.726389, -7.345833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kantor Imigrasi Surabaya",
+        "height": 52,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.747778, -7.290833],
+          [112.748889, -7.290833],
+          [112.748889, -7.291944],
+          [112.747778, -7.291944],
+          [112.747778, -7.290833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kantor Walikota Surabaya Selatan",
+        "height": 45,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.740556, -7.337500],
+          [112.741667, -7.337500],
+          [112.741667, -7.338611],
+          [112.740556, -7.338611],
+          [112.740556, -7.337500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kantor Walikota Surabaya Timur",
+        "height": 46,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.765000, -7.315833],
+          [112.766111, -7.315833],
+          [112.766111, -7.316944],
+          [112.765000, -7.316944],
+          [112.765000, -7.315833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kantor Walikota Surabaya Barat",
+        "height": 44,
+        "restricted": true,
+        "category": "government"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.705833, -7.285556],
+          [112.706944, -7.285556],
+          [112.706944, -7.286667],
+          [112.705833, -7.286667],
+          [112.705833, -7.285556]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Majapahit",
+        "height": 65,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.739722, -7.261667],
+          [112.740833, -7.261667],
+          [112.740833, -7.262778],
+          [112.739722, -7.262778],
+          [112.739722, -7.261667]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel JW Marriott",
+        "height": 120,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737500, -7.266111],
+          [112.738611, -7.266111],
+          [112.738611, -7.267222],
+          [112.737500, -7.267222],
+          [112.737500, -7.266111]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Shangri-La",
+        "height": 115,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737778, -7.268889],
+          [112.738889, -7.268889],
+          [112.738889, -7.270000],
+          [112.737778, -7.270000],
+          [112.737778, -7.268889]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Sheraton",
+        "height": 110,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.735833, -7.265556],
+          [112.736944, -7.265556],
+          [112.736944, -7.266667],
+          [112.735833, -7.266667],
+          [112.735833, -7.265556]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Bumi Surabaya",
+        "height": 78,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.738611, -7.264444],
+          [112.739722, -7.264444],
+          [112.739722, -7.265556],
+          [112.738611, -7.265556],
+          [112.738611, -7.264444]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Ciputra World",
+        "height": 105,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.720000, -7.288056],
+          [112.721111, -7.288056],
+          [112.721111, -7.289167],
+          [112.720000, -7.289167],
+          [112.720000, -7.288056]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Vasa Surabaya",
+        "height": 95,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.743056, -7.293611],
+          [112.744167, -7.293611],
+          [112.744167, -7.294722],
+          [112.743056, -7.294722],
+          [112.743056, -7.293611]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Novotel Surabaya",
+        "height": 88,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737222, -7.271667],
+          [112.738333, -7.271667],
+          [112.738333, -7.272778],
+          [112.737222, -7.272778],
+          [112.737222, -7.271667]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Ibis Surabaya City Center",
+        "height": 72,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.739167, -7.265833],
+          [112.740278, -7.265833],
+          [112.740278, -7.266944],
+          [112.739167, -7.266944],
+          [112.739167, -7.265833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Airlangga Kampus A",
+        "height": 55,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.754167, -7.269722],
+          [112.756111, -7.269722],
+          [112.756111, -7.271667],
+          [112.754167, -7.271667],
+          [112.754167, -7.269722]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Airlangga Kampus B",
+        "height": 50,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.718056, -7.270278],
+          [112.720000, -7.270278],
+          [112.720000, -7.272222],
+          [112.718056, -7.272222],
+          [112.718056, -7.270278]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Institut Teknologi Sepuluh Nopember",
+        "height": 60,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.793889, -7.280556],
+          [112.796389, -7.280556],
+          [112.796389, -7.283056],
+          [112.793889, -7.283056],
+          [112.793889, -7.280556]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Surabaya",
+        "height": 52,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.736944, -7.329167],
+          [112.738889, -7.329167],
+          [112.738889, -7.331111],
+          [112.736944, -7.331111],
+          [112.736944, -7.329167]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Kristen Petra",
+        "height": 48,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.716111, -7.285000],
+          [112.718056, -7.285000],
+          [112.718056, -7.286944],
+          [112.716111, -7.286944],
+          [112.716111, -7.285000]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Pembangunan Nasional",
+        "height": 54,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.733889, -7.324722],
+          [112.735833, -7.324722],
+          [112.735833, -7.326667],
+          [112.733889, -7.326667],
+          [112.733889, -7.324722]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Hang Tuah",
+        "height": 51,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.748333, -7.315556],
+          [112.750278, -7.315556],
+          [112.750278, -7.317500],
+          [112.748333, -7.317500],
+          [112.748333, -7.315556]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Wijaya Kusuma",
+        "height": 49,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.733056, -7.317222],
+          [112.735000, -7.317222],
+          [112.735000, -7.319167],
+          [112.733056, -7.319167],
+          [112.733056, -7.317222]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas Narotama",
+        "height": 47,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.745556, -7.288889],
+          [112.747500, -7.288889],
+          [112.747500, -7.290833],
+          [112.745556, -7.290833],
+          [112.745556, -7.288889]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universitas 17 Agustus 1945",
+        "height": 50,
+        "restricted": true,
+        "category": "university"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.735833, -7.284444],
+          [112.737778, -7.284444],
+          [112.737778, -7.286389],
+          [112.735833, -7.286389],
+          [112.735833, -7.284444]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Perkantoran SIER Tower",
+        "height": 95,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.718333, -7.332778],
+          [112.719444, -7.332778],
+          [112.719444, -7.333889],
+          [112.718333, -7.333889],
+          [112.718333, -7.332778]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Menara BCA",
+        "height": 105,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737778, -7.264167],
+          [112.738611, -7.264167],
+          [112.738611, -7.265000],
+          [112.737778, -7.265000],
+          [112.737778, -7.264167]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Graha Pena",
+        "height": 125,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737222, -7.281667],
+          [112.738333, -7.281667],
+          [112.738333, -7.282778],
+          [112.737222, -7.282778],
+          [112.737222, -7.281667]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Graha Bukopin",
+        "height": 98,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.736667, -7.264722],
+          [112.737500, -7.264722],
+          [112.737500, -7.265556],
+          [112.736667, -7.265556],
+          [112.736667, -7.264722]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Siola",
+        "height": 75,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.739167, -7.260278],
+          [112.740000, -7.260278],
+          [112.740000, -7.261111],
+          [112.739167, -7.261111],
+          [112.739167, -7.260278]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Bank Indonesia",
+        "height": 95,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.738611, -7.260833],
+          [112.739722, -7.260833],
+          [112.739722, -7.261944],
+          [112.738611, -7.261944],
+          [112.738611, -7.260833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Bank Mandiri",
+        "height": 92,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.738056, -7.262222],
+          [112.739167, -7.262222],
+          [112.739167, -7.263333],
+          [112.738056, -7.263333],
+          [112.738056, -7.262222]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung BNI",
+        "height": 88,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.739444, -7.262778],
+          [112.740556, -7.262778],
+          [112.740556, -7.263889],
+          [112.739444, -7.263889],
+          [112.739444, -7.262778]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung BRI",
+        "height": 85,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.738333, -7.263333],
+          [112.739444, -7.263333],
+          [112.739444, -7.264444],
+          [112.738333, -7.264444],
+          [112.738333, -7.263333]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung BTN",
+        "height": 82,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737500, -7.262500],
+          [112.738611, -7.262500],
+          [112.738611, -7.263611],
+          [112.737500, -7.263611],
+          [112.737500, -7.262500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung PTPN X",
+        "height": 68,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.735556, -7.269167],
+          [112.736667, -7.269167],
+          [112.736667, -7.270278],
+          [112.735556, -7.270278],
+          [112.735556, -7.269167]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Telkom Regional VII",
+        "height": 75,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.734167, -7.283333],
+          [112.735278, -7.283333],
+          [112.735278, -7.284444],
+          [112.734167, -7.284444],
+          [112.734167, -7.283333]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung PLN Wilayah Jawa Timur",
+        "height": 72,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.733333, -7.277222],
+          [112.734444, -7.277222],
+          [112.734444, -7.278333],
+          [112.733333, -7.278333],
+          [112.733333, -7.277222]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Waskita Karya",
+        "height": 78,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.732222, -7.271111],
+          [112.733333, -7.271111],
+          [112.733333, -7.272222],
+          [112.732222, -7.272222],
+          [112.732222, -7.271111]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gedung Indonesia Stock Exchange",
+        "height": 85,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.738889, -7.265000],
+          [112.740000, -7.265000],
+          [112.740000, -7.266111],
+          [112.738889, -7.266111],
+          [112.738889, -7.265000]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Puncak Kertajaya",
+        "height": 85,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.746944, -7.293056],
+          [112.747778, -7.293056],
+          [112.747778, -7.293889],
+          [112.746944, -7.293889],
+          [112.746944, -7.293056]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Gateway Pasteur",
+        "height": 92,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.731111, -7.285833],
+          [112.731944, -7.285833],
+          [112.731944, -7.286667],
+          [112.731111, -7.286667],
+          [112.731111, -7.285833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Puncak Permai",
+        "height": 88,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.717778, -7.297778],
+          [112.718611, -7.297778],
+          [112.718611, -7.298611],
+          [112.717778, -7.298611],
+          [112.717778, -7.297778]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Puncak Marina",
+        "height": 95,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.667222, -7.298333],
+          [112.668056, -7.298333],
+          [112.668056, -7.299167],
+          [112.667222, -7.299167],
+          [112.667222, -7.298333]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Gunawangsa Merr",
+        "height": 78,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.750000, -7.314167],
+          [112.750833, -7.314167],
+          [112.750833, -7.315000],
+          [112.750000, -7.315000],
+          [112.750000, -7.314167]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Waterplace",
+        "height": 98,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.664444, -7.299167],
+          [112.665556, -7.299167],
+          [112.665556, -7.300278],
+          [112.664444, -7.300278],
+          [112.664444, -7.299167]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen The Peak",
+        "height": 102,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.721667, -7.287222],
+          [112.722778, -7.287222],
+          [112.722778, -7.288333],
+          [112.721667, -7.288333],
+          [112.721667, -7.287222]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Pakuwon Residence",
+        "height": 96,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.670556, -7.295833],
+          [112.671667, -7.295833],
+          [112.671667, -7.296944],
+          [112.670556, -7.296944],
+          [112.670556, -7.295833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Grand Dhika City",
+        "height": 85,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.746111, -7.334167],
+          [112.747222, -7.334167],
+          [112.747222, -7.335278],
+          [112.746111, -7.335278],
+          [112.746111, -7.334167]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Gunawangsa Tidar",
+        "height": 88,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.730833, -7.275278],
+          [112.731944, -7.275278],
+          [112.731944, -7.276389],
+          [112.730833, -7.276389],
+          [112.730833, -7.275278]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Tree Park",
+        "height": 92,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.669167, -7.293611],
+          [112.670278, -7.293611],
+          [112.670278, -7.294722],
+          [112.669167, -7.294722],
+          [112.669167, -7.293611]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen U Residence",
+        "height": 90,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.720278, -7.292500],
+          [112.721389, -7.292500],
+          [112.721389, -7.293611],
+          [112.720278, -7.293611],
+          [112.720278, -7.292500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Sentra Timur Residence",
+        "height": 86,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.793056, -7.323889],
+          [112.794167, -7.323889],
+          [112.794167, -7.325000],
+          [112.793056, -7.325000],
+          [112.793056, -7.323889]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Bale Hinggil",
+        "height": 84,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.747500, -7.295556],
+          [112.748611, -7.295556],
+          [112.748611, -7.296667],
+          [112.747500, -7.296667],
+          [112.747500, -7.295556]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Newton Residence",
+        "height": 82,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.719722, -7.289167],
+          [112.720833, -7.289167],
+          [112.720833, -7.290278],
+          [112.719722, -7.290278],
+          [112.719722, -7.289167]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stasiun Gubeng",
+        "height": 35,
+        "restricted": true,
+        "category": "transportation"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.750278, -7.265833],
+          [112.751389, -7.265833],
+          [112.751389, -7.266944],
+          [112.750278, -7.266944],
+          [112.750278, -7.265833]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Stasiun Surabaya Pasar Turi",
+        "height": 32,
+        "restricted": true,
+        "category": "transportation"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.739444, -7.242500],
+          [112.740556, -7.242500],
+          [112.740556, -7.243611],
+          [112.739444, -7.243611],
+          [112.739444, -7.242500]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Terminal Bungurasih",
+        "height": 28,
+        "restricted": true,
+        "category": "transportation"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737500, -7.381389],
+          [112.739167, -7.381389],
+          [112.739167, -7.383056],
+          [112.737500, -7.383056],
+          [112.737500, -7.381389]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Masjid Al Akbar",
+        "height": 65,
+        "restricted": true,
+        "category": "religious"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.768611, -7.319444],
+          [112.770278, -7.319444],
+          [112.770278, -7.321111],
+          [112.768611, -7.321111],
+          [112.768611, -7.319444]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Masjid Ampel",
+        "height": 45,
+        "restricted": true,
+        "category": "religious"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.741389, -7.229722],
+          [112.742500, -7.229722],
+          [112.742500, -7.230833],
+          [112.741389, -7.230833],
+          [112.741389, -7.229722]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Gereja Kelahiran Santa Maria",
+        "height": 42,
+        "restricted": true,
+        "category": "religious"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.738889, -7.247222],
+          [112.739722, -7.247222],
+          [112.739722, -7.248056],
+          [112.738889, -7.248056],
+          [112.738889, -7.247222]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SMA Negeri 5 Surabaya",
+        "height": 35,
+        "restricted": false,
+        "category": "school"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.743611, -7.280556],
+          [112.744722, -7.280556],
+          [112.744722, -7.281667],
+          [112.743611, -7.281667],
+          [112.743611, -7.280556]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SMA Negeri 2 Surabaya",
+        "height": 38,
+        "restricted": false,
+        "category": "school"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.746667, -7.272778],
+          [112.747778, -7.272778],
+          [112.747778, -7.273889],
+          [112.746667, -7.273889],
+          [112.746667, -7.272778]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SMA Negeri 1 Surabaya",
+        "height": 36,
+        "restricted": false,
+        "category": "school"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.737778, -7.258889],
+          [112.738889, -7.258889],
+          [112.738889, -7.260000],
+          [112.737778, -7.260000],
+          [112.737778, -7.258889]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Kebun Binatang Surabaya",
+        "height": 25,
+        "restricted": false,
+        "category": "recreation"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.733889, -7.267222],
+          [112.736389, -7.267222],
+          [112.736389, -7.269722],
+          [112.733889, -7.269722],
+          [112.733889, -7.267222]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Monumen Kapal Selam",
+        "height": 30,
+        "restricted": true,
+        "category": "monument"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.742500, -7.240278],
+          [112.743611, -7.240278],
+          [112.743611, -7.241389],
+          [112.742500, -7.241389],
+          [112.742500, -7.240278]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Monumen Bambu Runcing",
+        "height": 42,
+        "restricted": true,
+        "category": "monument"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.745833, -7.244444],
+          [112.746667, -7.244444],
+          [112.746667, -7.245278],
+          [112.745833, -7.245278],
+          [112.745833, -7.244444]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Tugu Pahlawan",
+        "height": 41,
+        "restricted": true,
+        "category": "monument"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.738056, -7.246389],
+          [112.738889, -7.246389],
+          [112.738889, -7.247222],
+          [112.738056, -7.247222],
+          [112.738056, -7.246389]
         ]]
       }
     }

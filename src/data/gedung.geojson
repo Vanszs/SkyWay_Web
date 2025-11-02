@@ -1440,6 +1440,747 @@
           [112.7830, -7.3470]
         ]]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Peak - Tunjungan Plaza 5",
+        "height": 201,
+        "restricted": true,
+        "category": "skyscraper"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7370, -7.2620],
+          [112.7385, -7.2620],
+          [112.7385, -7.2635],
+          [112.7370, -7.2635],
+          [112.7370, -7.2620]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "One Icon Residence - Tunjungan Plaza 6",
+        "height": 198,
+        "restricted": true,
+        "category": "skyscraper"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7385, -7.2620],
+          [112.7400, -7.2620],
+          [112.7400, -7.2635],
+          [112.7385, -7.2635],
+          [112.7385, -7.2620]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "One Galaxy Elitz Apartment",
+        "height": 192,
+        "restricted": true,
+        "category": "skyscraper"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7260, -7.2560],
+          [112.7275, -7.2560],
+          [112.7275, -7.2575],
+          [112.7260, -7.2575],
+          [112.7260, -7.2560]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "One Galaxy Luxe Apartment",
+        "height": 192,
+        "restricted": true,
+        "category": "skyscraper"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7275, -7.2560],
+          [112.7290, -7.2560],
+          [112.7290, -7.2575],
+          [112.7275, -7.2575],
+          [112.7275, -7.2560]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pakuwon Mall - The Ritz Mansion",
+        "height": 178,
+        "restricted": true,
+        "category": "skyscraper"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6680, -7.2970],
+          [112.6695, -7.2970],
+          [112.6695, -7.2985],
+          [112.6680, -7.2985],
+          [112.6680, -7.2970]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Grand Sungkono Lagoon I - Caspian",
+        "height": 174,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7065, -7.2910],
+          [112.7080, -7.2910],
+          [112.7080, -7.2925],
+          [112.7065, -7.2925],
+          [112.7065, -7.2910]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pakuwon Tower",
+        "height": 172,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7410, -7.2640],
+          [112.7425, -7.2640],
+          [112.7425, -7.2655],
+          [112.7410, -7.2655],
+          [112.7410, -7.2640]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Puncak CBD Tower A",
+        "height": 168,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7040, -7.3095],
+          [112.7055, -7.3095],
+          [112.7055, -7.3110],
+          [112.7040, -7.3110],
+          [112.7040, -7.3095]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Puncak CBD Tower B",
+        "height": 168,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7055, -7.3095],
+          [112.7070, -7.3095],
+          [112.7070, -7.3110],
+          [112.7055, -7.3110],
+          [112.7055, -7.3095]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Puncak CBD Tower C",
+        "height": 168,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7070, -7.3095],
+          [112.7085, -7.3095],
+          [112.7085, -7.3110],
+          [112.7070, -7.3110],
+          [112.7070, -7.3095]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Voila 1 - Ciputra World",
+        "height": 165,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7220, -7.2940],
+          [112.7235, -7.2940],
+          [112.7235, -7.2955],
+          [112.7220, -7.2955],
+          [112.7220, -7.2940]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Voila 2 - Ciputra World",
+        "height": 165,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7235, -7.2940],
+          [112.7250, -7.2940],
+          [112.7250, -7.2955],
+          [112.7235, -7.2955],
+          [112.7235, -7.2940]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ciputra Skyloft Office Tower",
+        "height": 161,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7210, -7.2925],
+          [112.7225, -7.2925],
+          [112.7225, -7.2940],
+          [112.7210, -7.2940],
+          [112.7210, -7.2925]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Puncak Dharmahusada A",
+        "height": 161,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7800, -7.2580],
+          [112.7815, -7.2580],
+          [112.7815, -7.2595],
+          [112.7800, -7.2595],
+          [112.7800, -7.2580]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Puncak Dharmahusada B",
+        "height": 161,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7815, -7.2580],
+          [112.7830, -7.2580],
+          [112.7830, -7.2595],
+          [112.7815, -7.2595],
+          [112.7815, -7.2580]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Puncak Dharmahusada C",
+        "height": 161,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7830, -7.2580],
+          [112.7845, -7.2580],
+          [112.7845, -7.2595],
+          [112.7830, -7.2595],
+          [112.7830, -7.2580]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "One East Apartment",
+        "height": 159,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7820, -7.2800],
+          [112.7835, -7.2800],
+          [112.7835, -7.2815],
+          [112.7820, -7.2815],
+          [112.7820, -7.2800]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Via - Ciputra World",
+        "height": 150,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7190, -7.2935],
+          [112.7205, -7.2935],
+          [112.7205, -7.2950],
+          [112.7190, -7.2950],
+          [112.7190, -7.2935]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Vue - Ciputra World",
+        "height": 150,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7175, -7.2935],
+          [112.7190, -7.2935],
+          [112.7190, -7.2950],
+          [112.7175, -7.2950],
+          [112.7175, -7.2935]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pakuwon Orchard Mansion",
+        "height": 145,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6755, -7.2880],
+          [112.6770, -7.2880],
+          [112.6770, -7.2895],
+          [112.6755, -7.2895],
+          [112.6755, -7.2880]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Pakuwon Tanglin Mansion",
+        "height": 145,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6770, -7.2880],
+          [112.6785, -7.2880],
+          [112.6785, -7.2895],
+          [112.6770, -7.2895],
+          [112.6770, -7.2880]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Marvell City Tower C",
+        "height": 145,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7465, -7.2890],
+          [112.7480, -7.2890],
+          [112.7480, -7.2905],
+          [112.7465, -7.2905],
+          [112.7465, -7.2890]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BESS Mansion Apartments",
+        "height": 144,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7350, -7.3250],
+          [112.7365, -7.3250],
+          [112.7365, -7.3265],
+          [112.7350, -7.3265],
+          [112.7350, -7.3250]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Adhiwangsa Residence Tower 1",
+        "height": 143,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6820, -7.2850],
+          [112.6835, -7.2850],
+          [112.6835, -7.2865],
+          [112.6820, -7.2865],
+          [112.6820, -7.2850]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Adhiwangsa Residence Tower 2",
+        "height": 137,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6835, -7.2850],
+          [112.6850, -7.2850],
+          [112.6850, -7.2865],
+          [112.6835, -7.2865],
+          [112.6835, -7.2850]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Water Place Residence Tower A",
+        "height": 141,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6720, -7.2915],
+          [112.6735, -7.2915],
+          [112.6735, -7.2930],
+          [112.6720, -7.2930],
+          [112.6720, -7.2915]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Water Place Residence Tower B",
+        "height": 141,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6735, -7.2920],
+          [112.6750, -7.2920],
+          [112.6750, -7.2935],
+          [112.6735, -7.2935],
+          [112.6735, -7.2920]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Water Place Residence Tower C",
+        "height": 141,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6750, -7.2925],
+          [112.6765, -7.2925],
+          [112.6765, -7.2940],
+          [112.6750, -7.2940],
+          [112.6750, -7.2925]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Grand Sungkono Lagoon II - Venetian",
+        "height": 137,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7080, -7.2910],
+          [112.7095, -7.2910],
+          [112.7095, -7.2925],
+          [112.7080, -7.2925],
+          [112.7080, -7.2910]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Regency Apartment",
+        "height": 133,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7450, -7.2700],
+          [112.7465, -7.2700],
+          [112.7465, -7.2715],
+          [112.7450, -7.2715],
+          [112.7450, -7.2700]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "The Trillium Office & Residence",
+        "height": 129,
+        "restricted": true,
+        "category": "mixed"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7495, -7.2660],
+          [112.7510, -7.2660],
+          [112.7510, -7.2675],
+          [112.7495, -7.2675],
+          [112.7495, -7.2660]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Apartemen Taman Beverly",
+        "height": 129,
+        "restricted": true,
+        "category": "apartment"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.6960, -7.2850],
+          [112.6975, -7.2850],
+          [112.6975, -7.2865],
+          [112.6960, -7.2865],
+          [112.6960, -7.2850]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Fairfield by Marriott Surabaya",
+        "height": 121,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7100, -7.2890],
+          [112.7115, -7.2890],
+          [112.7115, -7.2905],
+          [112.7100, -7.2905],
+          [112.7100, -7.2890]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Sheraton Surabaya Hotel & Towers",
+        "height": 113,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7395, -7.2630],
+          [112.7410, -7.2630],
+          [112.7410, -7.2645],
+          [112.7395, -7.2645],
+          [112.7395, -7.2630]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hotel Wyndham Pullman",
+        "height": 109,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7425, -7.2675],
+          [112.7440, -7.2675],
+          [112.7440, -7.2690],
+          [112.7425, -7.2690],
+          [112.7425, -7.2675]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "JW Marriott Surabaya",
+        "height": 105,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7340, -7.2595],
+          [112.7355, -7.2595],
+          [112.7355, -7.2610],
+          [112.7340, -7.2610],
+          [112.7340, -7.2595]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bumi Surabaya City Resort",
+        "height": 103,
+        "restricted": true,
+        "category": "hotel"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7410, -7.2710],
+          [112.7425, -7.2710],
+          [112.7425, -7.2725],
+          [112.7410, -7.2725],
+          [112.7410, -7.2710]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Plaza BRI",
+        "height": 101,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7405, -7.2730],
+          [112.7420, -7.2730],
+          [112.7420, -7.2745],
+          [112.7405, -7.2745],
+          [112.7405, -7.2730]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Graha Pena",
+        "height": 100,
+        "restricted": true,
+        "category": "office"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [112.7380, -7.2805],
+          [112.7395, -7.2805],
+          [112.7395, -7.2820],
+          [112.7380, -7.2820],
+          [112.7380, -7.2805]
+        ]]
+      }
     }
   ]
 }
