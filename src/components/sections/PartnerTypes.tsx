@@ -184,7 +184,7 @@ export default function PartnerTypes() {
               </div>
               <h4 className="font-bold text-white mb-2">FreshMart</h4>
               <p className="text-sm text-neutral-300 mb-3">
-                "Reduced delivery time from 2 hours to 15 minutes. Customer satisfaction increased by 85%."
+                &quot;Reduced delivery time from 2 hours to 15 minutes. Customer satisfaction increased by 85%.&quot;
               </p>
               <div className="text-sky-gold font-bold">+300% Order Volume</div>
             </BubbleCard>
@@ -195,7 +195,7 @@ export default function PartnerTypes() {
               </div>
               <h4 className="font-bold text-white mb-2">SpeedLogistics</h4>
               <p className="text-sm text-neutral-300 mb-3">
-                "SkyWay handles our peak hours perfectly. Operational costs down by 40%."
+                &quot;SkyWay handles our peak hours perfectly. Operational costs down by 40%.&quot;
               </p>
               <div className="text-sky-gold font-bold">40% Cost Reduction</div>
             </BubbleCard>
@@ -206,7 +206,7 @@ export default function PartnerTypes() {
               </div>
               <h4 className="font-bold text-white mb-2">Warung Bu Siti</h4>
               <p className="text-sm text-neutral-300 mb-3">
-                "Small business, big impact. Now we serve 5x more customers daily."
+                &quot;Small business, big impact. Now we serve 5x more customers daily.&quot;
               </p>
               <div className="text-sky-gold font-bold">5x Daily Orders</div>
             </BubbleCard>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Toaster } from '@/components/ui/toaster'
+import '@/styles/admin-modern.css'
 
 export const metadata: Metadata = {
   title: 'SkyWay Admin Dashboard',

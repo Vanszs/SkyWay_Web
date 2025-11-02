@@ -59,6 +59,52 @@ const config: Config = {
   			'sky-gold': '#E0A458',
   			'sky-light': '#F7F9FC',
   			'sky-mid': '#A9B1B9',
+  			// Admin-specific color palette
+  			admin: {
+  				// Primary colors - Clean and professional
+  				'50': '#f8fafc',
+  				'100': '#f1f5f9',
+  				'200': '#e2e8f0',
+  				'300': '#cbd5e1',
+  				'400': '#94a3b8',
+  				'500': '#64748b',
+  				'600': '#475569',
+  				'700': '#334155',
+  				'800': '#1e293b',
+  				'900': '#0f172a',
+  				'950': '#020617',
+  				// Accent colors
+  				primary: '#3b82f6', // Clean blue
+  				secondary: '#10b981', // Success green
+  				accent: '#f59e0b', // Warning amber
+  				danger: '#ef4444', // Danger red
+  				info: '#06b6d4', // Info cyan
+  				// Status colors
+  				success: '#10b981',
+  				error: '#ef4444',
+  				warning: '#f59e0b',
+  				pending: '#f59e0b',
+  				active: '#10b981',
+  				inactive: '#6b7280',
+  				// Background colors
+  				bg: '#ffffff',
+  				'secondary-bg': '#f8fafc',
+  				'surface': '#ffffff',
+  				'surface-secondary': '#f1f5f9',
+  				// Text colors
+  				text: '#1e293b',
+  				'text-secondary': '#64748b',
+  				'text-muted': '#94a3b8',
+  				// Border colors
+  				border: '#e2e8f0',
+  				'border-secondary': '#f1f5f9',
+  				// Sidebar colors
+  				'sidebar-bg': '#1e293b',
+  				'sidebar-text': '#f1f5f9',
+  				'sidebar-text-secondary': '#94a3b8',
+  				'sidebar-hover': '#334155',
+  				'sidebar-active': '#3b82f6'
+  			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

@@ -1,0 +1,236 @@
+/* Modern Admin Dashboard Styles */
+
+:root {
+  /* Colors from design system */
+  --admin-primary: #0D1B2A;
+  --admin-secondary: #1B263B;
+  --admin-accent: #E0A458;
+  --admin-neutral-light: #F7F9FC;
+  --admin-neutral-mid: #A9B1B9;
+  --admin-border: #e5e7eb;
+  --admin-text-primary: #111827;
+  --admin-text-secondary: #6b7280;
+  
+  /* Spacing */
+  --admin-spacing-xs: 0.5rem;
+  --admin-spacing-sm: 0.75rem;
+  --admin-spacing-md: 1rem;
+  --admin-spacing-lg: 1.5rem;
+  --admin-spacing-xl: 2rem;
+  
+  /* Shadows */
+  --admin-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --admin-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --admin-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+.admin-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-track {
+  background: var(--admin-neutral-light);
+  border-radius: 3px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--admin-neutral-mid);
+  border-radius: 3px;
+}
+
+.admin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--admin-accent);
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Button ripple effect */
+.admin-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.admin-btn:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Card hover effects */
+.admin-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--admin-shadow-md);
+}
+
+/* Table styles */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table thead {
+  background: var(--admin-neutral-light);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.admin-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--admin-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--admin-border);
+  font-size: 0.875rem;
+}
+
+.admin-table tbody tr {
+  transition: background-color 0.15s ease-in-out;
+}
+
+.admin-table tbody tr:hover {
+  background-color: var(--admin-neutral-light);
+}
+
+/* Loading spinner */
+.admin-spinner {
+  border: 2px solid var(--admin-border);
+  border-top: 2px solid var(--admin-accent);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Toast notifications */
+.admin-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  background: white;
+  box-shadow: var(--admin-shadow-lg);
+  animation: slideIn 0.3s ease-out;
+  z-index: 9999;
+}
+
+/* Progress bar */
+.admin-progress {
+  height: 0.5rem;
+  background: var(--admin-border);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.admin-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--admin-accent) 0%, #c98d42 100%);
+  border-radius: 9999px;
+  transition: width 0.3s ease-in-out;
+}
+
+/* Badge styles */
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Status indicators */
+.status-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-idle {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-charging {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-maintenance {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .admin-table {
+    font-size: 0.8125rem;
+  }
+  
+  .admin-table th,
+  .admin-table td {
+    padding: 0.5rem;
+  }
+}
