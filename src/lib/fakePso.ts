@@ -15,141 +15,259 @@ export function calculateFakePSORoute(
   
   const safeDistanceKm = safeDistance / 1000
   
-  // 🔍 DEBUG: Analyze buildings along the route path
-  const straightLine = turf.lineString([[start.lng, start.lat], [end.lng, end.lat]])
-  const buildingsAlongPath = analyzeBuildingsAlongPath(start, end, buildings, safeDistanceKm)
-  
-  console.log(`🔍 DEBUG: Buildings along path: ${buildingsAlongPath.length}`)
-  buildingsAlongPath.forEach((building, index) => {
-    console.log(`🔍 DEBUG: Building ${index}: buffer_size=${building.bufferSize.toFixed(0)}m, distance_from_start=${building.distanceFromStart.toFixed(0)}m`)
-  })
-  
-  // 🎯 NEW STRATEGY: Sequential building processing
-  if (buildingsAlongPath.length > 0) {
-    console.log('🎯 DEBUG: Using sequential building processing strategy')
-    return calculateSequentialRoute(start, end, buildingsAlongPath, safeDistanceKm)
-  }
-  
   // 1️⃣ Buat garis lurus start → end
-  // 2️⃣ Buat buffer 100m untuk setiap gedung dan gabungkan yang saling tumpang tindih
-  const mergedBuffer = createMergedBuffer(buildings, safeDistanceKm)
+  const straightLine = turf.lineString([[start.lng, start.lat], [end.lng, end.lat]])
+  // 2️⃣ Buat buffer groups (gabungkan buffer yang overlap/menyatu)
+  const bufferGroups = createBufferGroups(buildings, safeDistanceKm)
+  
+  console.log(`📦 DEBUG: Created ${bufferGroups.length} buffer groups`)
   
   // 3️⃣ Jika tidak ada buffer yang terbentuk, return garis lurus
-  if (!mergedBuffer) {
+  if (bufferGroups.length === 0) {
     console.log('✅ No buildings to avoid, using straight line')
     return [start, end]
   }
   
-  // 4️⃣ Cek apakah garis lurus memotong buffer
-  const intersects = turf.booleanIntersects(straightLine, mergedBuffer)
+  // 4️⃣ Cek apakah garis lurus memotong salah satu buffer group
+  const intersectingGroups = bufferGroups.filter(group => 
+    turf.booleanIntersects(straightLine, group.buffer)
+  )
   
-  if (!intersects) {
-    console.log('✅ Direct line is safe, using straight route')
+  console.log(`🔍 DEBUG: ${intersectingGroups.length} buffer groups intersect the direct path`)
+  
+  if (intersectingGroups.length === 0) {
+    console.log('✅ Direct line is safe from all buffer groups')
     return [start, end]
   }
   
-  // 5️⃣ Jika memotong, buat rute yang menempel di tepi buffer
-  console.log('⚠️ Direct line intersects buffer, calculating edge-following route')
-  return calculateBufferEdgeRoute(start, end, mergedBuffer, straightLine, safeDistanceKm)
+  // 5️⃣ Jika ada intersection, gunakan iterative multi-obstacle routing
+  console.log('⚠️ Direct line intersects obstacles, calculating multi-obstacle route')
+  return calculateMultiObstacleRoute(start, end, intersectingGroups, straightLine, safeDistanceKm)
 }
 
-// 🎯 NEW: Process buildings sequentially along the route path
-function calculateSequentialRoute(
+// 📦 NEW: Buat buffer groups - gabungkan buffer yang overlap/menyatu
+function createBufferGroups(
+  buildings: any[],
+  safeDistanceKm: number
+): Array<{ buffer: any; buildingIndices: number[]; isMerged: boolean }> {
+  if (buildings.length === 0) return []
+  
+  console.log(`📦 DEBUG: Creating buffer groups from ${buildings.length} buildings...`)
+  
+  try {
+    // 1️⃣ Buat buffer untuk setiap gedung
+    const buffers = buildings
+      .map((building, index) => {
+        try {
+          const buffer = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
+          return { buffer, buildingIndex: index }
+        } catch (e) {
+          console.warn(`Failed to buffer building ${index}:`, e)
+          return null
+        }
+      })
+      .filter(b => b !== null) as Array<{ buffer: any; buildingIndex: number }>
+    
+    if (buffers.length === 0) return []
+    
+    // 2️⃣ Group buffers yang overlap/menyatu
+    const processed = new Set<number>()
+    const groups: Array<{ buffer: any; buildingIndices: number[]; isMerged: boolean }> = []
+    
+    for (let i = 0; i < buffers.length; i++) {
+      if (processed.has(i)) continue
+      
+      let groupBuffer = buffers[i].buffer
+      const buildingIndices = [buffers[i].buildingIndex]
+      processed.add(i)
+      
+      // Cari buffer lain yang overlap dengan group ini
+      let foundOverlap = true
+      while (foundOverlap) {
+        foundOverlap = false
+        
+        for (let j = 0; j < buffers.length; j++) {
+          if (processed.has(j)) continue
+          
+          try {
+            // Cek apakah buffer[j] overlap atau touch dengan groupBuffer
+            const overlaps = turf.booleanOverlap(groupBuffer, buffers[j].buffer)
+            const intersects = turf.booleanIntersects(groupBuffer, buffers[j].buffer)
+            
+            if (overlaps || intersects) {
+              console.log(`📦 DEBUG: Buffer ${buffers[j].buildingIndex} overlaps with group (${buildingIndices.join(', ')})`)
+              
+              // Merge ke group
+              const unionResult = turf.union(
+                turf.featureCollection([groupBuffer, buffers[j].buffer])
+              )
+              
+              if (unionResult) {
+                groupBuffer = unionResult
+                buildingIndices.push(buffers[j].buildingIndex)
+                processed.add(j)
+                foundOverlap = true
+                console.log(`📦 DEBUG: Successfully merged buffer ${buffers[j].buildingIndex} into group`)
+              }
+            }
+          } catch (e) {
+            console.warn(`Failed to check/union buffer ${j}:`, e)
+          }
+        }
+      }
+      
+      const isMerged = buildingIndices.length > 1
+      console.log(`📦 DEBUG: Created buffer group with ${buildingIndices.length} building(s) ${isMerged ? '(MERGED)' : '(SINGLE)'}: [${buildingIndices.join(', ')}]`)
+      
+      groups.push({
+        buffer: groupBuffer,
+        buildingIndices,
+        isMerged
+      })
+    }
+    
+    console.log(`✅ Created ${groups.length} buffer groups total`)
+    return groups
+    
+  } catch (e) {
+    console.error('Error creating buffer groups:', e)
+    return []
+  }
+}
+
+// 🎯 NEW: Calculate route with multiple obstacles (iterative approach)
+function calculateMultiObstacleRoute(
   start: Point,
   end: Point,
-  buildingsAlongPath: Array<{building: any, bufferSize: number, distanceFromStart: number}>,
+  obstacleGroups: Array<{ buffer: any; buildingIndices: number[]; isMerged: boolean }>,
+  straightLine: any,
   safeDistanceKm: number
 ): Point[] {
-  console.log('🎯 DEBUG: Starting sequential route calculation')
+  console.log(`🎯 DEBUG: Starting multi-obstacle route calculation with ${obstacleGroups.length} obstacle groups`)
   
-  let currentPoint = start
+  // Sort obstacle groups by distance from start
+  const startPoint = turf.point([start.lng, start.lat])
+  const sortedObstacles = obstacleGroups
+    .map(group => {
+      const groupCenter = turf.center(group.buffer)
+      const distFromStart = turf.distance(startPoint, groupCenter, { units: 'kilometers' })
+      return { ...group, distFromStart }
+    })
+    .sort((a, b) => a.distFromStart - b.distFromStart)
+  
+  console.log('🎯 DEBUG: Sorted obstacles by distance from start:')
+  sortedObstacles.forEach((obstacle, index) => {
+    console.log(`  Obstacle ${index}: distance=${(obstacle.distFromStart * 1000).toFixed(0)}m, buildings=[${obstacle.buildingIndices.join(', ')}], merged=${obstacle.isMerged}`)
+  })
+  
+  let currentPos = start
   const route: Point[] = [start]
+  let processedObstacles = 0
   
-  // Process each building in order along the path
-  for (let i = 0; i < buildingsAlongPath.length; i++) {
-    const buildingInfo = buildingsAlongPath[i]
-    const building = buildingInfo.building
-    const buffer = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
+  for (const obstacle of sortedObstacles) {
+    console.log(`\n🎯 DEBUG: Processing obstacle group ${processedObstacles + 1}/${sortedObstacles.length}`)
+    console.log(`  Buildings: [${obstacle.buildingIndices.join(', ')}], Merged: ${obstacle.isMerged}`)
     
-    console.log(`🎯 DEBUG: Processing building ${i} at distance ${buildingInfo.distanceFromStart.toFixed(0)}m from start`)
+    // Cek apakah path currentPos → end memotong obstacle ini
+    const pathToEnd = turf.lineString([[currentPos.lng, currentPos.lat], [end.lng, end.lat]])
+    const intersectsObstacle = turf.booleanIntersects(pathToEnd, obstacle.buffer)
     
-    // Check if current path to next building intersects this building's buffer
-    const pathToBuilding = turf.lineString([[currentPoint.lng, currentPoint.lat], [end.lng, end.lat]])
-    const intersectsBuffer = buffer && turf.booleanIntersects(pathToBuilding, buffer)
-    
-    if (intersectsBuffer) {
-      console.log(`🎯 DEBUG: Building ${i} buffer intersects current path, calculating avoidance`)
-      
-      // Calculate avoidance route for this specific building
-      const avoidanceRoute = calculateBuildingAvoidance(currentPoint, end, building, buffer, safeDistanceKm)
-      
-      if (avoidanceRoute) {
-        // Add avoidance waypoints (excluding currentPoint which is already in route)
-        route.push(...avoidanceRoute.slice(1))
-        currentPoint = avoidanceRoute[avoidanceRoute.length - 1]
-        console.log(`🎯 DEBUG: Added ${avoidanceRoute.length - 1} waypoints to avoid building ${i}`)
-      } else {
-        console.warn(`🎯 DEBUG: Failed to calculate avoidance for building ${i}`)
-      }
-    } else {
-      console.log(`🎯 DEBUG: Building ${i} buffer does not intersect current path, skipping`)
+    if (!intersectsObstacle) {
+      console.log(`  ✓ Path does not intersect this obstacle, skipping`)
+      continue
     }
+    
+    console.log(`  ⚠️ Path intersects this obstacle, calculating avoidance...`)
+    
+    // Hitung rute keliling obstacle ini
+    const avoidanceRoute = calculateObstacleAvoidance(
+      currentPos,
+      end,
+      obstacle.buffer,
+      safeDistanceKm
+    )
+    
+    if (avoidanceRoute && avoidanceRoute.length > 1) {
+      // Tambahkan waypoints (skip first point karena itu currentPos)
+      const newWaypoints = avoidanceRoute.slice(1)
+      route.push(...newWaypoints)
+      
+      // Update currentPos ke exit point dari obstacle ini
+      currentPos = newWaypoints[newWaypoints.length - 1]
+      
+      console.log(`  ✓ Added ${newWaypoints.length} waypoints, new position: [${currentPos.lng}, ${currentPos.lat}]`)
+    } else {
+      console.warn(`  ✗ Failed to calculate avoidance for obstacle`)
+    }
+    
+    processedObstacles++
   }
   
   // Add final destination
   route.push(end)
   
-  console.log(`🎯 DEBUG: Sequential route complete with ${route.length} waypoints`)
-  console.log('🎯 DEBUG: Final sequential route:')
+  console.log(`\n🎯 DEBUG: Multi-obstacle route complete with ${route.length} waypoints`)
+  console.log('🎯 DEBUG: Final route waypoints:')
   route.forEach((point, index) => {
-    console.log(`  WP${index}: [${point.lng}, ${point.lat}]`)
+    console.log(`  WP${index}: [${point.lng.toFixed(6)}, ${point.lat.toFixed(6)}]`)
   })
   
-  // Verify final route safety
-  console.log('🎯 DEBUG: Verifying sequential route safety...')
+  // Verify route safety
+  console.log('\n🔍 DEBUG: Verifying multi-obstacle route safety...')
   let routeIsSafe = true
+  
   for (let i = 0; i < route.length - 1; i++) {
     const segment = turf.lineString([[route[i].lng, route[i].lat], [route[i + 1].lng, route[i + 1].lat]])
     let segmentIntersects = false
+    let intersectedObstacle = -1
     
-    // Check against all building buffers
-    for (const buildingInfo of buildingsAlongPath) {
-      const buffer = turf.buffer(buildingInfo.building, safeDistanceKm, { units: 'kilometers' })
-      if (buffer && turf.booleanIntersects(segment, buffer)) {
+    for (let j = 0; j < sortedObstacles.length; j++) {
+      if (turf.booleanIntersects(segment, sortedObstacles[j].buffer)) {
         segmentIntersects = true
-        console.log(`  Segment ${i}: [${route[i].lng}, ${route[i].lat}] → [${route[i + 1].lng}, ${route[i + 1].lat}] | INTERSECTS building buffer`)
+        intersectedObstacle = j
         break
       }
     }
     
-    if (!segmentIntersects) {
-      console.log(`  Segment ${i}: [${route[i].lng}, ${route[i].lat}] → [${route[i + 1].lng}, ${route[i + 1].lat}] | SAFE`)
-    } else {
+    if (segmentIntersects) {
+      console.log(`  ✗ Segment ${i} → ${i + 1}: INTERSECTS obstacle ${intersectedObstacle}`)
       routeIsSafe = false
+    } else {
+      console.log(`  ✓ Segment ${i} → ${i + 1}: SAFE`)
     }
   }
-  console.log(`🎯 DEBUG: Sequential route safety check: ${routeIsSafe ? 'SAFE' : 'UNSAFE'}`)
+  
+  console.log(`🔍 DEBUG: Multi-obstacle route safety: ${routeIsSafe ? '✓ SAFE' : '✗ UNSAFE'}`)
   
   return route
 }
 
-// 🎯 NEW: Calculate avoidance route for a specific building
-function calculateBuildingAvoidance(
-  currentPoint: Point,
+// 🎯 Calculate avoidance route for a single obstacle (dapat berupa merged buffer)
+function calculateObstacleAvoidance(
+  currentPos: Point,
   destination: Point,
-  building: any,
-  buildingBuffer: any,
+  obstacleBuffer: any,
   safeDistanceKm: number
 ): Point[] | null {
   try {
-    console.log(`🎯 DEBUG: Calculating avoidance for building at [${currentPoint.lng}, ${currentPoint.lat}] → [${destination.lng}, ${destination.lat}]`)
+    console.log(`  🎯 Calculating avoidance from [${currentPos.lng.toFixed(6)}, ${currentPos.lat.toFixed(6)}]`)
     
-    // Find entry and exit points where path intersects building buffer
-    const pathLine = turf.lineString([[currentPoint.lng, currentPoint.lat], [destination.lng, destination.lat]])
-    const intersectionPoints = turf.lineIntersect(pathLine, buildingBuffer)
+    // Try tangent-based routing first (fastest)
+    const tangentRoute = calculateTangentRoute(currentPos, destination, obstacleBuffer, safeDistanceKm)
+    
+    if (tangentRoute && tangentRoute.length >= 2) {
+      console.log(`  ✓ Tangent route found with ${tangentRoute.length} waypoints`)
+      return tangentRoute
+    }
+    
+    console.log(`  ⚠️ Tangent route failed, using intersection-based method`)
+    
+    // Fallback: intersection-based edge following
+    const pathLine = turf.lineString([[currentPos.lng, currentPos.lat], [destination.lng, destination.lat]])
+    const intersectionPoints = turf.lineIntersect(pathLine, obstacleBuffer)
     
     if (!intersectionPoints || intersectionPoints.features.length === 0) {
-      console.warn('🎯 DEBUG: No intersection points found for building avoidance')
+      console.warn('  ✗ No intersection points found')
       return null
     }
     
@@ -159,15 +277,15 @@ function calculateBuildingAvoidance(
       lat: f.geometry.coordinates[1]
     }))
     
-    // Sort by distance from current point
+    // Sort by distance from current position
     intersections.sort((a, b) => {
       const distA = turf.distance(
-        turf.point([currentPoint.lng, currentPoint.lat]),
+        turf.point([currentPos.lng, currentPos.lat]),
         turf.point([a.lng, a.lat]),
         { units: 'kilometers' }
       )
       const distB = turf.distance(
-        turf.point([currentPoint.lng, currentPoint.lat]),
+        turf.point([currentPos.lng, currentPos.lat]),
         turf.point([b.lng, b.lat]),
         { units: 'kilometers' }
       )
@@ -177,270 +295,68 @@ function calculateBuildingAvoidance(
     const entryPoint = intersections[0]
     const exitPoint = intersections[intersections.length - 1]
     
-    console.log(`🎯 DEBUG: Building entry: [${entryPoint.lng}, ${entryPoint.lat}]`)
-    console.log(`🎯 DEBUG: Building exit: [${exitPoint.lng}, ${exitPoint.lat}]`)
+    console.log(`  Entry: [${entryPoint.lng.toFixed(6)}, ${entryPoint.lat.toFixed(6)}]`)
+    console.log(`  Exit: [${exitPoint.lng.toFixed(6)}, ${exitPoint.lat.toFixed(6)}]`)
     
-    // Calculate edge path around this building buffer
+    // Calculate edge path around obstacle
     const edgePath = calculateShortestEdgePath(
       entryPoint,
       exitPoint,
-      buildingBuffer,
-      currentPoint,
+      obstacleBuffer,
+      currentPos,
       destination
     )
     
-    // Build avoidance route: current → entry → edge path → exit
-    const avoidanceRoute: Point[] = [currentPoint]
+    // Build avoidance route: currentPos → entry → edge → exit
+    const avoidanceRoute: Point[] = [currentPos]
     
     const distToEntry = turf.distance(
-      turf.point([currentPoint.lng, currentPoint.lat]),
+      turf.point([currentPos.lng, currentPos.lat]),
       turf.point([entryPoint.lng, entryPoint.lat]),
       { units: 'kilometers' }
     )
     
-    if (distToEntry > 0.01) {
+    if (distToEntry > 0.01) {  // > 10 meters
       avoidanceRoute.push(entryPoint)
     }
     
     avoidanceRoute.push(...edgePath)
     
-    // Don't add exit point - it will be handled by next building or final destination
-    console.log(`🎯 DEBUG: Building avoidance route has ${avoidanceRoute.length} waypoints`)
+    const distFromExitToCurrent = turf.distance(
+      turf.point([exitPoint.lng, exitPoint.lat]),
+      turf.point([avoidanceRoute[avoidanceRoute.length - 1].lng, avoidanceRoute[avoidanceRoute.length - 1].lat]),
+      { units: 'kilometers' }
+    )
+    
+    if (distFromExitToCurrent > 0.01) {  // > 10 meters
+      avoidanceRoute.push(exitPoint)
+    }
+    
+    console.log(`  ✓ Avoidance route has ${avoidanceRoute.length} waypoints`)
     
     return avoidanceRoute
     
   } catch (e) {
-    console.error('🎯 DEBUG: Error calculating building avoidance:', e)
+    console.error('  ✗ Error calculating obstacle avoidance:', e)
     return null
   }
 }
 
-// 🔍 NEW: Analyze buildings along the path to understand their order and sizes
-function analyzeBuildingsAlongPath(
-  start: Point,
-  end: Point,
-  buildings: any[],
-  safeDistanceKm: number
-): Array<{building: any, bufferSize: number, distanceFromStart: number}> {
-  const straightLine = turf.lineString([[start.lng, start.lat], [end.lng, end.lat]])
-  const startPoint = turf.point([start.lng, start.lat])
-  
-  const buildingsWithInfo = buildings.map(building => {
-    // Create buffer for this building
-    const buffer = turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
-    
-    // Calculate buffer area (as proxy for "size")
-    const bufferSize = buffer ? turf.area(buffer) : 0
-    
-    // Find distance from start to building center
-    const buildingCenter = turf.center(building)
-    const distanceFromStart = turf.distance(startPoint, buildingCenter, { units: 'kilometers' })
-    
-    // Check if this building intersects the direct path
-    const intersectsPath = buffer ? turf.booleanIntersects(straightLine, buffer) : false
-    
-    return {
-      building,
-      bufferSize,
-      distanceFromStart,
-      intersectsPath
-    }
-  })
-  
-  // Filter only buildings that intersect the path
-  const intersectingBuildings = buildingsWithInfo.filter(info => info.intersectsPath)
-  
-  // Sort by distance from start (to get order along path)
-  intersectingBuildings.sort((a, b) => a.distanceFromStart - b.distanceFromStart)
-  
-  return intersectingBuildings
-}
-
-// 📦 Gabungkan semua buffer gedung menjadi satu area (union buffer yang tumpang tindih)
+// 📦 DEPRECATED: Old single merged buffer approach (kept for reference)
+// Now using createBufferGroups() which properly handles both merged and separate buffers
+/*
 function createMergedBuffer(buildings: any[], safeDistanceKm: number): any {
-  if (buildings.length === 0) return null
-  
-  try {
-    // Buat buffer untuk setiap gedung
-    const buffers = buildings
-      .map(building => {
-        try {
-          return turf.buffer(building, safeDistanceKm, { units: 'kilometers' })
-        } catch (e) {
-          console.warn('Failed to buffer building:', e)
-          return null
-        }
-      })
-      .filter(b => b !== null)
-    
-    if (buffers.length === 0) return null
-    
-    // Gabungkan semua buffer menjadi satu area
-    let merged = buffers[0]
-    
-    for (let i = 1; i < buffers.length; i++) {
-      try {
-        // @ts-ignore - turf.union terkadang punya type signature yang kompleks
-        const unionResult = turf.union(turf.featureCollection([merged, buffers[i]]))
-        if (unionResult) {
-          merged = unionResult
-        }
-      } catch (e) {
-        console.warn('Failed to union buffers:', e)
-        // Jika union gagal, tambahkan sebagai feature collection
-        continue
-      }
-    }
-    
-    console.log(`✅ Merged ${buildings.length} building buffers into single area`)
-    return merged
-    
-  } catch (e) {
-    console.error('Error creating merged buffer:', e)
-    return null
-  }
+  // ... old implementation that only created one merged buffer
+  // Problem: Lost separate buffers that don't overlap
 }
+*/
 
-// 🎯 Hitung rute yang menempel di tepi buffer (edge-following)
-function calculateBufferEdgeRoute(
-  start: Point,
-  end: Point,
-  mergedBuffer: any,
-  straightLine: any,
-  safeDistanceKm: number
-): Point[] {
-  try {
-    console.log('🔍 DEBUG: Starting buffer edge route calculation')
-    console.log(`🔍 DEBUG: Start: [${start.lng}, ${start.lat}]`)
-    console.log(`🔍 DEBUG: End: [${end.lng}, ${end.lat}]`)
-    
-    // 🎯 STRATEGI BARU: Tangent-based routing (seperti sinar cahaya yang memantul)
-    
-    // 1️⃣ Cari "tangent points" - titik di tepi buffer yang membuat jalur terpendek
-    console.log('🔍 DEBUG: Attempting tangent route calculation...')
-    const tangentRoute = calculateTangentRoute(start, end, mergedBuffer, safeDistanceKm)
-    
-    if (tangentRoute && tangentRoute.length > 2) {
-      console.log(`✅ DEBUG: Tangent route successful with ${tangentRoute.length} waypoints`)
-      console.log('🔍 DEBUG: Tangent route waypoints:')
-      tangentRoute.forEach((point, index) => {
-        console.log(`  WP${index}: [${point.lng}, ${point.lat}]`)
-      })
-      return tangentRoute
-    }
-    
-    // Fallback ke metode lama jika tangent gagal
-    console.warn('🔍 DEBUG: Tangent method failed, using intersection-based method')
-    
-    // 1️⃣ Cari titik potong antara garis lurus dengan buffer
-    console.log('🔍 DEBUG: Finding intersection points with merged buffer...')
-    const intersectionPoints = turf.lineIntersect(straightLine, mergedBuffer)
-    
-    if (intersectionPoints.features.length === 0) {
-      console.warn('🔍 DEBUG: No intersection points found, using fallback route')
-      return createFallbackRoute(start, end, mergedBuffer, safeDistanceKm)
-    }
-    
-    console.log(`🔍 DEBUG: Found ${intersectionPoints.features.length} intersection points`)
-    
-    // 2️⃣ Ambil titik masuk (entry) dan keluar (exit) dari buffer
-    const intersections = intersectionPoints.features.map(f => ({
-      lng: f.geometry.coordinates[0],
-      lat: f.geometry.coordinates[1]
-    }))
-    
-    // Urutkan berdasarkan jarak dari start
-    intersections.sort((a, b) => {
-      const distA = turf.distance(
-        turf.point([start.lng, start.lat]),
-        turf.point([a.lng, a.lat]),
-        { units: 'kilometers' }
-      )
-      const distB = turf.distance(
-        turf.point([start.lng, start.lat]),
-        turf.point([b.lng, b.lat]),
-        { units: 'kilometers' }
-      )
-      return distA - distB
-    })
-    
-    const entryPoint = intersections[0]
-    const exitPoint = intersections[intersections.length - 1]
-    
-    console.log(`🔍 DEBUG: Entry point: [${entryPoint.lng}, ${entryPoint.lat}]`)
-    console.log(`🔍 DEBUG: Exit point: [${exitPoint.lng}, ${exitPoint.lat}]`)
-    
-    // 3️⃣ Buat path mengikuti tepi buffer dari entry ke exit
-    console.log('🔍 DEBUG: Calculating shortest edge path...')
-    const edgePath = calculateShortestEdgePath(
-      entryPoint,
-      exitPoint,
-      mergedBuffer,
-      start,
-      end
-    )
-    
-    console.log(`🔍 DEBUG: Edge path has ${edgePath.length} waypoints`)
-    edgePath.forEach((point, index) => {
-      console.log(`  Edge WP${index}: [${point.lng}, ${point.lat}]`)
-    })
-    
-    // 4️⃣ Gabungkan: start → entry → edge path → exit → end
-    const route: Point[] = [start]
-    
-    const distToEntry = turf.distance(
-      turf.point([start.lng, start.lat]),
-      turf.point([entryPoint.lng, entryPoint.lat]),
-      { units: 'kilometers' }
-    )
-    
-    if (distToEntry > 0.01) {
-      route.push(entryPoint)
-      console.log(`🔍 DEBUG: Added entry point to route (distance: ${(distToEntry * 1000).toFixed(0)}m)`)
-    }
-    
-    route.push(...edgePath)
-    
-    const distToEnd = turf.distance(
-      turf.point([exitPoint.lng, exitPoint.lat]),
-      turf.point([end.lng, end.lat]),
-      { units: 'kilometers' }
-    )
-    
-    if (distToEnd > 0.01) {
-      route.push(exitPoint)
-      console.log(`🔍 DEBUG: Added exit point to route (distance: ${(distToEnd * 1000).toFixed(0)}m)`)
-    }
-    
-    route.push(end)
-    
-    console.log(`🔍 DEBUG: Final route has ${route.length} waypoints`)
-    console.log('🔍 DEBUG: Final route waypoints:')
-    route.forEach((point, index) => {
-      console.log(`  Final WP${index}: [${point.lng}, ${point.lat}]`)
-    })
-    
-    // 🔍 CRITICAL DEBUG: Check if final route actually avoids all buildings
-    console.log('🔍 DEBUG: Checking final route safety...')
-    let routeIsSafe = true
-    for (let i = 0; i < route.length - 1; i++) {
-      const segment = turf.lineString([[route[i].lng, route[i].lat], [route[i + 1].lng, route[i + 1].lat]])
-      const segmentIntersects = turf.booleanIntersects(segment, mergedBuffer)
-      console.log(`  Segment ${i}: [${route[i].lng}, ${route[i].lat}] → [${route[i + 1].lng}, ${route[i + 1].lat}] | Intersects: ${segmentIntersects}`)
-      if (segmentIntersects) {
-        routeIsSafe = false
-      }
-    }
-    console.log(`🔍 DEBUG: Final route safety check: ${routeIsSafe ? 'SAFE' : 'UNSAFE'}`)
-    
-    console.log(`✅ Created edge-following route with ${route.length} waypoints`)
-    return route
-    
-  } catch (e) {
-    console.error('Error calculating buffer edge route:', e)
-    return createFallbackRoute(start, end, mergedBuffer, safeDistanceKm)
-  }
+// 🎯 DEPRECATED: Old buffer edge route (now using calculateObstacleAvoidance)
+/*
+function calculateBufferEdgeRoute(...) {
+  // ... old implementation
 }
+*/
 
 // 🎯 Hitung rute tangent (seperti cahaya memantul di cermin)
 function calculateTangentRoute(
