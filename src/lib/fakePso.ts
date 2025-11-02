@@ -198,35 +198,30 @@ function calculateTangentRoute(
     const startPoint = turf.point([start.lng, start.lat])
     const endPoint = turf.point([end.lng, end.lat])
     
-    // Ekstrak boundary points
-    let boundaryCoords: number[][] = []
+    // 💡 STRATEGI BARU: Gunakan titik sudut dari convex hull sebagai kandidat tangent
+    // Ini jauh lebih efisien dan akurat daripada sampling.
+    const allPoints = turf.explode(buffer)
+    const convexHull = turf.convex(allPoints)
     
-    if (buffer.geometry.type === 'Polygon') {
-      boundaryCoords = buffer.geometry.coordinates[0]
-    } else if (buffer.geometry.type === 'MultiPolygon') {
-      // Gabungkan semua polygon boundaries
-      buffer.geometry.coordinates.forEach((poly: any) => {
-        boundaryCoords.push(...poly[0])
-      })
+    if (!convexHull) {
+      console.warn('❌ Could not create convex hull, tangent route calculation failed.')
+      return null
     }
     
-    // Sampling boundary points (tidak perlu semua titik, ambil setiap N titik)
-    const sampledBoundary: Point[] = []
-    const sampleRate = Math.max(1, Math.floor(boundaryCoords.length / 20)) // Max 20 sample points
+    // Ambil titik-titik dari convex hull sebagai kandidat
+    const candidatePoints: Point[] = convexHull.geometry.coordinates[0].map((coord: number[]) => ({
+      lng: coord[0],
+      lat: coord[1]
+    }))
     
-    for (let i = 0; i < boundaryCoords.length; i += sampleRate) {
-      sampledBoundary.push({
-        lng: boundaryCoords[i][0],
-        lat: boundaryCoords[i][1]
-      })
-    }
+    console.log(`💡 Using ${candidatePoints.length} vertices from convex hull for tangent search.`)
     
     // Coba berbagai kombinasi tangent points
     let bestRoute: Point[] | null = null
     let shortestDistance = Infinity
     
     // Single tangent point (jika buffer kecil)
-    for (const tangent of sampledBoundary) {
+    for (const tangent of candidatePoints) {
       const tangentPoint = turf.point([tangent.lng, tangent.lat])
       
       // Cek apakah start→tangent dan tangent→end aman
@@ -254,10 +249,10 @@ function calculateTangentRoute(
     }
     
     // Double tangent points (jika perlu 2 titik belok)
-    for (let i = 0; i < sampledBoundary.length; i++) {
-      for (let j = i + 1; j < sampledBoundary.length; j++) {
-        const t1 = sampledBoundary[i]
-        const t2 = sampledBoundary[j]
+    for (let i = 0; i < candidatePoints.length; i++) {
+      for (let j = i + 1; j < candidatePoints.length; j++) {
+        const t1 = candidatePoints[i]
+        const t2 = candidatePoints[j]
         
         const tp1 = turf.point([t1.lng, t1.lat])
         const tp2 = turf.point([t2.lng, t2.lat])
