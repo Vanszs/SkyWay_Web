@@ -8,7 +8,7 @@ import { ArrowRight, Play, MapPin, Zap, Shield } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-sky min-h-screen flex items-center">
+    <section className="relative overflow-hidden bg-gradient-sky h-screen flex items-center pt-20">
       {/* Background Animation */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-32 w-80 h-80 rounded-full bg-sky-gold/10 animate-float" />
@@ -16,37 +16,37 @@ export default function Hero() {
         <div className="absolute bottom-20 right-1/4 w-40 h-40 rounded-full bg-sky-gold/5 animate-float" style={{ animationDelay: '1s' }} />
       </div>
 
-      <div className="container-custom px-4 py-8 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Content */}
           <motion.div 
-            className="space-y-8"
+            className="space-y-8 max-w-2xl"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-
-
             {/* Headline */}
             <motion.div 
-              className="space-y-4"
+              className="space-y-6"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              <h1 className="text-4xl lg:text-5xl font-bold text-white leading-tight font-display">
+              <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight font-display">
                 Drone + System
                 <br />
                 <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-300 bg-clip-text text-transparent">
                   as a Service
                 </span>
-                <br />
-                <span className="text-2xl lg:text-3xl text-neutral-300">for Urban Logistics</span>
               </h1>
               
-              <p className="text-lg lg:text-xl text-neutral-200 leading-relaxed max-w-lg">
+              <p className="text-xl lg:text-2xl text-neutral-300 font-medium">
+                for Urban Logistics
+              </p>
+              
+              <p className="text-lg lg:text-xl text-neutral-200 leading-relaxed">
                 Complete drone fleet hardware + integrated monitoring system for Surabaya's logistics partners. 
-                We provide the drones and technology - you manage the packages.
+                We provide the drones and technology—you manage the packages.
               </p>
             </motion.div>
 
@@ -72,22 +72,22 @@ export default function Hero() {
 
             {/* Stats */}
             <motion.div 
-              className="grid grid-cols-3 gap-4 pt-6"
+              className="grid grid-cols-3 gap-6 pt-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
             >
-              <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-sky-gold">50k+</div>
-                <div className="text-xs lg:text-sm text-neutral-300">Deliveries</div>
+              <div className="text-center p-4 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10">
+                <div className="text-3xl lg:text-4xl font-bold text-sky-gold mb-1">50k+</div>
+                <div className="text-sm lg:text-base text-neutral-300">Deliveries</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-sky-gold">99.8%</div>
-                <div className="text-xs lg:text-sm text-neutral-300">Success Rate</div>
+              <div className="text-center p-4 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10">
+                <div className="text-3xl lg:text-4xl font-bold text-sky-gold mb-1">99.8%</div>
+                <div className="text-sm lg:text-base text-neutral-300">Success Rate</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl lg:text-3xl font-bold text-sky-gold">15min</div>
-                <div className="text-xs lg:text-sm text-neutral-300">Avg Delivery</div>
+              <div className="text-center p-4 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10">
+                <div className="text-3xl lg:text-4xl font-bold text-sky-gold mb-1">15min</div>
+                <div className="text-sm lg:text-base text-neutral-300">Avg Delivery</div>
               </div>
             </motion.div>
           </motion.div>

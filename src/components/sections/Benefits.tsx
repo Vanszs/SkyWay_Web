@@ -52,26 +52,26 @@ export default function Benefits() {
   ]
 
   return (
-    <section className="section-padding">
-      <div className="container-custom">
+    <section className="py-24 lg:py-32">
+      <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl">
         {/* Section Header */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 font-display">
-            Why Choose SkyWay?
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 font-display">
+            Why Choose <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-400 bg-clip-text text-transparent">SkyWay</span>?
           </h2>
-          <p className="text-xl text-neutral-300 max-w-3xl mx-auto">
+          <p className="text-lg lg:text-xl text-neutral-300 max-w-3xl mx-auto leading-relaxed">
             Transform your logistics with cutting-edge drone technology that delivers speed, 
             reliability, and sustainability in urban environments
           </p>
         </motion.div>
 
         {/* Benefits Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {benefits.map((benefit, index) => (
             <motion.div
               key={benefit.title}
@@ -80,31 +80,31 @@ export default function Benefits() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <BubbleCard className="group h-full p-6 bg-sky-slate rounded-2xl">
+              <BubbleCard className="group h-full p-8 bg-sky-slate/80 backdrop-blur-sm rounded-3xl border border-white/10">
                 {/* Icon & Metric */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-start justify-between mb-6">
                   <motion.div 
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-r ${benefit.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${benefit.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
                     whileHover={{ rotate: 10 }}
                   >
-                    <benefit.icon className="w-6 h-6 text-white" />
+                    <benefit.icon className="w-8 h-8 text-white" />
                   </motion.div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-sky-gold">{benefit.metric}</div>
+                    <div className="text-2xl lg:text-3xl font-bold text-sky-gold">{benefit.metric}</div>
                   </div>
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-sky-gold transition-colors">
+                <h3 className="text-xl lg:text-2xl font-bold text-white mb-4 group-hover:text-sky-gold transition-colors">
                   {benefit.title}
                 </h3>
-                <p className="text-neutral-300 leading-relaxed">
+                <p className="text-neutral-300 leading-relaxed text-base">
                   {benefit.description}
                 </p>
 
                 {/* Hover Effect */}
                 <motion.div 
-                  className="absolute inset-0 border-2 border-sky-gold rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                  className="absolute inset-0 border-2 border-sky-gold rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                   initial={false}
                 />
               </BubbleCard>
@@ -114,20 +114,20 @@ export default function Benefits() {
 
         {/* Stats Section */}
         <motion.div 
-          className="bg-sky-slate rounded-3xl p-8 lg:p-12"
+          className="bg-gradient-to-br from-sky-slate/80 to-sky-navy/80 backdrop-blur-sm rounded-3xl p-12 lg:p-16 border border-sky-gold/20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <div className="grid md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12 text-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
             >
-              <div className="text-4xl lg:text-5xl font-bold text-sky-gold mb-2">50k+</div>
-              <div className="text-white/80">Successful Deliveries</div>
+              <div className="text-4xl lg:text-6xl font-bold text-sky-gold mb-3">50k+</div>
+              <div className="text-base lg:text-lg text-white/90 font-medium">Successful Deliveries</div>
             </motion.div>
             
             <motion.div
@@ -136,8 +136,8 @@ export default function Benefits() {
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
             >
-              <div className="text-4xl lg:text-5xl font-bold text-sky-gold mb-2">250+</div>
-              <div className="text-white/80">Partner Companies</div>
+              <div className="text-4xl lg:text-6xl font-bold text-sky-gold mb-3">250+</div>
+              <div className="text-base lg:text-lg text-white/90 font-medium">Partner Companies</div>
             </motion.div>
             
             <motion.div
@@ -146,8 +146,8 @@ export default function Benefits() {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <div className="text-4xl lg:text-5xl font-bold text-sky-gold mb-2">15</div>
-              <div className="text-white/80">Cities Covered</div>
+              <div className="text-4xl lg:text-6xl font-bold text-sky-gold mb-3">15</div>
+              <div className="text-base lg:text-lg text-white/90 font-medium">Cities Covered</div>
             </motion.div>
             
             <motion.div
@@ -156,8 +156,8 @@ export default function Benefits() {
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
             >
-              <div className="text-4xl lg:text-5xl font-bold text-sky-gold mb-2">24/7</div>
-              <div className="text-white/80">Operations</div>
+              <div className="text-4xl lg:text-6xl font-bold text-sky-gold mb-3">24/7</div>
+              <div className="text-base lg:text-lg text-white/90 font-medium">Operations</div>
             </motion.div>
           </div>
         </motion.div>

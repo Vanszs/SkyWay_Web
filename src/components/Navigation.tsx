@@ -44,13 +44,15 @@ export const Navigation: React.FC<NavigationProps> = ({ className = "" }) => {
       transition={{ duration: 0.6 }}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-sky-gold rounded-lg flex items-center justify-center">
-              <span className="text-sky-navy font-bold text-sm">SW</span>
-            </div>
-            <span className="text-white font-bold text-xl">SkyWay</span>
+          <Link href="/" className="flex items-center space-x-3">
+            <img 
+              src="/logo.png" 
+              alt="SkyWay Logo" 
+              className="h-12 w-auto object-contain"
+            />
+            <span className="text-white font-bold text-2xl hidden sm:block">SkyWay</span>
           </Link>
 
           {/* Desktop Navigation */}

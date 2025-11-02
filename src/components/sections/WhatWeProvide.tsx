@@ -52,8 +52,8 @@ export default function WhatWeProvide() {
   ]
 
   return (
-    <section className="section-padding">
-      <div className="container-custom">
+    <section className="py-24 lg:py-32">
+      <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl">
         {/* Section Header */}
         <motion.div 
           className="text-center mb-20"
@@ -61,14 +61,14 @@ export default function WhatWeProvide() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <div className="inline-flex items-center space-x-2 bg-sky-gold/10 px-6 py-3 rounded-full mb-6">
+          <div className="inline-flex items-center space-x-2 bg-sky-gold/10 px-6 py-3 rounded-full mb-6 border border-sky-gold/20">
             <Target className="w-5 h-5 text-sky-gold" />
-            <span className="text-sky-gold font-semibold">Complete Solution</span>
+            <span className="text-sky-gold font-semibold text-sm tracking-wide uppercase">Complete Solution</span>
           </div>
-          <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6 font-display">
-            What We <span className="text-gradient bg-gradient-to-r from-sky-gold to-sky-gold bg-clip-text text-transparent">Provide</span>
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 font-display">
+            What We <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-400 bg-clip-text text-transparent">Provide</span>
           </h2>
-          <p className="text-xl text-neutral-300 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg lg:text-xl text-neutral-300 max-w-3xl mx-auto leading-relaxed">
             SkyWay delivers complete drone hardware + integrated monitoring system 
             for logistics partners in Surabaya's urban environment
           </p>
@@ -76,15 +76,15 @@ export default function WhatWeProvide() {
 
         {/* Interactive Tabs */}
         <motion.div 
-          className="mb-16"
+          className="mb-20"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
         >
-          <div className="flex justify-center mb-12">
-            <div className="bg-sky-navy/30 backdrop-blur-xl p-2 rounded-2xl shadow-xl border border-sky-gold/30">
-              <div className="flex space-x-2">
+          <div className="flex justify-center">
+            <div className="bg-sky-navy/50 backdrop-blur-xl p-3 rounded-3xl shadow-2xl border border-sky-gold/30">
+              <div className="flex flex-wrap justify-center gap-3">
                 {tabs.map((tab) => {
                   const Icon = tab.icon
                   const isActive = activeTab === tab.id
@@ -93,10 +93,10 @@ export default function WhatWeProvide() {
                     <motion.button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`relative flex items-center space-x-3 px-6 py-4 rounded-xl font-medium transition-all duration-300 ${
+                      className={`relative flex items-center space-x-3 px-8 py-4 rounded-2xl font-semibold transition-all duration-300 ${
                         isActive 
-                          ? 'text-white shadow-lg' 
-                          : 'text-neutral-400 hover:text-white hover:bg-sky-gold/30'
+                          ? 'text-white shadow-2xl' 
+                          : 'text-neutral-400 hover:text-white hover:bg-white/10'
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -104,12 +104,12 @@ export default function WhatWeProvide() {
                       {isActive && (
                         <motion.div
                           layoutId="activeTab"
-                          className={`absolute inset-0 bg-gradient-to-r ${tab.color} rounded-xl`}
+                          className={`absolute inset-0 bg-gradient-to-r ${tab.color} rounded-2xl`}
                           transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                         />
                       )}
-                      <Icon className={`w-5 h-5 relative z-10 ${isActive ? 'text-white' : ''}`} />
-                      <span className="relative z-10">{tab.label}</span>
+                      <Icon className={`w-6 h-6 relative z-10 ${isActive ? 'text-white' : ''}`} />
+                      <span className="relative z-10 text-base">{tab.label}</span>
                     </motion.button>
                   )
                 })}

@@ -55,26 +55,26 @@ export default function PartnerTypes() {
   ]
 
   return (
-    <section className="section-padding">
-      <div className="container-custom">
+    <section className="py-24 lg:py-32">
+      <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl">
         {/* Section Header */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 font-display">
-            Partner with SkyWay
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 font-display">
+            Partner with <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-400 bg-clip-text text-transparent">SkyWay</span>
           </h2>
-          <p className="text-xl text-neutral-300 max-w-3xl mx-auto">
+          <p className="text-lg lg:text-xl text-neutral-300 max-w-3xl mx-auto leading-relaxed">
             From e-commerce giants to local UMKM, we empower businesses of all sizes 
             with cutting-edge drone delivery technology
           </p>
         </motion.div>
 
         {/* Partner Types */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-16">
+        <div className="grid lg:grid-cols-3 gap-8 mb-20">
           {partnerTypes.map((partner, index) => (
             <motion.div
               key={partner.title}
@@ -83,35 +83,35 @@ export default function PartnerTypes() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.2 }}
             >
-              <BubbleCard className="h-full group p-6 bg-sky-slate rounded-2xl">
+              <BubbleCard className="h-full group p-8 bg-sky-slate/80 backdrop-blur-sm rounded-3xl border border-white/10">
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-start justify-between mb-6">
                   <motion.div 
-                    className={`w-14 h-14 rounded-2xl bg-gradient-to-r ${partner.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${partner.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
                     whileHover={{ rotate: 5 }}
                   >
-                    <partner.icon className="w-7 h-7 text-white" />
+                    <partner.icon className="w-8 h-8 text-white" />
                   </motion.div>
                   <div className="text-right">
-                    <div className="text-sm text-neutral-300">Volume</div>
-                    <div className="text-lg font-bold text-sky-gold">{partner.volume}</div>
+                    <div className="text-sm text-neutral-400">Volume</div>
+                    <div className="text-base lg:text-lg font-bold text-sky-gold">{partner.volume}</div>
                   </div>
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-sky-gold transition-colors">
+                <h3 className="text-xl lg:text-2xl font-bold text-white mb-4 group-hover:text-sky-gold transition-colors">
                   {partner.title}
                 </h3>
-                <p className="text-neutral-300 mb-6 leading-relaxed">
+                <p className="text-neutral-300 mb-6 leading-relaxed text-base">
                   {partner.description}
                 </p>
 
                 {/* Features */}
-                <div className="space-y-2 mb-6">
+                <div className="space-y-3 mb-6">
                   {partner.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-sky-gold rounded-full" />
-                      <span className="text-sm text-neutral-300">{feature}</span>
+                    <div key={idx} className="flex items-center space-x-3">
+                      <div className="w-2 h-2 bg-sky-gold rounded-full flex-shrink-0" />
+                      <span className="text-sm lg:text-base text-neutral-300">{feature}</span>
                     </div>
                   ))}
                 </div>

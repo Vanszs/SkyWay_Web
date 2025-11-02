@@ -64,19 +64,19 @@ export default function DemoMap() {
   const currentDemo = demoData[activeDemo]
 
   return (
-    <section className="section-padding">
-      <div className="container-custom">
+    <section className="py-24 lg:py-32">
+      <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl">
         {/* Section Header */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 font-display">
-            See SkyWay in Action
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 font-display">
+            See SkyWay <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-400 bg-clip-text text-transparent">in Action</span>
           </h2>
-          <p className="text-xl text-neutral-300 max-w-3xl mx-auto">
+          <p className="text-lg lg:text-xl text-neutral-300 max-w-3xl mx-auto leading-relaxed">
             Experience our interactive demo showcasing real-time tracking, 
             route planning, and fleet management capabilities
           </p>

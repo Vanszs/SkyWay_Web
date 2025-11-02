@@ -143,16 +143,16 @@
 
   /* Section Styles */
   .section-padding {
-    @apply px-4 py-16 sm:px-6 lg:px-8 lg:py-20;
+    @apply px-6 py-20 sm:px-8 lg:px-12 lg:py-28;
   }
 
   .container-custom {
-    @apply mx-auto max-w-7xl;
+    @apply mx-auto max-w-7xl px-6 lg:px-12 xl:px-16;
   }
 
   /* Background Patterns */
   .bg-gradient-sky {
-    background: linear-gradient(135deg, #0D1B2A 0%, #1B263B 50%, #3E4C59 100%);
+    background: linear-gradient(135deg, #0D1B2A 0%, #1B263B 50%, #0D1B2A 100%);
   }
 
   .bg-gradient-gold {

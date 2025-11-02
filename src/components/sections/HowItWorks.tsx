@@ -31,19 +31,19 @@ export default function HowItWorks() {
   ]
 
   return (
-    <section className="section-padding">
-      <div className="container-custom">
+    <section className="py-24 lg:py-32">
+      <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl">
         {/* Section Header */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6 font-display">
-            How It Works
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6 font-display">
+            How It <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-400 bg-clip-text text-transparent">Works</span>
           </h2>
-          <p className="text-xl text-neutral-300 max-w-2xl mx-auto">
+          <p className="text-lg lg:text-xl text-neutral-300 max-w-3xl mx-auto leading-relaxed">
             Three simple steps to transform your logistics with drone delivery technology
           </p>
         </motion.div>

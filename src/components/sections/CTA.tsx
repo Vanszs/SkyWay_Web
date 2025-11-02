@@ -8,7 +8,7 @@ import { ArrowRight, Phone, Mail, MessageSquare, Zap } from 'lucide-react'
 
 export default function CTA() {
   return (
-    <section className="section-padding bg-gradient-sky relative overflow-hidden">
+    <section className="py-24 lg:py-32 bg-gradient-sky relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full bg-white/5 animate-float" />
@@ -16,7 +16,7 @@ export default function CTA() {
         <div className="absolute -bottom-20 left-1/4 w-48 h-48 rounded-full bg-white/5 animate-float" style={{ animationDelay: '2s' }} />
       </div>
 
-      <div className="container-custom relative z-10">
+      <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div 
@@ -45,7 +45,7 @@ export default function CTA() {
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
             >
-              <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight font-display">
+              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight font-display">
                 Ready to Transform
                 <br />
                 <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-300 bg-clip-text text-transparent">
@@ -53,7 +53,7 @@ export default function CTA() {
                 </span>
               </h2>
               
-              <p className="text-xl text-neutral-200 leading-relaxed max-w-lg">
+              <p className="text-lg lg:text-xl text-neutral-200 leading-relaxed">
                 Join 250+ companies already using SkyWay for faster, cheaper, 
                 and more sustainable urban deliveries. Get started today.
               </p>
