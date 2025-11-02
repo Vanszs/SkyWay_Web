@@ -30,8 +30,8 @@ const LiveMapComponent = dynamic(
   () => import("@/components/ui/LiveMap").then((mod) => mod.LiveMap),
   {
     loading: () => (
-      <div className="w-full h-[500px] bg-gray-100 rounded-xl animate-pulse flex items-center justify-center">
-        <p className="text-gray-500">Loading map...</p>
+      <div className="w-full h-[500px] bg-white rounded-xl animate-pulse flex items-center justify-center border border-sky-gold/20">
+        <p className="text-neutral-500">Loading map...</p>
       </div>
     ),
     ssr: false,
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F0F0F0]">
+    <div className="min-h-screen bg-white">
       {/* Modern Sidebar */}
       <ModernSidebar
         isCollapsed={sidebarCollapsed}
@@ -154,21 +154,22 @@ export default function AdminDashboard() {
         }`}
       >
         {/* Top Bar */}
-        <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
-          <div className="px-6 py-4">
+        <div className="bg-white/80 backdrop-blur-lg border-b border-sky-gold/20 sticky top-0 z-[60] shadow-sm">
+          <div className="px-8 py-5">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-sm text-gray-600 mt-1">
+                <h1 className="text-3xl font-bold text-sky-navy">Dashboard</h1>
+                <p className="text-sm text-neutral-600 mt-1 flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                   Welcome back, Admin
                 </p>
               </div>
               <div className="flex items-center gap-3">
-                <button className="px-4 py-2 rounded-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm font-medium">
+                <button className="px-5 py-2.5 rounded-xl bg-white border-2 border-sky-gold/30 text-sky-navy hover:bg-sky-gold/10 hover:border-sky-gold transition-all text-sm font-semibold shadow-sm">
                   Export Data
                 </button>
                 <Link href="/admin/new-order">
-                  <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#E0A458] to-[#c98d42] text-white hover:shadow-lg transition-all text-sm font-medium">
+                  <button className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-gold to-yellow-500 text-white hover:shadow-lg hover:scale-105 transition-all text-sm font-semibold shadow-md">
                     + New Shipment
                   </button>
                 </Link>
@@ -178,8 +179,8 @@ export default function AdminDashboard() {
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <div className="max-w-[1400px] mx-auto space-y-6">
+        <div className="p-8">
+          <div className="max-w-[1400px] mx-auto space-y-8">
             {/* KPI Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <KPIStat
@@ -211,7 +212,7 @@ export default function AdminDashboard() {
 
             {/* Live Map Section */}
             <ChartCard title="Live Fleet Map" subtitle="Real-time drone tracking">
-              <div className="w-full h-[500px] rounded-lg overflow-hidden">
+              <div className="w-full h-[500px] rounded-lg overflow-hidden relative z-10">
                 <LiveMapComponent
                   drones={drones.map((drone) => ({
                     id: drone.id,
@@ -235,21 +236,21 @@ export default function AdminDashboard() {
             </ChartCard>
 
             {/* Fleet Status & Recent Shipments */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Fleet Status */}
               <ChartCard title="Fleet Status" subtitle="Current drone operations">
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {drones.map((drone) => (
                     <div
                       key={drone.id}
-                      className="p-4 rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors"
+                      className="p-5 rounded-xl border-2 border-sky-gold/20 hover:border-sky-gold/50 hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-white to-sky-gold/5"
                     >
-                      <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-3">
                           <div
-                            className={`w-2 h-2 rounded-full ${
+                            className={`w-3 h-3 rounded-full shadow-lg ${
                               drone.status === "active"
-                                ? "bg-green-500"
+                                ? "bg-green-500 animate-pulse"
                                 : drone.status === "idle"
                                 ? "bg-blue-500"
                                 : drone.status === "charging"
@@ -258,17 +259,17 @@ export default function AdminDashboard() {
                             }`}
                           />
                           <div>
-                            <p className="font-medium text-sm text-gray-900">
+                            <p className="font-bold text-base text-sky-navy">
                               {drone.id}
                             </p>
-                            <p className="text-xs text-gray-600">
+                            <p className="text-sm text-neutral-600">
                               {drone.location}
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-sky-gold/30">
                           <Battery
-                            className={`w-4 h-4 ${
+                            className={`w-5 h-5 ${
                               drone.battery > 70
                                 ? "text-green-600"
                                 : drone.battery > 30
@@ -276,16 +277,16 @@ export default function AdminDashboard() {
                                 : "text-red-600"
                             }`}
                           />
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-bold text-sky-navy">
                             {drone.battery}%
                           </span>
                         </div>
                       </div>
                       {drone.currentJob && (
-                        <div className="mt-2 pt-2 border-t border-gray-100">
-                          <p className="text-xs text-gray-600">
+                        <div className="mt-3 pt-3 border-t border-sky-gold/20">
+                          <p className="text-sm text-neutral-600">
                             Current Job:{" "}
-                            <span className="font-medium text-indigo-600">
+                            <span className="font-bold text-sky-gold">
                               {drone.currentJob}
                             </span>
                           </p>
@@ -298,20 +299,20 @@ export default function AdminDashboard() {
 
               {/* Recent Shipments */}
               <ChartCard title="Recent Shipments" subtitle="Latest delivery requests">
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {shipments.slice(0, 4).map((shipment) => (
                     <div
                       key={shipment.id}
-                      className="p-4 rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors"
+                      className="p-5 rounded-xl border-2 border-sky-gold/20 hover:border-sky-gold/50 hover:shadow-lg transition-all duration-300 bg-gradient-to-r from-white to-sky-gold/5"
                     >
-                      <div className="flex items-start justify-between mb-2">
+                      <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <p className="font-medium text-sm text-gray-900">
+                          <div className="flex items-center gap-2 mb-2">
+                            <p className="font-bold text-base text-sky-navy">
                               {shipment.trackingNumber}
                             </p>
                             <span
-                              className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                              className={`px-3 py-1 rounded-full text-xs font-bold ${
                                 shipment.status === "delivered"
                                   ? "bg-green-100 text-green-700"
                                   : shipment.status === "in_flight"
@@ -324,18 +325,18 @@ export default function AdminDashboard() {
                               {shipment.status}
                             </span>
                           </div>
-                          <p className="text-xs text-gray-600">
+                          <p className="text-sm text-neutral-600">
                             {shipment.customerName}
                           </p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-xs font-medium text-gray-900">
+                        <div className="text-right px-3 py-1 bg-sky-gold/10 rounded-lg">
+                          <p className="text-sm font-bold text-sky-navy">
                             {shipment.estimatedTime}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-600 mt-2">
-                        <MapPin className="w-3 h-3" />
+                      <div className="flex items-center gap-2 text-sm text-neutral-600 mt-3">
+                        <MapPin className="w-4 h-4 text-sky-gold" />
                         <span className="truncate">{shipment.destination}</span>
                       </div>
                     </div>
@@ -345,54 +346,54 @@ export default function AdminDashboard() {
             </div>
 
             {/* Performance Metrics */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="rounded-xl bg-white shadow-sm p-5 border border-gray-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-green-600" />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="rounded-2xl bg-white shadow-lg p-6 border-2 border-green-200 hover:border-green-400 transition-all duration-300 hover:shadow-2xl">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg">
+                    <TrendingUp className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Success Rate</p>
-                    <p className="text-2xl font-bold text-gray-900">98.5%</p>
+                    <p className="text-sm text-neutral-600 font-semibold">Success Rate</p>
+                    <p className="text-3xl font-bold text-green-600">98.5%</p>
                   </div>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-green-100 rounded-full h-3">
                   <div
-                    className="bg-green-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full shadow-md"
                     style={{ width: "98.5%" }}
                   ></div>
                 </div>
               </div>
 
-              <div className="rounded-xl bg-white shadow-sm p-5 border border-gray-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
-                    <Clock className="w-5 h-5 text-blue-600" />
+              <div className="rounded-2xl bg-white shadow-lg p-6 border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-2xl">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg">
+                    <Clock className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Avg. Delivery Time</p>
-                    <p className="text-2xl font-bold text-gray-900">18 min</p>
+                    <p className="text-sm text-neutral-600 font-semibold">Avg. Delivery Time</p>
+                    <p className="text-3xl font-bold text-blue-600">18 min</p>
                   </div>
                 </div>
-                <p className="text-xs text-gray-600">
-                  <span className="text-green-600 font-medium">↓ 2 min</span>{" "}
+                <p className="text-sm text-neutral-600">
+                  <span className="text-green-600 font-bold">↓ 2 min</span>{" "}
                   faster than last week
                 </p>
               </div>
 
-              <div className="rounded-xl bg-white shadow-sm p-5 border border-gray-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
-                    <Activity className="w-5 h-5 text-purple-600" />
+              <div className="rounded-2xl bg-white shadow-lg p-6 border-2 border-purple-200 hover:border-purple-400 transition-all duration-300 hover:shadow-2xl">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg">
+                    <Activity className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Fleet Utilization</p>
-                    <p className="text-2xl font-bold text-gray-900">76%</p>
+                    <p className="text-sm text-neutral-600 font-semibold">Fleet Utilization</p>
+                    <p className="text-3xl font-bold text-purple-600">76%</p>
                   </div>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-purple-100 rounded-full h-3">
                   <div
-                    className="bg-purple-500 h-2 rounded-full"
+                    className="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full shadow-md"
                     style={{ width: "76%" }}
                   ></div>
                 </div>

@@ -337,11 +337,11 @@ export const LiveMap: React.FC<LiveMapProps> = ({
   }
 
   return (
-    <div className="relative h-full w-full rounded-2xl overflow-hidden border border-sky-gold/20">
+    <div className="relative h-full w-full rounded-2xl overflow-hidden border border-sky-gold/20 z-10">
       <MapContainer
         center={center}
         zoom={zoom}
-        style={{ height: '100%', width: '100%' }}
+        style={{ height: '100%', width: '100%', zIndex: 1 }}
         zoomControl={false}
         scrollWheelZoom={true}
         attributionControl={false}

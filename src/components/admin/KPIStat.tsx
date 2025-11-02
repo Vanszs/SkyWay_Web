@@ -35,25 +35,25 @@ export function KPIStat({
       role="status"
       aria-label={`KPI ${label}`}
       className={cn(
-        "rounded-xl bg-white shadow-sm p-5 border border-gray-200",
-        "hover:shadow-md transition-all duration-200",
-        "flex flex-col gap-3",
+        "rounded-2xl bg-white shadow-lg p-6 border border-sky-gold/20",
+        "hover:shadow-2xl hover:border-sky-gold/40 transition-all duration-300",
+        "flex flex-col gap-3 group",
         className
       )}
     >
       {/* Header with label and icon */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-600 font-medium">{label}</span>
+        <span className="text-sm text-neutral-600 font-semibold">{label}</span>
         {Icon && (
-          <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center">
-            <Icon className="w-5 h-5 text-indigo-600" />
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-gold to-yellow-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
+            <Icon className="w-6 h-6 text-white" />
           </div>
         )}
       </div>
 
       {/* Value */}
       <div className="flex items-end justify-between gap-2">
-        <div className="text-2xl font-semibold text-gray-900">
+        <div className="text-3xl font-bold text-sky-navy">
           {formattedValue}
         </div>
 
@@ -61,7 +61,7 @@ export function KPIStat({
         {delta && (
           <div
             className={cn(
-              "flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium",
+              "flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold",
               delta.direction === "up"
                 ? "bg-green-100 text-green-700"
                 : "bg-red-100 text-red-700"
@@ -69,9 +69,9 @@ export function KPIStat({
             title={delta.tooltip}
           >
             {delta.direction === "up" ? (
-              <TrendingUp className="w-3 h-3" />
+              <TrendingUp className="w-3.5 h-3.5" />
             ) : (
-              <TrendingDown className="w-3 h-3" />
+              <TrendingDown className="w-3.5 h-3.5" />
             )}
             <span>{Math.abs(delta.value)}%</span>
           </div>
