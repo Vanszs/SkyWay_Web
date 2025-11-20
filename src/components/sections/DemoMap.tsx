@@ -11,7 +11,7 @@ const badgeClass = 'inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gra
 
 const DemoLiveMap = dynamic(() => import('@/components/ui/DemoLiveMap'), {
   ssr: false,
-  loading: () => <div className="w-full h-full bg-gray-50 rounded-xl flex items-center justify-center"><div className="text-blue-500">Loading map...</div></div>
+  loading: () => <div className="w-full h-full bg-gray-50 rounded-xl flex items-center justify-center"><div className="text-teal">Loading map...</div></div>
 })
 
 // Dummy data for the demo map
@@ -38,7 +38,7 @@ export default function DemoMap() {
   const [activeTab, setActiveTab] = useState<'live' | 'analytics'>('live')
 
   return (
-    <section className="relative bg-white overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
+    <section className="relative bg-light-gray overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
 
       {/* Top Wave from PartnerTypes - Smooth Transition */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180" style={{ marginTop: '-1px' }}>
@@ -88,20 +88,20 @@ export default function DemoMap() {
             <div className="h-14 border-b border-gray-300 flex items-center justify-between px-6 bg-white/90">
               <div className="flex items-center space-x-4">
                 <div className="font-semibold text-gray-900 text-lg">
-                  SkyWay <span className="text-blue-500 font-normal">OS</span>
+                  SkyWay <span className="text-teal font-normal">OS</span>
                 </div>
                 <div className="h-6 w-px bg-gray-200" />
                 <div className="flex space-x-1">
                   <button
                     onClick={() => setActiveTab('live')}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${activeTab === 'live' ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:text-gray-600'
+                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${activeTab === 'live' ? 'bg-teal/10 text-teal' : 'text-gray-400 hover:text-gray-600'
                       }`}
                   >
                     Live Map
                   </button>
                   <button
                     onClick={() => setActiveTab('analytics')}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${activeTab === 'analytics' ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:text-gray-600'
+                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${activeTab === 'analytics' ? 'bg-teal/10 text-teal' : 'text-gray-400 hover:text-gray-600'
                       }`}
                   >
                     Analytics
@@ -112,7 +112,7 @@ export default function DemoMap() {
                 <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400">
                   <Bell className="w-4 h-4" />
                 </div>
-                <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xs">
+                <div className="w-8 h-8 rounded-full bg-mint-green text-white flex items-center justify-center font-bold text-xs">
                   JD
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function DemoMap() {
 
             <div className="flex h-[420px] md:h-[500px]">
               <div className="w-16 border-r border-gray-300 flex flex-col items-center py-4 space-y-6 bg-white">
-                <div className="p-2 bg-blue-50 rounded-lg text-blue-500"><Navigation className="w-5 h-5" /></div>
+                <div className="p-2 bg-teal/10 rounded-lg text-teal"><Navigation className="w-5 h-5" /></div>
                 <div className="p-2 text-gray-400 hover:text-gray-900 transition-colors"><BarChart3 className="w-5 h-5" /></div>
                 <div className="p-2 text-gray-400 hover:text-gray-900 transition-colors"><Users className="w-5 h-5" /></div>
                 <div className="p-2 text-gray-400 hover:text-gray-900 transition-colors"><Battery className="w-5 h-5" /></div>
@@ -156,13 +156,13 @@ export default function DemoMap() {
           ].map((item, i) => (
             <motion.div
               key={i}
-              className="flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-sm border border-gray-200 text-gray-700 font-medium hover:border-blue-200 hover:text-blue-600 transition-colors"
+              className="flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-sm border border-gray-200 text-gray-700 font-medium hover:border-teal/30 hover:text-teal transition-colors"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 + (i * 0.1) }}
             >
-              <item.icon className="w-4 h-4 text-blue-500" />
+              <item.icon className="w-4 h-4 text-mint-green" />
               <span>{item.text}</span>
             </motion.div>
           ))}
@@ -178,7 +178,7 @@ export default function DemoMap() {
           className="relative block w-full h-[100px] sm:h-[140px] lg:h-[180px]"
         >
           <path
-            fill="#1D1D1F"
+            fill="#111827"
             fillOpacity="1"
             d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,122.7C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
           />

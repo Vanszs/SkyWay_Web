@@ -27,9 +27,9 @@ const mainFeatures = [
     title: 'Ultra-Fast Delivery',
     desc: '15-minute average delivery time within urban zones. 10x faster than traditional ground delivery.',
     stat: '15 min avg',
-    iconBg: 'bg-blue-50',
-    iconColor: 'text-blue-600',
-    chipClass: 'bg-blue-50 text-blue-700 border-blue-100',
+    iconBg: 'bg-teal/10',
+    iconColor: 'text-teal',
+    chipClass: 'bg-teal/10 text-teal border-teal/20',
     gridClass: 'md:col-span-2 md:row-span-2' // Featured large card
   },
   {
@@ -115,7 +115,7 @@ const comparison = [
 
 export default function WhatWeProvide() {
   return (
-    <section className="relative bg-[#D4F4E8] overflow-hidden" style={{ paddingTop: '6rem', paddingBottom: '8rem' }}>
+    <section className="relative bg-sky-blue/10 overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
       <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10">
         <div className="text-center max-w-4xl mx-auto mb-16">
           <motion.div
@@ -125,8 +125,8 @@ export default function WhatWeProvide() {
             className={badgeClass}
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mint-green opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-mint-green" />
             </span>
             <span>What we provide</span>
           </motion.div>
@@ -164,11 +164,11 @@ export default function WhatWeProvide() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
-                className={`${cardClass} ${feature.gridClass} ${isFeatured ? 'bg-gradient-to-br from-blue-50 to-indigo-50 relative overflow-hidden' : ''}`}
+                className={`${cardClass} ${feature.gridClass} ${isFeatured ? 'bg-gradient-to-br from-teal/10 to-mint-green/10 relative overflow-hidden' : ''}`}
               >
                 {isFeatured && (
                   <div className="absolute -bottom-8 -right-8 opacity-5">
-                    <Icon className="w-64 h-64 text-blue-600" />
+                    <Icon className="w-64 h-64 text-teal/10" />
                   </div>
                 )}
 
@@ -192,7 +192,7 @@ export default function WhatWeProvide() {
                   </div>
 
                   {isFeatured && (
-                    <div className="mt-8 flex items-center text-blue-600 font-semibold group cursor-pointer">
+                    <div className="mt-8 flex items-center text-teal font-semibold group cursor-pointer">
                       Learn more <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
                     </div>
                   )}
@@ -219,25 +219,25 @@ export default function WhatWeProvide() {
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             {/* Primary Stat - Large Card */}
-            <div className="md:col-span-6 lg:col-span-5 bg-blue-600 rounded-[32px] p-10 text-white relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="md:col-span-6 lg:col-span-5 bg-mint-green rounded-[32px] p-10 text-white relative overflow-hidden group shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl transition-transform group-hover:scale-150 duration-700" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/20 rounded-full -ml-12 -mb-12 blur-2xl" />
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/20 rounded-full -ml-12 -mb-12 blur-2xl" />
 
               <div className="relative z-10 h-full flex flex-col justify-between min-h-[280px]">
                 <div>
                   <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 border border-white/10">
                     <TrendingUp className="w-8 h-8 text-white" />
                   </div>
-                  <h4 className="text-blue-100 font-medium text-lg mb-2">Total Deliveries</h4>
-                  <div className="text-6xl lg:text-7xl font-bold tracking-tight mb-4">
-                    50k<span className="text-blue-300">+</span>
+                  <h4 className="text-white/80 font-medium text-lg mb-2">Total Deliveries</h4>
+                  <div className="text-7xl font-bold">
+                    50k<span className="text-white/70">+</span>
                   </div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/10">
-                  <div className="flex items-center gap-3 text-sm font-medium text-blue-50">
+                  <div className="flex items-center gap-3 text-sm font-medium text-white/90">
                     <div className="flex -space-x-2">
                       {[1, 2, 3].map(i => (
-                        <div key={i} className="w-6 h-6 rounded-full bg-blue-400 border-2 border-blue-600" />
+                        <div key={i} className="w-6 h-6 rounded-full bg-white border-2 border-white/50" />
                       ))}
                     </div>
                     <span>Trusted by top retailers</span>

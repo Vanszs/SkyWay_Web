@@ -25,7 +25,7 @@ export default function PartnerTypes() {
       title: "Logistics Companies",
       description: "JNE, J&T, SiCepat, and other logistics providers expanding their last-mile delivery capabilities.",
       features: ["Fleet augmentation", "Peak hour support", "Weather backup", "Route optimization"],
-      color: "from-blue-500 to-indigo-600",
+      color: "from-teal to-mint-green",
       volume: "500+ packages/day"
     },
     {
@@ -60,7 +60,7 @@ export default function PartnerTypes() {
   ]
 
   return (
-    <section className="relative bg-[#F5F5F7] overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
+    <section className="relative bg-sky-blue/10 overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
 
       {/* Top Wave from HowItWorks - Smooth Transition */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180" style={{ marginTop: '-1px' }}>
@@ -132,7 +132,7 @@ export default function PartnerTypes() {
                 <div className="space-y-3 mb-8 relative z-10">
                   {partner.features.map((feature, idx) => (
                     <div key={idx} className="flex items-center space-x-3">
-                      <div className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0" />
+                      <div className="w-1.5 h-1.5 bg-teal rounded-full flex-shrink-0" />
                       <span className="text-sm text-gray-600 font-medium">{feature}</span>
                     </div>
                   ))}
@@ -177,8 +177,8 @@ export default function PartnerTypes() {
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center group-hover:bg-blue-50 transition-colors">
-                    <useCase.icon className="w-6 h-6 text-gray-700 group-hover:text-blue-600 transition-colors" />
+                  <div className="w-12 h-12 bg-gray-50 rounded-2xl flex items-center justify-center group-hover:bg-teal/10 transition-colors">
+                    <useCase.icon className="w-6 h-6 text-gray-700 group-hover:text-teal transition-colors" />
                   </div>
                   <span className="text-xs font-bold text-gray-400 uppercase tracking-wider bg-gray-50 px-3 py-1 rounded-full">
                     {useCase.time}

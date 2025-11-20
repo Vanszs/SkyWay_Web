@@ -46,7 +46,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="relative bg-white overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
+    <section className="relative bg-light-gray overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
 
       {/* Top Wave from WhatWeProvide - Smooth Transition */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180" style={{ marginTop: '-1px' }}>
@@ -111,7 +111,7 @@ export default function HowItWorks() {
                   }`}
               >
                 {/* Step Number - Subtle Background */}
-                <div className="absolute top-8 right-8 text-6xl font-bold text-gray-50 opacity-50 select-none pointer-events-none group-hover:text-blue-50 transition-colors duration-300">
+                <div className="absolute top-8 right-8 text-6xl font-bold text-gray-50 opacity-50 select-none pointer-events-none group-hover:text-teal/10 transition-colors duration-300">
                   {index + 1}
                 </div>
 
@@ -122,7 +122,7 @@ export default function HowItWorks() {
 
                 {/* Content */}
                 <div className="relative z-10 flex-grow">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-teal transition-colors">
                     {step.title}
                   </h3>
                   <p className="text-gray-500 leading-relaxed text-sm font-medium">

@@ -10,7 +10,7 @@ export default function Hero() {
     <section
       className="
         relative min-h-screen flex items-center justify-center overflow-hidden pt-20
-        bg-gradient-to-b from-sky-300 via-sky-100 to-white
+        bg-gradient-to-b from-sky-blue via-white to-light-gray
       "
       style={{ width: '100%', minHeight: '100vh', paddingBottom: '8rem' }}
     >
@@ -68,7 +68,7 @@ export default function Hero() {
           className="absolute top-1/3 left-0"
         >
           {/* Simple Bird/Drone Silhouette */}
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-sky-700/20 rotate-12">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-teal/20 rotate-12">
             <path d="M2 12L22 12M12 2L12 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
           </svg>
@@ -94,10 +94,10 @@ export default function Hero() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-white/40 shadow-sm mb-8"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-500 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-600"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mint-green opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-mint-green"></span>
             </span>
-            <span className="text-sm font-bold text-sky-900 tracking-wide uppercase">The Future of Logistics</span>
+            <span className="text-sm font-bold text-text-dark tracking-wide uppercase">The Future of Logistics</span>
           </motion.div>
 
           {/* Headline - Apple Style */}
@@ -106,10 +106,10 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
           >
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-bold leading-[0.95] tracking-tighter mb-8 text-sky-950 drop-shadow-sm">
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-bold leading-[0.95] tracking-tighter mb-8 text-text-dark drop-shadow-sm">
               Drone delivery.
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Reimagined.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal to-purple">Reimagined.</span>
             </h1>
           </motion.div>
 
@@ -118,7 +118,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="text-xl sm:text-2xl lg:text-3xl text-sky-900/80 font-medium leading-relaxed mb-10 max-w-3xl mx-auto tracking-tight"
+            className="text-xl sm:text-2xl lg:text-3xl text-text-gray font-medium leading-relaxed mb-10 max-w-3xl mx-auto tracking-tight"
           >
             Ultra-fast, eco-friendly deliveries powered by AI.
             <br className="hidden sm:block" />
@@ -133,14 +133,14 @@ export default function Hero() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
           >
             <Link href="/tracking">
-              <button className="group relative px-8 py-4 bg-sky-900 text-white rounded-full font-bold text-lg hover:bg-sky-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+              <button className="group relative px-8 py-4 bg-mint-green text-white rounded-full font-bold text-lg hover:bg-mint-green/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
                 Track delivery
                 <ArrowRight className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>
 
             <Link href="/admin">
-              <button className="group relative px-8 py-4 bg-white/80 backdrop-blur-sm text-sky-900 rounded-full font-bold text-lg border border-white/50 hover:bg-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-sm">
+              <button className="group relative px-8 py-4 bg-white/80 backdrop-blur-sm text-teal rounded-full font-bold text-lg border border-teal/20 hover:bg-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-sm">
                 <Play className="inline-block mr-2 w-5 h-5 fill-current" />
                 Watch demo
               </button>
@@ -152,19 +152,19 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-20 grid grid-cols-3 gap-8 max-w-3xl mx-auto border-t border-sky-900/10 pt-10"
+            className="mt-20 grid grid-cols-3 gap-8 max-w-3xl mx-auto border-t border-teal/10 pt-10"
           >
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-sky-950 mb-1 tracking-tight">15min</div>
-              <div className="text-sm font-bold text-sky-700 uppercase tracking-wider">Avg delivery</div>
+              <div className="text-3xl sm:text-4xl font-bold text-teal mb-1 tracking-tight">15min</div>
+              <div className="text-sm font-bold text-text-gray uppercase tracking-wider">Avg delivery</div>
             </div>
-            <div className="text-center border-l border-r border-sky-900/10">
-              <div className="text-3xl sm:text-4xl font-bold text-sky-950 mb-1 tracking-tight">99.8%</div>
-              <div className="text-sm font-bold text-sky-700 uppercase tracking-wider">Reliability</div>
+            <div className="text-center border-l border-r border-teal/10">
+              <div className="text-3xl sm:text-4xl font-bold text-teal mb-1 tracking-tight">99.8%</div>
+              <div className="text-sm font-bold text-text-gray uppercase tracking-wider">Reliability</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-sky-950 mb-1 tracking-tight">0%</div>
-              <div className="text-sm font-bold text-sky-700 uppercase tracking-wider">Emissions</div>
+              <div className="text-3xl sm:text-4xl font-bold text-mint-green mb-1 tracking-tight">0%</div>
+              <div className="text-sm font-bold text-text-gray uppercase tracking-wider">Emissions</div>
             </div>
           </motion.div>
 

@@ -7,7 +7,7 @@ export default function CTA() {
   return (
     <section className="section-padding bg-[#F5F5F7]">
       <div className="container-custom">
-        <div className="relative overflow-hidden rounded-[40px] bg-deep-navy px-6 py-24 text-center shadow-2xl md:px-12 md:py-32">
+        <div className="relative overflow-hidden rounded-[40px] bg-teal px-6 py-24 text-center shadow-2xl md:px-12 md:py-32">
           {/* Background Effects */}
           <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-sky-blue/20 rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-tech-cyan/20 rounded-full blur-3xl" />
@@ -25,7 +25,7 @@ export default function CTA() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/contact"
-                className="btn-apple bg-white text-deep-navy hover:bg-gray-100 w-full sm:w-auto min-w-[160px]"
+                className="btn-apple bg-white text-teal hover:bg-gray-100 w-full sm:w-auto min-w-[160px]"
               >
                 Get Started
               </Link>

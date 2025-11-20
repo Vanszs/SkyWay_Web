@@ -11,42 +11,30 @@ const config: Config = {
 	theme: {
 		extend: {
 			colors: {
-				// SkyWay Palette - Preserved
-				'sky-blue': '#0071E3', // Apple-like Blue
-				'deep-navy': '#1D1D1F', // Apple-like Dark
-				'tech-cyan': '#4ED6FF',
-				'air-mint': '#DFFBEF',
-				'soft-sky-white': '#F5F5F7', // Apple Light Gray
-				'light-sky-blue': '#EAF5FF',
-				'soft-gray': '#86868b', // Apple Gray
-				'pure-white': '#FFFFFF',
+				// New SkyWay Color Palette - Exclusive Colors
+				'sky-blue': '#D7EAEF',
+				'mint-green': '#90D090',
+				'teal': '#63B0A0',
+				'purple': '#9134CB',
+
+				// Neutral grays for text and backgrounds
+				'soft-white': '#FFFFFF',
+				'light-gray': '#F5F5F7',
+				'text-dark': '#1D1D1F',
+				'text-gray': '#6e6e73',
 
 				primary: {
-					DEFAULT: '#0071E3',
+					DEFAULT: '#63B0A0', // Teal
 					foreground: '#FFFFFF'
 				},
 				secondary: {
-					DEFAULT: '#F5F5F7',
+					DEFAULT: '#90D090', // Mint Green
 					foreground: '#1D1D1F'
 				},
 				accent: {
-					DEFAULT: '#4ED6FF',
-					foreground: '#1D1D1F'
+					DEFAULT: '#9134CB', // Purple
+					foreground: '#FFFFFF'
 				},
-				neutral: {
-					'50': '#F5F5F7',
-					'100': '#E8E8ED',
-					'200': '#D2D2D7',
-					'300': '#86868b',
-					'400': '#6e6e73',
-					'500': '#424245',
-					'600': '#1D1D1F',
-					'900': '#000000'
-				},
-
-				'sky-navy': '#1D1D1F',
-				'sky-gold': '#4ED6FF',
-
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {

@@ -6,19 +6,29 @@ import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from 'luc
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-sky-navy to-[#071021] text-white pt-20 pb-10 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-20 -right-20 w-96 h-96 bg-sky-blue/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+    <footer className="bg-gray-900 text-white pt-20 pb-10 relative overflow-hidden">
+      {/* Top Wave Divider - Smooth transition from DemoMap */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180" style={{ marginTop: '-2px' }}>
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          className="relative block w-full h-[80px]"
+        >
+          <path
+            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+            fill="#111827"
+          />
+        </svg>
       </div>
+
+
 
       <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Column */}
           <div className="space-y-6">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-sky-blue to-sky-600 rounded-xl flex items-center justify-center shadow-lg shadow-sky-blue/20">
+              <div className="w-10 h-10 bg-mint-green rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-xl">S</span>
               </div>
               <span className="text-2xl font-bold text-white tracking-tight">SkyWay</span>
@@ -32,7 +42,7 @@ export default function Footer() {
                 <a
                   key={i}
                   href="#"
-                  className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/70 hover:bg-sky-blue hover:text-white transition-all duration-300"
+                  className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-mint-green hover:text-white transition-all duration-300"
                 >
                   <Icon className="w-5 h-5" />
                 </a>
@@ -46,7 +56,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {['About Us', 'Careers', 'Blog', 'Press', 'Contact'].map((item) => (
                 <li key={item}>
-                  <Link href="#" className="text-neutral-400 hover:text-sky-gold transition-colors">
+                  <Link href="#" className="text-white/80 hover:text-mint-green transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -60,7 +70,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {['Drone Delivery', 'Fleet Management', 'API Integration', 'Partner Program', 'Coverage Map'].map((item) => (
                 <li key={item}>
-                  <Link href="#" className="text-neutral-400 hover:text-sky-gold transition-colors">
+                  <Link href="#" className="text-white/80 hover:text-mint-green transition-colors">
                     {item}
                   </Link>
                 </li>
@@ -73,20 +83,20 @@ export default function Footer() {
             <h4 className="text-lg font-bold text-white mb-6">Contact</h4>
             <ul className="space-y-6">
               <li className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-sky-blue mt-1" />
-                <span className="text-neutral-400">
+                <MapPin className="w-5 h-5 text-mint-green mt-1" />
+                <span className="text-white/80">
                   Menara SkyWay, Level 42<br />
                   Jl. Sudirman Kav. 52-53<br />
                   Jakarta Selatan, 12190
                 </span>
               </li>
               <li className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-sky-blue" />
-                <span className="text-neutral-400">+62 21 555 0123</span>
+                <Phone className="w-5 h-5 text-mint-green" />
+                <span className="text-white/80">+62 21 555 0123</span>
               </li>
               <li className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-sky-blue" />
-                <span className="text-neutral-400">hello@skyway.id</span>
+                <Mail className="w-5 h-5 text-mint-green" />
+                <span className="text-white/80">hello@skyway.id</span>
               </li>
             </ul>
           </div>
@@ -94,7 +104,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-neutral-500 text-sm">
+          <div className="text-white/70 text-sm">
             © {new Date().getFullYear()} SkyWay Logistics. All rights reserved.
           </div>
           <div className="flex space-x-6 text-sm text-neutral-500">
