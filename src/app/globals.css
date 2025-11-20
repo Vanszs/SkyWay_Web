@@ -4,6 +4,7 @@
 
 /* Google Fonts Import */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* Poppins kept for specific display needs but Inter is primary for Apple feel */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 /* SkyWay Custom Base Styles */
@@ -11,106 +12,103 @@
   * {
     @apply border-border;
   }
-  
+
   body {
-    @apply text-foreground bg-soft-sky-white;
+    @apply text-foreground bg-[#F5F5F7];
+    /* Apple's light gray background */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
-    overflow-x: hidden; /* Prevent horizontal scroll from clouds */
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply tracking-tight font-semibold text-deep-navy;
+  }
+
+  h1 {
+    @apply text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter;
+  }
+
+  h2 {
+    @apply text-4xl md:text-5xl font-semibold;
+  }
+
+  p {
+    @apply text-lg leading-relaxed text-gray-600;
   }
 
   html {
     scroll-behavior: smooth;
   }
 
-  /* Custom Scrollbar */
+  /* Custom Scrollbar - Minimalist */
   ::-webkit-scrollbar {
     @apply w-2;
   }
-  
+
   ::-webkit-scrollbar-track {
-    @apply bg-soft-sky-white;
+    @apply bg-transparent;
   }
-  
+
   ::-webkit-scrollbar-thumb {
-    @apply bg-sky-blue/50 rounded-full hover:bg-sky-blue;
+    @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors;
   }
 }
 
 /* SkyWay Custom Components */
 @layer components {
-  /* Bubble Button Style */
-  .btn-bubble {
-    @apply px-6 py-3 rounded-bubble font-medium transition-all duration-300 ease-in-out;
-    @apply transform hover:scale-105 active:scale-95;
-    @apply shadow-soft hover:shadow-soft-lg;
+
+  /* Apple-style Buttons */
+  .btn-apple {
+    @apply px-8 py-4 rounded-full font-medium text-[17px] transition-all duration-300 ease-out;
+    @apply active:scale-95;
   }
 
   .btn-primary {
-    @apply btn-bubble bg-sky-blue text-white hover:bg-sky-blue/90;
-    @apply shadow-glow-sm hover:shadow-glow;
+    @apply btn-apple bg-sky-blue text-white hover:bg-sky-blue/90 shadow-lg hover:shadow-xl;
   }
 
   .btn-secondary {
-    @apply btn-bubble bg-tech-cyan text-deep-navy hover:bg-tech-cyan/90;
+    @apply btn-apple bg-white text-deep-navy hover:bg-gray-50 border border-gray-200;
   }
 
   .btn-ghost {
-    @apply btn-bubble bg-transparent border-2 border-sky-blue text-sky-blue hover:bg-sky-blue/10;
+    @apply btn-apple bg-transparent text-sky-blue hover:bg-sky-blue/5;
   }
 
-  /* Card Styles */
-  .card {
-    @apply bg-white rounded-2xl shadow-soft border border-soft-gray;
-    @apply transition-all duration-300 ease-in-out;
+  /* Bento Grid Cards */
+  .bento-card {
+    @apply bg-white rounded-[32px] p-8 md:p-10;
+    @apply shadow-[0_2px_40px_rgba(0_0_0/0.04)] hover:shadow-[0_2px_50px_rgba(0_0_0/0.08)];
+    @apply transition-all duration-500 ease-out border border-white/50;
+    @apply backdrop-blur-xl bg-opacity-80;
   }
 
-  .card-hover {
-    @apply card hover:shadow-soft-lg hover:-translate-y-1;
+  .bento-card-dark {
+    @apply bg-deep-navy text-white rounded-[32px] p-8 md:p-10;
+    @apply shadow-xl;
   }
 
-  /* Cloud Styles */
-  .cloud-layer {
-    @apply absolute bottom-0 left-0 w-full pointer-events-none overflow-hidden;
-    height: 150px;
-    z-index: 10;
-  }
-
-  .cloud {
-    @apply absolute rounded-full bg-white opacity-80 blur-xl;
-  }
-
-  /* Wave Styles */
-  .wave-divider {
-    @apply absolute left-0 w-full overflow-hidden leading-[0];
-    z-index: 5;
-  }
-
-  .wave-divider svg {
-    @apply block w-[calc(100%+1.3px)] h-[150px];
-  }
-  
-  .wave-top {
-    top: -1px;
-    transform: rotate(180deg);
-  }
-  
-  .wave-bottom {
-    bottom: -1px;
+  /* Glass Effect - Refined */
+  .glass-panel {
+    @apply backdrop-blur-2xl bg-white/70 border border-white/40 shadow-sm;
   }
 
   /* Section Styles */
   .section-padding {
-    @apply px-6 py-20 sm:px-8 lg:px-12 lg:py-28 relative;
+    @apply py-24 md:py-32 relative overflow-hidden;
   }
 
   .container-custom {
-    @apply mx-auto max-w-7xl px-6 lg:px-12 xl:px-16;
-  }
-
-  /* Glass Effect */
-  .glass {
-    @apply backdrop-blur-md bg-white/30 border border-white/40 shadow-soft;
+    @apply mx-auto max-w-[1200px] px-6 md:px-12;
   }
 }
 
@@ -121,8 +119,15 @@
     background-image: linear-gradient(135deg, #2B7BFF 0%, #4ED6FF 100%);
   }
 
-  .text-gradient-gold { /* Keeping for backward compat but updated colors */
-     @apply bg-clip-text text-transparent;
-     background-image: linear-gradient(135deg, #4ED6FF 0%, #2B7BFF 100%);
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/80 border border-white/60 shadow-lg;
+  }
+
+  .glass-card-dark {
+    @apply backdrop-blur-xl bg-black/40 border border-white/10 shadow-lg text-white;
   }
 }

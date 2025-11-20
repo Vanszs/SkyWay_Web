@@ -55,7 +55,7 @@ export default function Benefits() {
     <section className="py-24 lg:py-32">
       <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl">
         {/* Section Header */}
-        <motion.div 
+        <motion.div
           className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -65,7 +65,7 @@ export default function Benefits() {
             Why Choose <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-400 bg-clip-text text-transparent">SkyWay</span>?
           </h2>
           <p className="text-lg lg:text-xl text-neutral-300 max-w-3xl mx-auto leading-relaxed">
-            Transform your logistics with cutting-edge drone technology that delivers speed, 
+            Transform your logistics with cutting-edge drone technology that delivers speed,
             reliability, and sustainability in urban environments
           </p>
         </motion.div>
@@ -83,7 +83,7 @@ export default function Benefits() {
               <BubbleCard className="group h-full p-8 bg-sky-slate/80 backdrop-blur-sm rounded-3xl border border-white/10">
                 {/* Icon & Metric */}
                 <div className="flex items-start justify-between mb-6">
-                  <motion.div 
+                  <motion.div
                     className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${benefit.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
                     whileHover={{ rotate: 10 }}
                   >
@@ -103,7 +103,7 @@ export default function Benefits() {
                 </p>
 
                 {/* Hover Effect */}
-                <motion.div 
+                <motion.div
                   className="absolute inset-0 border-2 border-sky-gold rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                   initial={false}
                 />
@@ -113,7 +113,7 @@ export default function Benefits() {
         </div>
 
         {/* Stats Section */}
-        <motion.div 
+        <motion.div
           className="bg-gradient-to-br from-sky-slate/80 to-sky-navy/80 backdrop-blur-sm rounded-3xl p-12 lg:p-16 border border-sky-gold/20"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -129,7 +129,7 @@ export default function Benefits() {
               <div className="text-4xl lg:text-6xl font-bold text-sky-gold mb-3">50k+</div>
               <div className="text-base lg:text-lg text-white/90 font-medium">Successful Deliveries</div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -139,7 +139,7 @@ export default function Benefits() {
               <div className="text-4xl lg:text-6xl font-bold text-sky-gold mb-3">250+</div>
               <div className="text-base lg:text-lg text-white/90 font-medium">Partner Companies</div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -149,66 +149,23 @@ export default function Benefits() {
               <div className="text-4xl lg:text-6xl font-bold text-sky-gold mb-3">15</div>
               <div className="text-base lg:text-lg text-white/90 font-medium">Cities Covered</div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-            >
-              <div className="text-4xl lg:text-6xl font-bold text-sky-gold mb-3">24/7</div>
-              <div className="text-base lg:text-lg text-white/90 font-medium">Operations</div>
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Comparison Table */}
-        <motion.div 
-          className="mt-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h3 className="text-3xl font-bold text-white mb-8 text-center">
-            SkyWay vs Traditional Delivery
-          </h3>
-          
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl shadow-soft-lg overflow-hidden">
-            <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/20">
-              {/* Headers */}
-              <div className="p-6 bg-sky-navy/30">
-                <h4 className="text-lg font-semibold text-neutral-300">Delivery Method</h4>
+                
+                <div className="mt-8 flex items-center gap-2 text-sky-blue font-medium">
+              <div className="w-6 h-6 rounded-full bg-sky-blue/10 flex items-center justify-center">
+                <Check className="w-4 h-4" />
               </div>
-              <div className="p-6 bg-sky-gold/20">
-                <h4 className="text-lg font-semibold text-white">SkyWay Drone</h4>
-              </div>
-              <div className="p-6 bg-sky-navy/30">
-                <h4 className="text-lg font-semibold text-neutral-300">Traditional Courier</h4>
-              </div>
-
-              {/* Delivery Time */}
-              <div className="p-6 font-medium text-neutral-300">Delivery Time</div>
-              <div className="p-6 text-sky-gold font-bold">15 minutes</div>
-              <div className="p-6 text-neutral-300">2-4 hours</div>
-
-              {/* Cost */}
-              <div className="p-6 font-medium text-neutral-300">Cost per Delivery</div>
-              <div className="p-6 text-sky-gold font-bold">60% lower</div>
-              <div className="p-6 text-neutral-300">Standard rate</div>
-
-              {/* Environmental Impact */}
-              <div className="p-6 font-medium text-neutral-300">Environmental Impact</div>
-              <div className="p-6 text-sky-gold font-bold">Zero emissions</div>
-              <div className="p-6 text-neutral-300">High emissions</div>
-
-              {/* Tracking */}
-              <div className="p-6 font-medium text-neutral-300">Tracking Quality</div>
-              <div className="p-6 text-sky-gold font-bold">Real-time GPS + Video</div>
-              <div className="p-6 text-neutral-300">Basic location updates</div>
+              <span>Proven advantage</span>
             </div>
           </div>
-        </motion.div>
       </div>
-    </section>
+          ))}
+    </div>
+      </div >
+    </section >
   )
 }
