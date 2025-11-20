@@ -13,7 +13,6 @@ export default function HomePage() {
       <div className="bg-sky-blue">
         <WhatWeProvide />
         <HowItWorks />
-        <Benefits />
         <PartnerTypes />
         <DemoMap />
       </div>

@@ -38,6 +38,35 @@ export default function HowItWorks() {
   return (
     <section className="relative py-24 lg:py-32 bg-gradient-to-br from-[#1F7BFF] via-[#1769FF] to-[#0F5BFF] overflow-hidden" style={{ marginTop: 0, paddingTop: 0 }}>
       
+      {/* Decorative SVG Elements - Left Margin */}
+      <div className="absolute left-0 top-1/4 w-32 h-32 opacity-[0.05]">
+        <svg viewBox="0 0 200 200" className="w-full h-full text-white">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="3" strokeDasharray="10,10" />
+          <circle cx="100" cy="100" r="50" fill="currentColor" opacity="0.2" />
+        </svg>
+      </div>
+
+      <div className="absolute left-8 bottom-1/4 w-24 h-24 opacity-[0.06]">
+        <svg viewBox="0 0 100 100" className="w-full h-full text-cyan-300">
+          <path d="M50,10 L90,50 L50,90 L10,50 Z" fill="none" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      </div>
+
+      {/* Decorative SVG Elements - Right Margin */}
+      <div className="absolute right-0 top-1/3 w-40 h-40 opacity-[0.05]">
+        <svg viewBox="0 0 200 200" className="w-full h-full text-white">
+          <polygon points="100,20 180,180 20,180" fill="none" stroke="currentColor" strokeWidth="3" />
+          <circle cx="100" cy="100" r="30" fill="currentColor" opacity="0.3" />
+        </svg>
+      </div>
+
+      <div className="absolute right-12 bottom-1/3 w-28 h-28 opacity-[0.06]">
+        <svg viewBox="0 0 100 100" className="w-full h-full text-blue-200">
+          <rect x="10" y="10" width="80" height="80" fill="none" stroke="currentColor" strokeWidth="2" rx="10" />
+          <rect x="30" y="30" width="40" height="40" fill="currentColor" opacity="0.3" rx="5" />
+        </svg>
+      </div>
+
       {/* Top Wave from Features - Smooth Premium Transition */}
       <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180" style={{ marginTop: '-1px' }}>
         <svg 
@@ -56,36 +85,112 @@ export default function HowItWorks() {
 
       <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10" style={{ paddingTop: '10rem', paddingBottom: '2rem' }}>
 
-        {/* Section Header */}
-        <div className="text-center mb-12 lg:mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 mb-6"
-          >
-            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-            <span className="text-sm font-medium text-white uppercase tracking-wider">Simple Process</span>
-          </motion.div>
+        {/* Enhanced Visibility Header for Blue Background */}
+        <div className="max-w-6xl mx-auto mb-16 lg:mb-20">
           
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 font-display"
-          >
-            How It Works
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-base lg:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed"
-          >
-            A seamless, automated process designed for speed and reliability.
-          </motion.p>
+          {/* Top Row - Badge and Steps Counter */}
+          <div className="flex items-center justify-between mb-8">
+            {/* Left - Animated Badge */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-white shadow-[0_10px_40px_rgba(0,0,0,0.3)] border-2 border-white"
+            >
+              <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 shadow-lg">
+                <div className="w-3 h-3 rounded-full bg-white animate-pulse" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Process</span>
+                <span className="text-sm font-bold text-gray-900">Simple & Fast</span>
+              </div>
+            </motion.div>
+
+            {/* Right - Step Counter */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-white shadow-[0_8px_30px_rgba(0,0,0,0.25)] border-2 border-white"
+            >
+              <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">3</div>
+              <div className="text-xs text-gray-700 uppercase tracking-wider font-bold">Steps</div>
+            </motion.div>
+          </div>
+
+          {/* Main Title with Enhanced Contrast */}
+          <div className="grid lg:grid-cols-12 gap-6 items-end">
+            
+            {/* Left - Title */}
+            <div className="lg:col-span-7">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+              >
+                <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight font-display drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
+                  How It{' '}
+                  <span className="relative inline-block text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.5)]">
+                    Works
+                  </span>
+                </h2>
+                
+                {/* Decorative Line Element - Higher Contrast */}
+                <div className="flex items-center gap-3 mt-6">
+                  <div className="h-1 w-20 rounded-full bg-gradient-to-r from-white via-cyan-300 to-transparent shadow-lg" />
+                  <div className="flex gap-2">
+                    <div className="w-2 h-2 rounded-full bg-white shadow-lg" />
+                    <div className="w-2 h-2 rounded-full bg-cyan-300 shadow-lg" />
+                    <div className="w-2 h-2 rounded-full bg-blue-300 shadow-lg" />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right - Solid White Card for Maximum Contrast */}
+            <div className="lg:col-span-5">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="relative p-6 rounded-2xl bg-white shadow-[0_10px_40px_rgba(0,0,0,0.3)] border-2 border-gray-100"
+              >
+                {/* Icon Corner - Brighter */}
+                <div className="absolute -top-4 -right-4 w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center shadow-[0_8px_20px_rgba(251,146,60,0.6)]">
+                  <svg className="w-6 h-6 text-white drop-shadow-md" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+
+                <p className="text-sm lg:text-base text-gray-700 leading-relaxed font-medium">
+                  A seamless, automated process designed for{' '}
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-orange-100 text-orange-700 font-bold border border-orange-300">
+                    speed
+                  </span>
+                  {' '}and{' '}
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-green-100 text-green-700 font-bold border border-green-300">
+                    reliability
+                  </span>
+                </p>
+                
+                {/* Stats with Better Contrast */}
+                <div className="flex items-center gap-4 mt-5 pt-4 border-t-2 border-gray-200">
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-300">
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm" />
+                    <span className="text-xs text-green-800 font-bold">Automated</span>
+                  </div>
+                  <div className="w-px h-4 bg-gray-300" />
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-300">
+                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm" />
+                    <span className="text-xs text-blue-800 font-bold">Real-time</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+          </div>
         </div>
 
         {/* Modern Flat Cards - Horizontal Layout */}
@@ -139,10 +244,12 @@ export default function HowItWorks() {
                 </div>
               </div>
 
-              {/* Connecting Arrow - Between Cards */}
+              {/* Connecting Arrow - Between Cards - High Visibility */}
               {index < steps.length - 1 && (
-                <div className="flex justify-center py-3">
-                  <ArrowRight className="w-5 h-5 text-white/40 rotate-90" />
+                <div className="flex justify-center py-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg border-2 border-gray-200">
+                    <ArrowRight className="w-5 h-5 text-blue-600 rotate-90 font-bold" strokeWidth={3} />
+                  </div>
                 </div>
               )}
             </motion.div>
