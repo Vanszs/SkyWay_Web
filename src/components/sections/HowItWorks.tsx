@@ -3,6 +3,12 @@
 import { Package, MapPin, Send, CheckCircle, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 
+const sectionTitleClass = 'text-3xl md:text-4xl lg:text-5xl font-semibold text-gray-900 tracking-tight'
+const sectionSubtitleClass = 'text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto'
+const badgeClass = 'inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 uppercase text-xs font-semibold text-gray-600 tracking-widest'
+const cardClass =
+  'h-full rounded-[22px] border border-gray-100 bg-white shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col gap-4'
+
 const steps = [
   {
     title: 'Book Delivery',
@@ -53,9 +59,9 @@ export default function HowItWorks() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-200 mb-8"
+            className={`${badgeClass} mb-6`}
           >
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Workflow</span>
+            <span>Workflow</span>
           </motion.div>
 
           <motion.h2
@@ -63,27 +69,37 @@ export default function HowItWorks() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 tracking-tight"
+            className={`${sectionTitleClass} mb-4`}
           >
-            Simple, seamless <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">delivery flow.</span>
+            Simple, seamless delivery flow.
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-gray-500 font-light"
+            className={sectionSubtitleClass}
           >
-            From request to delivery in four automated steps.
+            Empat langkah otomatis yang mengikuti ritme minimalis ala Apple—bersih, ringkas, dan mudah dipahami.
           </motion.p>
         </div>
 
         <div className="relative">
           {/* Connecting Line (Desktop) */}
-          <div className="hidden lg:block absolute top-16 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-gray-200 to-transparent -z-10" />
+          <div className="hidden lg:block absolute top-1/2 left-0 w-full h-20 -translate-y-1/2 pointer-events-none z-0">
+            <svg className="w-full h-full" preserveAspectRatio="none">
+              <path
+                d="M0,40 C200,40 200,80 400,80 C600,80 600,40 800,40 C1000,40 1000,80 1200,80 L1400,80"
+                fill="none"
+                stroke="#E5E7EB"
+                strokeWidth="2"
+                strokeDasharray="8 8"
+                className="opacity-50"
+              />
+            </svg>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
             {steps.map((step, index) => (
               <motion.div
                 key={index}
@@ -91,32 +107,33 @@ export default function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.15 }}
-                className="relative group"
+                className={`group relative h-full bg-white rounded-[32px] p-8 border border-gray-300 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col ${index % 2 === 1 ? 'lg:mt-16' : 'lg:mb-16'
+                  }`}
               >
-                <div className={`w-32 h-32 rounded-[2rem] bg-white border-4 border-white shadow-xl flex items-center justify-center mb-10 mx-auto relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
-                  <div className={`w-full h-full rounded-[1.7rem] ${step.bg} flex items-center justify-center border ${step.border}`}>
-                    <step.icon className={`w-12 h-12 ${step.color}`} />
-                  </div>
-
-                  {/* Step Number Badge */}
-                  <div className="absolute -top-4 -right-4 w-10 h-10 rounded-xl bg-gray-900 text-white flex items-center justify-center font-bold text-lg border-4 border-white shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                    {index + 1}
-                  </div>
+                {/* Step Number - Subtle Background */}
+                <div className="absolute top-8 right-8 text-6xl font-bold text-gray-50 opacity-50 select-none pointer-events-none group-hover:text-blue-50 transition-colors duration-300">
+                  {index + 1}
                 </div>
 
-                <div className="text-center px-4">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">
+                {/* Icon */}
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${step.bg} group-hover:scale-110 transition-transform duration-300 relative z-10`}>
+                  <step.icon className={`w-7 h-7 ${step.color}`} />
+                </div>
+
+                {/* Content */}
+                <div className="relative z-10 flex-grow">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
                     {step.title}
                   </h3>
-                  <p className="text-gray-500 leading-relaxed text-base">
+                  <p className="text-gray-500 leading-relaxed text-sm font-medium">
                     {step.description}
                   </p>
                 </div>
 
-                {/* Arrow for mobile/tablet flow indication */}
+                {/* Mobile Arrow */}
                 {index < steps.length - 1 && (
-                  <div className="lg:hidden flex justify-center mt-8 text-gray-300">
-                    <ArrowRight className="w-6 h-6 rotate-90 md:rotate-0" />
+                  <div className="lg:hidden flex justify-center mt-6 text-gray-300">
+                    <ArrowRight className="w-5 h-5 rotate-90 md:rotate-0" />
                   </div>
                 )}
               </motion.div>

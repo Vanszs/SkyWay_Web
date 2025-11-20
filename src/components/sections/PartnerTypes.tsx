@@ -2,8 +2,13 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { BubbleCard, BubbleButton } from '@/components/ui/skyway-components'
-import { Store, Truck, Building2, ShoppingBag, Package, Users, ArrowRight } from 'lucide-react'
+import { Store, Building2, ShoppingBag, Package, Users, ArrowRight } from 'lucide-react'
+
+const sectionTitleClass = 'text-3xl md:text-4xl lg:text-5xl font-semibold text-gray-900 tracking-tight'
+const sectionSubtitleClass = 'text-lg text-gray-600 leading-relaxed max-w-3xl mx-auto'
+const badgeClass = 'inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 uppercase text-xs font-semibold text-gray-600 tracking-widest shadow-sm'
+const cardClass =
+  'bg-white/80 backdrop-blur-xl rounded-[28px] p-8 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-300 h-full flex flex-col relative overflow-hidden'
 
 export default function PartnerTypes() {
   const partnerTypes = [
@@ -69,9 +74,9 @@ export default function PartnerTypes() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 mb-8 shadow-sm"
+            className={`${badgeClass} mb-6`}
           >
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Partnerships</span>
+            <span>Partnerships</span>
           </motion.div>
 
           <motion.h2
@@ -79,19 +84,18 @@ export default function PartnerTypes() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 tracking-tight"
+            className={`${sectionTitleClass} mb-4`}
           >
-            Built for every <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">business scale.</span>
+            Built for every business scale.
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-gray-500 font-light"
+            className={sectionSubtitleClass}
           >
-            Whether you're a global logistics giant or a local bakery, SkyWay adapts to your needs.
+            Whether you're a global logistics giant or a local bakery, SkyWay adapts to your needs with the same clean, minimalist rhythm as our favorite Apple layouts.
           </motion.p>
         </div>
 
@@ -106,21 +110,21 @@ export default function PartnerTypes() {
               transition={{ delay: index * 0.1 }}
               className="group"
             >
-              <div className="bg-white rounded-[32px] p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 h-full flex flex-col relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-bl-[100px] -mr-8 -mt-8 transition-transform duration-500 group-hover:scale-150 group-hover:bg-gray-100" />
+              <div className={cardClass}>
+                <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 pointer-events-none" />
 
                 {/* Icon */}
-                <div className={`w-16 h-16 mb-8 bg-gradient-to-br ${partner.color} rounded-2xl flex items-center justify-center shadow-lg relative z-10 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-16 h-16 mb-8 bg-gradient-to-br ${partner.color} rounded-2xl flex items-center justify-center shadow-md relative z-10 group-hover:scale-110 transition-transform duration-300`}>
                   <partner.icon className="w-8 h-8 text-white" />
                 </div>
 
                 {/* Title */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 relative z-10">
+                <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-3 relative z-10">
                   {partner.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-500 mb-8 leading-relaxed text-base relative z-10 flex-grow">
+                <p className="text-gray-600 mb-8 leading-relaxed text-base relative z-10 flex-grow">
                   {partner.description}
                 </p>
 
@@ -136,11 +140,11 @@ export default function PartnerTypes() {
 
                 {/* Volume Badge */}
                 <div className="mb-8 inline-flex self-start items-center bg-gray-50 px-4 py-2 rounded-full border border-gray-100 relative z-10">
-                  <span className="text-sm font-bold text-gray-700">{partner.volume}</span>
+                  <span className="text-sm font-semibold text-gray-700">{partner.volume}</span>
                 </div>
 
                 {/* CTA */}
-                <button className="w-full py-4 rounded-xl border-2 border-gray-100 text-gray-900 font-bold hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300 relative z-10 flex items-center justify-center group-hover:shadow-lg">
+                <button className="w-full py-4 rounded-xl border-2 border-gray-100 text-gray-900 font-semibold hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all duration-300 relative z-10 flex items-center justify-center group-hover:shadow-md">
                   Become Partner
                   <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                 </button>

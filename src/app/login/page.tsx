@@ -3,8 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
-import { Lock, User, Eye, EyeOff, Shield } from 'lucide-react'
-import { BubbleCard, BubbleButton, BubbleInput } from '@/components/ui/skyway-components'
+import { Lock, User, Eye, EyeOff, Shield, ArrowRight } from 'lucide-react'
 
 export default function LoginPage() {
   const [credentials, setCredentials] = useState({
@@ -33,116 +32,108 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-navy via-sky-blue to-sky-navy flex items-center justify-center pt-16">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-[#F5F5F7] flex items-center justify-center p-4 pt-24">
+      <div className="w-full max-w-md">
         <motion.div
-          className="max-w-md mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          className="bg-white rounded-[32px] p-8 md:p-12 shadow-sm border border-gray-200 relative overflow-hidden"
         >
+          {/* Background Decoration */}
+          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-sky-400 to-blue-600" />
+
           {/* Header */}
-          <div className="text-center mb-8">
-            <motion.div
-              className="w-16 h-16 bg-sky-gold rounded-2xl flex items-center justify-center mx-auto mb-4"
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              <Shield className="w-8 h-8 text-sky-navy" />
-            </motion.div>
-            <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
-            <p className="text-neutral-300">Access SkyWay Operations Dashboard</p>
+          <div className="text-center mb-10">
+            <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-blue-600">
+              <Shield className="w-8 h-8" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back</h1>
+            <p className="text-gray-500">Sign in to SkyWay Dashboard</p>
           </div>
 
-          {/* Login Form */}
-          <BubbleCard className="p-8 bg-white/10 backdrop-blur-md border-white/20">
-            <form onSubmit={handleLogin} className="space-y-6">
-              {/* Username Field */}
-              <div className="space-y-2">
-                <label className="text-white text-sm font-medium">Username</label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400" />
-                  <BubbleInput
-                    type="text"
-                    placeholder="Enter username"
-                    value={credentials.username}
-                    onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                    className="pl-12"
-                    required
-                  />
-                </div>
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 ml-1">Username</label>
+              <div className="relative group">
+                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                <input
+                  type="text"
+                  placeholder="Enter username"
+                  value={credentials.username}
+                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 pl-12 pr-4 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200"
+                  required
+                />
               </div>
+            </div>
 
-              {/* Password Field */}
-              <div className="space-y-2">
-                <label className="text-white text-sm font-medium">Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-neutral-400" />
-                  <BubbleInput
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter password"
-                    value={credentials.password}
-                    onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-                    className="pl-12 pr-12"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-white"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Error Message */}
-              {error && (
-                <motion.div
-                  className="p-3 bg-red-400/20 border border-red-400/30 rounded-xl text-red-400 text-sm"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 ml-1">Password</label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter password"
+                  value={credentials.password}
+                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 pl-12 pr-12 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  {error}
-                </motion.div>
-              )}
-
-              {/* Demo Credentials */}
-              <div className="p-3 bg-sky-gold/20 border border-sky-gold/30 rounded-xl">
-                <div className="text-sky-gold text-sm font-medium mb-1">Demo Credentials:</div>
-                <div className="text-sky-gold/80 text-xs">
-                  Username: <code className="bg-sky-gold/20 px-1 rounded">admin</code><br/>
-                  Password: <code className="bg-sky-gold/20 px-1 rounded">skyway2024</code>
-                </div>
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
               </div>
+            </div>
 
-              {/* Login Button */}
-              <BubbleButton
-                type="submit"
-                disabled={isLoading || !credentials.username || !credentials.password}
-                className="w-full"
-                size="lg"
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="text-red-500 text-sm text-center bg-red-50 py-2 rounded-xl border border-red-100"
               >
-                {isLoading ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Signing in...</span>
-                  </div>
-                ) : (
-                  'Sign In'
-                )}
-              </BubbleButton>
-            </form>
-          </BubbleCard>
+                {error}
+              </motion.div>
+            )}
 
-          {/* Footer */}
-          <div className="text-center mt-6">
-            <p className="text-neutral-400 text-sm">
-              For branch admin access and support, contact{' '}
-              <span className="text-sky-gold">ops@skyway.id</span>
-            </p>
+            <button
+              type="submit"
+              disabled={isLoading || !credentials.username || !credentials.password}
+              className="w-full bg-gray-900 text-white rounded-2xl py-4 font-medium hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center gap-2 group"
+            >
+              {isLoading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign In</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Demo Credentials */}
+          <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+            <p className="text-xs text-gray-400 mb-2">DEMO ACCESS</p>
+            <div className="inline-flex items-center gap-4 text-sm text-gray-500 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
+              <span>User: <span className="font-mono text-gray-900 font-medium">admin</span></span>
+              <span className="w-1 h-1 bg-gray-300 rounded-full" />
+              <span>Pass: <span className="font-mono text-gray-900 font-medium">skyway2024</span></span>
+            </div>
           </div>
         </motion.div>
+
+        <div className="text-center mt-8 text-sm text-gray-400">
+          &copy; 2024 SkyWay Logistics. All rights reserved.
+        </div>
       </div>
     </div>
   )
