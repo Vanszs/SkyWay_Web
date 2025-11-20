@@ -7,25 +7,26 @@ import { cn } from '@/lib/utils'
 // Modern Button Component with Bubble Style
 interface BubbleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'outline'
-  size?: 'sm' | 'default' | 'lg'
+  size?: 'sm' | 'default' | 'lg' | 'xl'
   loading?: boolean
 }
 
 export const BubbleButton = React.forwardRef<HTMLButtonElement, BubbleButtonProps>(
   ({ className, variant = 'primary', size = 'default', loading = false, children, onClick, ...props }, ref) => {
     const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 rounded-bubble'
-    
+
     const variants = {
       primary: 'bg-sky-gold text-white shadow-glow-sm hover:shadow-glow hover:bg-secondary-600',
       secondary: 'bg-sky-blue text-white hover:bg-primary-800 shadow-soft hover:shadow-soft-lg',
       ghost: 'bg-transparent border-2 border-sky-mid text-sky-slate hover:bg-sky-light hover:border-sky-gold',
       outline: 'border-2 border-sky-gold text-sky-gold hover:bg-sky-gold hover:text-white',
     }
-    
+
     const sizes = {
       sm: 'h-9 px-4 text-sm',
       default: 'h-11 px-6 py-3',
       lg: 'h-13 px-8 py-4 text-lg',
+      xl: 'h-16 px-10 py-5 text-xl',
     }
 
     return (
@@ -61,11 +62,11 @@ interface BubbleCardProps {
   glow?: boolean
 }
 
-export const BubbleCard: React.FC<BubbleCardProps> = ({ 
-  children, 
-  className, 
-  hover = true, 
-  glow = false 
+export const BubbleCard: React.FC<BubbleCardProps> = ({
+  children,
+  className,
+  hover = true,
+  glow = false
 }) => {
   return (
     <motion.div

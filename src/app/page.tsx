@@ -17,7 +17,7 @@ export default function HomePage() {
         <PartnerTypes />
         <DemoMap />
       </div>
-      <CTA />
+      {/* <CTA /> */}
     </main>
   )
 }

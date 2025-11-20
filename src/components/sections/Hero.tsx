@@ -3,233 +3,229 @@
 import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { BubbleButton, BubbleCard } from '@/components/ui/skyway-components'
-import { ArrowRight, Play, MapPin, Zap, Shield } from 'lucide-react'
+import { ArrowRight, Play } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-sky h-screen flex items-center pt-20">
-      {/* Background Animation */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-80 h-80 rounded-full bg-sky-gold/10 animate-float" />
-        <div className="absolute top-40 -left-32 w-60 h-60 rounded-full bg-white/5 animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-20 right-1/4 w-40 h-40 rounded-full bg-sky-gold/5 animate-float" style={{ animationDelay: '1s' }} />
+    <section
+      className="
+        relative min-h-screen flex items-center justify-center overflow-hidden pt-20
+        bg-gradient-to-br from-[#1F7BFF] via-[#1769FF] to-[#0F5BFF]
+        text-white
+      "
+      style={{ width: '100%', minHeight: '100vh', paddingBottom: '12rem' }}
+    >
+      {/* Abstract Blue Tech Background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        
+        {/* Rounded Blobs */}
+        <div 
+          className="absolute opacity-[0.32]"
+          style={{
+            top: '-40px',
+            left: '-20px',
+            width: '380px',
+            height: '380px',
+            backgroundColor: '#6EA4FF',
+            borderRadius: '180px'
+          }}
+        />
+        
+        <div 
+          className="absolute opacity-[0.35]"
+          style={{
+            bottom: '-20px',
+            right: '-15px',
+            width: '420px',
+            height: '420px',
+            backgroundColor: '#003DCC',
+            borderRadius: '210px'
+          }}
+        />
+
+        {/* Soft Blur Circle */}
+        <div 
+          className="absolute opacity-[0.55]"
+          style={{
+            top: '120px',
+            left: '120px',
+            width: '260px',
+            height: '260px',
+            backgroundColor: '#6EA4FF',
+            borderRadius: '50%',
+            filter: 'blur(60px)'
+          }}
+        />
+
+        {/* Diagonal Tech Lines */}
+        <svg className="absolute inset-0 w-full h-full opacity-85">
+          {/* Right side lines */}
+          <line x1="600" y1="200" x2="760" y2="200" 
+            stroke="url(#lineGradient)" strokeWidth="2" 
+            style={{ transform: 'rotate(-30deg)', transformOrigin: '600px 200px' }} />
+          <line x1="640" y1="260" x2="800" y2="260" 
+            stroke="url(#lineGradient)" strokeWidth="2" 
+            style={{ transform: 'rotate(-30deg)', transformOrigin: '640px 260px' }} />
+          <line x1="680" y1="340" x2="840" y2="340" 
+            stroke="url(#lineGradient)" strokeWidth="2" 
+            style={{ transform: 'rotate(-30deg)', transformOrigin: '680px 340px' }} />
+          <line x1="740" y1="420" x2="900" y2="420" 
+            stroke="url(#lineGradient)" strokeWidth="2" 
+            style={{ transform: 'rotate(-30deg)', transformOrigin: '740px 420px' }} />
+
+          {/* Left side lines */}
+          <line x1="200" y1="280" x2="360" y2="280" 
+            stroke="url(#lineGradient)" strokeWidth="2" 
+            style={{ transform: 'rotate(-30deg)', transformOrigin: '200px 280px' }} />
+          <line x1="240" y1="340" x2="400" y2="340" 
+            stroke="url(#lineGradient)" strokeWidth="2" 
+            style={{ transform: 'rotate(-30deg)', transformOrigin: '240px 340px' }} />
+          <line x1="280" y1="400" x2="440" y2="400" 
+            stroke="url(#lineGradient)" strokeWidth="2" 
+            style={{ transform: 'rotate(-30deg)', transformOrigin: '280px 400px' }} />
+          <line x1="320" y1="480" x2="480" y2="480" 
+            stroke="url(#lineGradient)" strokeWidth="2" 
+            style={{ transform: 'rotate(-30deg)', transformOrigin: '320px 480px' }} />
+
+          <defs>
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#9AFFE0" />
+              <stop offset="100%" stopColor="#63F7D0" />
+            </linearGradient>
+          </defs>
+        </svg>
       </div>
 
-      <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Content */}
-          <motion.div 
-            className="space-y-8 max-w-2xl"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            {/* Headline */}
-            <motion.div 
-              className="space-y-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-            >
-              <h1 className="text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-tight font-display">
-                Drone + System
-                <br />
-                <span className="text-gradient bg-gradient-to-r from-sky-gold to-yellow-300 bg-clip-text text-transparent">
-                  as a Service
-                </span>
-              </h1>
-              
-              <p className="text-xl lg:text-2xl text-neutral-300 font-medium">
-                for Urban Logistics
-              </p>
-              
-              <p className="text-lg lg:text-xl text-neutral-200 leading-relaxed">
-                Complete drone fleet hardware + integrated monitoring system for Surabaya&apos;s logistics partners. 
-                We provide the drones and technology—you manage the packages.
-              </p>
-            </motion.div>
-
-            {/* CTA Buttons */}
-            <motion.div 
-              className="flex flex-wrap gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <BubbleButton size="lg" className="text-sky-navy">
-                Integrate with SkyWay System
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </BubbleButton>
-              
-              <Link href="/tracking">
-                <BubbleButton variant="outline" size="lg" className="border-sky-gold text-sky-gold hover:bg-sky-gold hover:text-white">
-                  Track Shipment
-                </BubbleButton>
-              </Link>
-
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div 
-              className="grid grid-cols-3 gap-6 pt-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <div className="text-center p-4 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10">
-                <div className="text-3xl lg:text-4xl font-bold text-sky-gold mb-1">50k+</div>
-                <div className="text-sm lg:text-base text-neutral-300">Deliveries</div>
-              </div>
-              <div className="text-center p-4 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10">
-                <div className="text-3xl lg:text-4xl font-bold text-sky-gold mb-1">99.8%</div>
-                <div className="text-sm lg:text-base text-neutral-300">Success Rate</div>
-              </div>
-              <div className="text-center p-4 bg-white/5 rounded-2xl backdrop-blur-sm border border-white/10">
-                <div className="text-3xl lg:text-4xl font-bold text-sky-gold mb-1">15min</div>
-                <div className="text-sm lg:text-base text-neutral-300">Avg Delivery</div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Content - Interactive Demo */}
-          <motion.div
-            className="relative"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <div className="relative max-w-md mx-auto">
-              {/* Main Demo Card */}
-              <BubbleCard className="bg-white/10 backdrop-blur-md border-white/20 p-6 space-y-4" hover={false} glow={true}>
-                {/* Tracking Feature Header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-sky-gold rounded-full animate-pulse" />
-                    <span className="text-white font-medium">Tracking Feature</span>
-                  </div>
-                  <span className="text-sky-gold text-sm font-mono">#DEMO</span>
-                </div>
-
-                {/* Feature Demo Card */}
-                <div className="bg-gradient-to-br from-sky-blue/10 to-sky-gold/10 rounded-xl p-4 space-y-4">
-                  {/* Demo Status */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 text-sm">
-                      <span className="text-green-400">📱</span>
-                      <span className="text-white">Real-time Tracking</span>
-                    </div>
-                    <span className="text-sky-gold text-xs font-medium">GPS Enabled</span>
-                  </div>
-
-                  {/* Simple Route Demo */}
-                  <div className="relative h-16 bg-white/5 rounded-lg overflow-hidden">
-                    {/* Route Line */}
-                    <motion.div
-                      className="absolute top-1/2 left-4 right-4 h-0.5 bg-gradient-to-r from-green-400 via-sky-gold to-orange-400 rounded-full transform -translate-y-1/2"
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                      style={{ originX: 0 }}
-                    />
-
-                    {/* Moving Drone */}
-                    <motion.div
-                      className="absolute top-1/2 w-5 h-5 flex items-center justify-center text-sky-gold transform -translate-y-1/2"
-                      initial={{ left: 12 }}
-                      animate={{ left: "calc(100% - 32px)" }}
-                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 1, ease: "easeInOut" }}
-                    >
-                      🚁
-                    </motion.div>
-
-                    {/* Start Point */}
-                    <div className="absolute left-2 top-1/2 w-2.5 h-2.5 bg-green-400 rounded-full transform -translate-y-1/2"></div>
-                    <div className="absolute left-0 bottom-1 text-[8px] text-neutral-300">Start</div>
-
-                    {/* End Point */}
-                    <div className="absolute right-2 top-1/2 w-2.5 h-2.5 bg-orange-400 rounded-full transform -translate-y-1/2"></div>
-                    <div className="absolute right-0 bottom-1 text-[8px] text-neutral-300">Delivery</div>
-                  </div>
-
-                  {/* Feature Highlights */}
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="flex items-center space-x-1.5">
-                      <span className="text-green-400 text-sm">✓</span>
-                      <span className="text-neutral-300">Live Location</span>
-                    </div>
-                    <div className="flex items-center space-x-1.5">
-                      <span className="text-green-400 text-sm">✓</span>
-                      <span className="text-neutral-300">ETA Updates</span>
-                    </div>
-                    <div className="flex items-center space-x-1.5">
-                      <span className="text-green-400 text-sm">✓</span>
-                      <span className="text-neutral-300">Route History</span>
-                    </div>
-                    <div className="flex items-center space-x-1.5">
-                      <span className="text-green-400 text-sm">✓</span>
-                      <span className="text-neutral-300">Status Alerts</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Demo Status */}
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-neutral-400">Interactive Demo</span>
-                  <div className="flex items-center space-x-1">
-                    <div className="w-1.5 h-1.5 bg-sky-gold rounded-full animate-pulse"></div>
-                    <span className="text-sky-gold text-xs">Live Preview</span>
-                  </div>
-                </div>
-
-                {/* Try Button */}
-                <Link href="/tracking">
-                  <BubbleButton size="sm" className="w-full">
-                    Try Tracking Feature
-                  </BubbleButton>
-                </Link>
-              </BubbleCard>
-
-              {/* Floating Elements */}
-              <motion.div 
-                className="absolute -top-4 -right-4 bg-sky-gold text-sky-navy px-3 py-1 rounded-pill text-sm font-medium"
-                animate={{ y: [-5, 5, -5] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                Feature Demo
-              </motion.div>
-
-              <motion.div 
-                className="absolute -bottom-4 -left-4 bg-white/10 backdrop-blur-md text-white px-3 py-1 rounded-pill text-sm"
-                animate={{ y: [5, -5, 5] }}
-                transition={{ duration: 3, repeat: Infinity, delay: 1.5 }}
-              >
-                GPS Tracking
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
+      {/* Main Content - Optimized Layout */}
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 sm:px-8 lg:px-12">
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: 'easeOut' }}
+          className="flex flex-col items-center text-center space-y-6 sm:space-y-8"
         >
+          {/* Eyebrow Badge */}
           <motion.div 
-            className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center"
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="inline-flex items-center justify-center rounded-full bg-white/15 backdrop-blur-md px-5 py-2.5 text-xs sm:text-sm font-medium uppercase tracking-[0.15em] text-white/95 border border-white/20 shadow-lg"
           >
-            <motion.div 
-              className="w-1 h-3 bg-white/50 rounded-full mt-2"
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
+            <span className="mr-2.5 h-2 w-2 rounded-full bg-[#63F7D0] animate-pulse shadow-[0_0_8px_rgba(99,247,208,0.8)]" />
+            Intelligent Drone Logistics
           </motion.div>
+
+          {/* Main Heading - Improved Hierarchy */}
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="font-display font-bold tracking-tight leading-[1.08] max-w-4xl"
+            style={{
+              fontSize: 'clamp(2.5rem, 8vw, 5.5rem)',
+              textShadow: '0 4px 20px rgba(0,0,0,0.15)'
+            }}
+          >
+            The Future of
+            <br />
+            <span className="bg-gradient-to-r from-white via-[#F8FBFF] to-[#E0F2FF] bg-clip-text text-transparent">
+              Urban Logistics
+            </span>
+          </motion.h1>
+
+          {/* Subheading - Better Readability */}
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="mx-auto max-w-3xl font-normal leading-[1.65] text-white/90"
+            style={{
+              fontSize: 'clamp(1.05rem, 2.5vw, 1.35rem)',
+              textShadow: '0 2px 10px rgba(0,0,0,0.1)'
+            }}
+          >
+            Experience lightning-fast, semi-autonomous drone logistics designed for modern cities.
+            SkyWay connects businesses using intelligent air corridors powered by IoT and swarm
+            navigation.
+          </motion.p>
+
+          {/* CTA Buttons - Enhanced Spacing & Design */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="flex flex-col items-center justify-center gap-4 pt-6 sm:flex-row sm:gap-5"
+          >
+            {/* Primary Button */}
+            <Link href="/tracking">
+              <motion.button
+                whileHover={{ y: -3, scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="
+                  group relative inline-flex items-center justify-center gap-3
+                  rounded-full bg-white px-9 py-4 sm:px-10 sm:py-4.5
+                  text-base sm:text-lg font-semibold
+                  text-[#1769FF] 
+                  shadow-[0_10px_40px_rgba(255,255,255,0.25),0_0_0_1px_rgba(255,255,255,0.1)]
+                  transition-all duration-300
+                  hover:shadow-[0_15px_50px_rgba(255,255,255,0.35),0_0_0_1px_rgba(255,255,255,0.2)]
+                  focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30
+                  min-w-[200px] sm:min-w-[220px]
+                "
+              >
+                <span className="relative z-10 font-semibold">Track Shipment</span>
+                <ArrowRight className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+              </motion.button>
+            </Link>
+
+            {/* Secondary Button */}
+            <Link href="/demo">
+              <motion.button
+                whileHover={{ y: -3, scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                className="
+                  inline-flex items-center justify-center gap-3
+                  rounded-full border-2 border-white/40 bg-white/10
+                  backdrop-blur-md
+                  px-9 py-4 sm:px-10 sm:py-4.5
+                  text-base sm:text-lg font-semibold
+                  text-white
+                  shadow-[0_10px_30px_rgba(0,0,0,0.15)]
+                  transition-all duration-300
+                  hover:border-white/60 hover:bg-white/15
+                  hover:shadow-[0_15px_40px_rgba(0,0,0,0.2)]
+                  focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30
+                  min-w-[200px] sm:min-w-[220px]
+                "
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
+                  <Play className="h-4.5 w-4.5 fill-current" />
+                </span>
+                <span className="font-semibold">Watch Demo</span>
+              </motion.button>
+            </Link>
+          </motion.div>
+
         </motion.div>
+      </div>
+
+      {/* Bottom smooth mint wave - seamless transition to green section with premium spacing */}
+      <div className="pointer-events-none absolute bottom-0 left-0 w-full overflow-hidden leading-[0] block" style={{ marginBottom: '-1px' }}>
+        <svg
+          className="relative block h-[100px] w-[calc(100%+1.3px)] sm:h-[140px] lg:h-[180px]"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          style={{ display: 'block' }}
+        >
+          <path
+            d="M0,50 C200,100 400,20 600,60 C800,100 1000,40 1200,70 L1200,120 L0,120 Z"
+            fill="#D4F4E8"
+          />
+        </svg>
       </div>
     </section>
   )
 }
+
+// Helper component tidak diperlukan lagi untuk desain baru

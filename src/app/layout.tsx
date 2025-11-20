@@ -3,14 +3,15 @@ import { Inter, Poppins } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import { Navigation } from '@/components/Navigation'
+import Footer from '@/components/Footer'
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   display: 'swap',
 })
 
-const poppins = Poppins({ 
+const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
   variable: '--font-poppins',
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased bg-sky-light`}>
         <Navigation />
         {children}
+        <Footer />
         <Toaster />
       </body>
     </html>
