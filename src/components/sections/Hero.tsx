@@ -18,6 +18,114 @@ export default function Hero() {
       {/* Abstract Blue Tech Background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         
+        {/* Animated Clouds - SVG Collection */}
+        
+        {/* Large Cloud 1 - Top Center */}
+        <motion.svg
+          className="absolute top-10 left-[45%] w-56 h-32 opacity-25"
+          animate={{ x: [0, -50, 0], y: [0, 20, 0] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M35,65 Q20,40 45,32 Q52,18 72,25 Q85,12 105,25 Q125,15 140,30 Q160,28 158,55 Q165,75 145,78 H40 Q20,78 35,65 Z" 
+                fill="white" opacity="0.9" />
+        </motion.svg>
+
+        {/* Large Cloud 2 - Bottom Left */}
+        <motion.svg
+          className="absolute bottom-32 left-[5%] w-52 h-30 opacity-22"
+          animate={{ x: [0, 45, 0], y: [0, -25, 0] }}
+          transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M40,68 Q25,43 50,35 Q57,21 77,28 Q90,15 110,28 Q130,18 145,33 Q165,31 163,58 Q170,78 150,81 H45 Q25,81 40,68 Z" 
+                fill="white" opacity="0.85" />
+        </motion.svg>
+
+        {/* Medium Cloud - Original Collection */}
+        <motion.svg
+          className="absolute top-20 left-10 w-32 h-20 opacity-20"
+          animate={{ x: [0, 30, 0], y: [0, -10, 0] }}
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M40,60 Q30,40 50,35 Q55,25 70,30 Q80,20 95,30 Q110,25 115,35 Q130,35 125,55 Q130,70 115,70 H45 Q30,70 40,60 Z" 
+                fill="white" opacity="0.8" />
+        </motion.svg>
+
+        <motion.svg
+          className="absolute top-32 right-20 w-40 h-24 opacity-15"
+          animate={{ x: [0, -40, 0], y: [0, 15, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M45,70 Q35,50 55,45 Q60,35 75,40 Q85,30 100,40 Q115,35 120,45 Q135,45 130,65 Q135,80 120,80 H50 Q35,80 45,70 Z" 
+                fill="white" opacity="0.7" />
+        </motion.svg>
+
+        {/* Extra Large Cloud - Right Side */}
+        <motion.svg
+          className="absolute top-[35%] right-[8%] w-64 h-36 opacity-18"
+          animate={{ x: [0, -60, 0], y: [0, 30, 0] }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M30,70 Q15,38 42,28 Q50,12 73,20 Q88,8 110,22 Q135,10 152,28 Q175,25 173,58 Q182,82 158,86 H38 Q18,86 30,70 Z" 
+                fill="white" opacity="0.95" />
+        </motion.svg>
+
+        <motion.svg
+          className="absolute bottom-40 left-[15%] w-36 h-22 opacity-25"
+          animate={{ x: [0, 25, 0], y: [0, -20, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M50,65 Q40,45 60,40 Q65,30 80,35 Q90,25 105,35 Q120,30 125,40 Q140,40 135,60 Q140,75 125,75 H55 Q40,75 50,65 Z" 
+                fill="white" opacity="0.6" />
+        </motion.svg>
+
+        {/* Small Clouds - Additional */}
+        <motion.svg
+          className="absolute top-[55%] left-[25%] w-28 h-18 opacity-28"
+          animate={{ x: [0, 35, 0], y: [0, -12, 0] }}
+          transition={{ duration: 17, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M52,66 Q42,46 62,41 Q67,31 82,36 Q92,26 107,36 Q122,31 127,41 Q142,41 137,61 Q142,76 127,76 H57 Q42,76 52,66 Z" 
+                fill="white" opacity="0.65" />
+        </motion.svg>
+
+        <motion.svg
+          className="absolute top-[60%] right-[10%] w-28 h-18 opacity-20"
+          animate={{ x: [0, -20, 0], y: [0, 10, 0] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M55,68 Q45,48 65,43 Q70,33 85,38 Q95,28 110,38 Q125,33 130,43 Q145,43 140,63 Q145,78 130,78 H60 Q45,78 55,68 Z" 
+                fill="white" opacity="0.5" />
+        </motion.svg>
+
+        {/* Large Cloud 3 - Top Right Corner */}
+        <motion.svg
+          className="absolute top-[15%] right-[2%] w-48 h-28 opacity-20"
+          animate={{ x: [0, -35, 0], y: [0, 18, 0] }}
+          transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M38,67 Q23,42 48,34 Q55,20 75,27 Q88,14 108,27 Q128,17 143,32 Q163,30 161,57 Q168,77 148,80 H43 Q23,80 38,67 Z" 
+                fill="white" opacity="0.88" />
+        </motion.svg>
+
+        <motion.svg
+          className="absolute bottom-[25%] right-[25%] w-32 h-20 opacity-18"
+          animate={{ x: [0, 35, 0], y: [0, -15, 0] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+          viewBox="0 0 200 120"
+        >
+          <path d="M48,62 Q38,42 58,37 Q63,27 78,32 Q88,22 103,32 Q118,27 123,37 Q138,37 133,57 Q138,72 123,72 H53 Q38,72 48,62 Z" 
+                fill="white" opacity="0.7" />
+        </motion.svg>
+        
         {/* Rounded Blobs */}
         <div 
           className="absolute opacity-[0.32]"

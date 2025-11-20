@@ -11,21 +11,27 @@ export default function HowItWorks() {
       icon: Package,
       title: "Package Pickup",
       description: "Partner drops package at SkyWay hub. Automated intake & weighing.",
-      color: "text-sky-blue"
+      bgColor: "bg-blue-50",
+      iconColor: "text-blue-600",
+      numberBg: "bg-blue-600"
     },
     {
       id: 2,
       icon: Zap,
       title: "Drone Dispatch",
       description: "AI selects optimal flight path. Semi-autonomous rapid transport.",
-      color: "text-sky-gold"
+      bgColor: "bg-purple-50",
+      iconColor: "text-purple-600",
+      numberBg: "bg-purple-600"
     },
     {
       id: 3,
       icon: CheckCircle,
       title: "Smart Delivery",
       description: "Secure drop-off with real-time photo confirmation.",
-      color: "text-tech-cyan"
+      bgColor: "bg-green-50",
+      iconColor: "text-green-600",
+      numberBg: "bg-green-600"
     }
   ]
 
@@ -50,63 +56,98 @@ export default function HowItWorks() {
 
       <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10" style={{ paddingTop: '10rem', paddingBottom: '2rem' }}>
 
-        {/* Floating White Card */}
-        <motion.div
-          className="bg-white/95 backdrop-blur-md rounded-[2rem] shadow-2xl p-8 lg:p-16 max-w-5xl mx-auto border border-white/50"
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          {/* Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-deep-navy mb-4 font-display">
-              How It Works
-            </h2>
-            <p className="text-lg text-neutral-500 max-w-2xl mx-auto">
-              A seamless, automated process designed for speed and reliability.
-            </p>
-          </div>
+        {/* Section Header */}
+        <div className="text-center mb-12 lg:mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 mb-6"
+          >
+            <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+            <span className="text-sm font-medium text-white uppercase tracking-wider">Simple Process</span>
+          </motion.div>
+          
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-4 font-display"
+          >
+            How It Works
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-base lg:text-lg text-white/80 max-w-2xl mx-auto leading-relaxed"
+          >
+            A seamless, automated process designed for speed and reliability.
+          </motion.p>
+        </div>
 
-          {/* Steps Grid */}
-          <div className="grid md:grid-cols-3 gap-12 relative">
-            {/* Connecting Line (Desktop) */}
-            <div className="hidden md:block absolute top-12 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-sky-blue/20 via-sky-gold/20 to-tech-cyan/20 -z-10" />
-
-            {steps.map((step, index) => (
-              <motion.div
-                key={step.id}
-                className="flex flex-col items-center text-center relative"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-              >
-                {/* Step Number Bubble */}
-                <div className="absolute -top-3 right-1/3 w-8 h-8 bg-white rounded-full shadow-sm flex items-center justify-center text-xs font-bold text-neutral-400 border border-neutral-100">
-                  {step.id}
-                </div>
-
-                {/* Icon Circle */}
-                <div className="w-24 h-24 rounded-full bg-white shadow-soft-md flex items-center justify-center mb-6 border border-neutral-50 group hover:scale-105 transition-transform duration-300">
-                  <step.icon className={`w-10 h-10 ${step.color}`} />
-                </div>
-
-                <h3 className="text-xl font-bold text-deep-navy mb-3">{step.title}</h3>
-                <p className="text-neutral-500 text-sm leading-relaxed px-4">
-                  {step.description}
-                </p>
-
-                {/* Mobile Arrow */}
-                {index < steps.length - 1 && (
-                  <div className="md:hidden mt-8 text-neutral-300">
-                    <ArrowRight className="w-6 h-6 rotate-90" />
+        {/* Modern Flat Cards - Horizontal Layout */}
+        <div className="grid gap-5 max-w-4xl mx-auto">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.id}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.15, duration: 0.5 }}
+              className="group relative"
+            >
+              {/* Card Container */}
+              <div className="relative bg-white rounded-2xl p-6 lg:p-8 hover:shadow-xl transition-all duration-300 border border-gray-100">
+                
+                {/* Left Side - Number & Icon */}
+                <div className="flex items-start gap-6">
+                  {/* Step Number Circle */}
+                  <div className="flex-shrink-0">
+                    <div className={`w-14 h-14 rounded-2xl ${step.numberBg} flex items-center justify-center shadow-lg`}>
+                      <span className="text-2xl font-bold text-white">{step.id}</span>
+                    </div>
                   </div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+
+                  {/* Content */}
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-xl lg:text-2xl font-bold text-gray-900">
+                        {step.title}
+                      </h3>
+                      
+                      {/* Icon Badge */}
+                      <div className={`flex-shrink-0 w-12 h-12 rounded-xl ${step.bgColor} flex items-center justify-center ml-4`}>
+                        <step.icon className={`w-6 h-6 ${step.iconColor}`} strokeWidth={2} />
+                      </div>
+                    </div>
+                    
+                    <p className="text-sm lg:text-base text-gray-600 leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
+                </div>
+
+                {/* SVG Decoration - Bottom Right */}
+                <div className="absolute bottom-0 right-0 w-32 h-32 opacity-5 overflow-hidden rounded-2xl pointer-events-none">
+                  <svg viewBox="0 0 100 100" className="w-full h-full">
+                    <circle cx="70" cy="70" r="40" className={step.iconColor} fill="currentColor" />
+                    <circle cx="30" cy="30" r="20" className={step.iconColor} fill="currentColor" opacity="0.5" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Connecting Arrow - Between Cards */}
+              {index < steps.length - 1 && (
+                <div className="flex justify-center py-3">
+                  <ArrowRight className="w-5 h-5 text-white/40 rotate-90" />
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
 
       </div>
 
