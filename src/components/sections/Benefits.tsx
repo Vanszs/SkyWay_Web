@@ -163,8 +163,8 @@ export default function Benefits() {
               </div>
             </motion.div>
           </div>
+        </motion.div>
       </div>
-    </div >
-    </section >
+    </section>
   )
 }
