@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -80,9 +81,11 @@ export function ModernSidebar({
       <div className="p-6 flex items-center justify-between border-b border-white/10">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
-            <img 
-              src="/logo.png" 
-              alt="SkyWay Logo" 
+            <Image
+              src="/logo.png"
+              alt="SkyWay Logo"
+              width={40}
+              height={40}
               className="h-10 w-auto object-contain"
             />
             <div>
@@ -92,9 +95,11 @@ export function ModernSidebar({
           </div>
         )}
         {isCollapsed && (
-          <img 
-            src="/logo.png" 
-            alt="SkyWay Logo" 
+          <Image
+            src="/logo.png"
+            alt="SkyWay Logo"
+            width={32}
+            height={32}
             className="h-8 w-auto object-contain mx-auto"
           />
         )}
@@ -120,13 +125,13 @@ export function ModernSidebar({
 
             return (
               <li key={item.url}>
-                  <Link
+                <Link
                   href={item.url}
                   className={cn(
                     "flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200",
                     "hover:bg-white/10 hover:translate-x-1",
                     active &&
-                      "bg-gradient-to-r from-sky-gold to-yellow-500 shadow-lg shadow-sky-gold/30 text-white",
+                    "bg-gradient-to-r from-sky-gold to-yellow-500 shadow-lg shadow-sky-gold/30 text-white",
                     !active && "text-neutral-300",
                     isCollapsed ? "justify-center" : ""
                   )}

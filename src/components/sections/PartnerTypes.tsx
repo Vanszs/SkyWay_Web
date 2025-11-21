@@ -130,7 +130,7 @@ export default function PartnerTypes() {
             transition={{ delay: 0.2 }}
             className={sectionSubtitleClass}
           >
-            Whether you're a global logistics giant or a local bakery, SkyWay adapts to your needs with the same clean, minimalist rhythm as our favorite Apple layouts.
+            Whether you&apos;re a global logistics giant or a local bakery, SkyWay adapts to your needs with the same clean, minimalist rhythm as our favorite Apple layouts.
           </motion.p>
         </div>
 

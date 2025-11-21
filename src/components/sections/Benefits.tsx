@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { BubbleCard } from '@/components/ui/skyway-components'
-import { Clock, DollarSign, Leaf, Shield, Zap, BarChart } from 'lucide-react'
+import { Clock, DollarSign, Leaf, Shield, Zap, BarChart, Check } from 'lucide-react'
 
 export default function Benefits() {
   const benefits = [
@@ -154,18 +154,17 @@ export default function Benefits() {
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-                
-                <div className="mt-8 flex items-center gap-2 text-sky-blue font-medium">
-              <div className="w-6 h-6 rounded-full bg-sky-blue/10 flex items-center justify-center">
-                <Check className="w-4 h-4" />
+            >
+              <div className="mt-8 flex items-center gap-2 text-sky-blue font-medium">
+                <div className="w-6 h-6 rounded-full bg-sky-blue/10 flex items-center justify-center">
+                  <Check className="w-4 h-4" />
+                </div>
+                <span>Proven advantage</span>
               </div>
-              <span>Proven advantage</span>
-            </div>
+            </motion.div>
           </div>
       </div>
-          ))}
-    </div>
-      </div >
+    </div >
     </section >
   )
 }
