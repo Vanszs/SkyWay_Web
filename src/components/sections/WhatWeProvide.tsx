@@ -116,6 +116,37 @@ const comparison = [
 export default function WhatWeProvide() {
   return (
     <section className="relative bg-sky-blue/10 overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
+      {/* Cloud Background Decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-70">
+        {/* Cloud Top Left */}
+        <svg className="absolute top-10 left-5 w-40 h-40 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M140 60c-5.5-10-15.5-17-27-17-5 0-10 1.2-14 3.5C95 38 86 32 76 32c-15 0-28 10-32 24-12 2-21 12-21 24 0 13.3 10.7 24 24 24h90c11 0 20-9 20-20 0-9-6-17-14-20z" />
+        </svg>
+
+        {/* Cloud Top Right */}
+        <svg className="absolute top-32 right-10 w-56 h-56 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M160 70c-4-8-12-14-21-14-3.5 0-7 0.8-10 2.5C125 50 117 45 108 45c-11 0-20 7-24 17-9 1.5-16 9-16 18 0 10 8 18 18 18h68c8 0 15-7 15-15 0-7-4.5-13-10-15z" />
+        </svg>
+
+        {/* Cloud Bottom Left */}
+        <svg className="absolute bottom-20 left-20 w-48 h-48 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M150 75c-6-11-17-19-30-19-5.5 0-11 1.5-15.5 4C99 48 88 40 75 40c-17 0-31 11-35 27-13 2.5-23 13-23 26 0 15 12 27 27 27h100c12 0 22-10 22-22 0-10-7-19-16-23z" />
+        </svg>
+
+        {/* Small clouds scattered */}
+        <svg className="absolute top-1/2 right-1/4 w-32 h-32 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <ellipse cx="100" cy="100" rx="60" ry="30" />
+        </svg>
+
+        {/* Extra Side Clouds */}
+        <svg className="absolute top-1/3 -left-10 w-64 h-64 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M140 60c-5.5-10-15.5-17-27-17-5 0-10 1.2-14 3.5C95 38 86 32 76 32c-15 0-28 10-32 24-12 2-21 12-21 24 0 13.3 10.7 24 24 24h90c11 0 20-9 20-20 0-9-6-17-14-20z" />
+        </svg>
+        <svg className="absolute bottom-1/3 -right-16 w-72 h-72 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M160 70c-4-8-12-14-21-14-3.5 0-7 0.8-10 2.5C125 50 117 45 108 45c-11 0-20 7-24 17-9 1.5-16 9-16 18 0 10 8 18 18 18h68c8 0 15-7 15-15 0-7-4.5-13-10-15z" />
+        </svg>
+      </div>
+
       <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10">
         <div className="text-center max-w-4xl mx-auto mb-16">
           <motion.div

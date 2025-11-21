@@ -63,8 +63,43 @@ export default function PartnerTypes() {
     <section className="relative bg-sky-blue/10 overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
 
       {/* Top Wave from HowItWorks - Smooth Transition */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180" style={{ marginTop: '-1px' }}>
-        {/* Matches HowItWorks bottom wave */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]" style={{ marginTop: '-1px' }}>
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          className="relative block w-full h-[80px]"
+        >
+          <path
+            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+            fill="currentColor"
+            className="text-light-gray"
+          />
+        </svg>
+      </div>
+
+      {/* Cloud Decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-70">
+        <svg className="absolute top-24 left-12 w-48 h-48 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M140 65c-5-10-15-16-26-16-5 0-9 1-13 3C97 43 89 38 80 38c-14 0-26 10-30 23-11 2-20 11-20 23 0 12 10 22 22 22h85c10 0 19-8 19-19 0-9-6-16-13-18z" />
+        </svg>
+
+        <svg className="absolute bottom-32 right-20 w-56 h-56 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <ellipse cx="100" cy="90" rx="75" ry="40" opacity="0.7" />
+          <ellipse cx="120" cy="95" rx="55" ry="30" opacity="0.9" />
+        </svg>
+
+        <svg className="absolute top-1/2 right-1/3 w-40 h-40 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <circle cx="100" cy="100" r="45" opacity="0.4" />
+          <circle cx="85" cy="95" r="35" opacity="0.6" />
+        </svg>
+
+        {/* Extra Side Clouds */}
+        <svg className="absolute top-1/4 -right-12 w-64 h-64 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M140 60c-5.5-10-15.5-17-27-17-5 0-10 1.2-14 3.5C95 38 86 32 76 32c-15 0-28 10-32 24-12 2-21 12-21 24 0 13.3 10.7 24 24 24h90c11 0 20-9 20-20 0-9-6-17-14-20z" />
+        </svg>
+        <svg className="absolute bottom-1/4 -left-16 w-60 h-60 text-white" viewBox="0 0 200 200" fill="currentColor">
+          <ellipse cx="100" cy="100" rx="75" ry="35" />
+        </svg>
       </div>
 
       <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10">
@@ -197,21 +232,7 @@ export default function PartnerTypes() {
 
       </div>
 
-      {/* Bottom Wave Divider - Gray to White (Next Section Background) */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]" style={{ marginBottom: '-1px' }}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          className="relative block w-full h-[80px] sm:h-[120px] lg:h-[160px]"
-        >
-          <path
-            fill="#FFFFFF"
-            fillOpacity="1"
-            d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,165.3C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          />
-        </svg>
-      </div>
+
     </section>
   )
 }

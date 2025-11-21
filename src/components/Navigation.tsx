@@ -25,7 +25,7 @@ export const Navigation: React.FC<NavigationProps> = ({ className = "" }) => {
   const navItems = [
     { href: '/', label: 'Home', icon: Home },
     { href: '/tracking', label: 'Track Shipment', icon: Package },
-    { href: '/login', label: 'Admin Login', icon: BarChart3 }
+    // { href: '/login', label: 'Admin Login', icon: BarChart3 }
   ]
 
   return (

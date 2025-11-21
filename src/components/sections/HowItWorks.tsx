@@ -49,8 +49,44 @@ export default function HowItWorks() {
     <section className="relative bg-light-gray overflow-hidden" style={{ marginTop: 0, paddingTop: '6rem', paddingBottom: '8rem' }}>
 
       {/* Top Wave from WhatWeProvide - Smooth Transition */}
-      <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180" style={{ marginTop: '-1px' }}>
-        {/* Matches WhatWeProvide bottom wave */}
+      <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0]" style={{ marginTop: '-1px' }}>
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          className="relative block w-full h-[80px]"
+        >
+          <path
+            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+            fill="currentColor"
+            className="text-sky-blue/10"
+          />
+        </svg>
+      </div>
+
+      {/* Cloud Decorations */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-70">
+        {/* Floating clouds */}
+        <svg className="absolute top-20 right-10 w-52 h-52 text-sky-blue" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M145 65c-5-9-14-15-24-15-4 0-8 1-11 3C106 45 99 40 90 40c-13 0-24 9-28 21-11 2-19 11-19 22 0 12 10 22 22 22h78c10 0 18-8 18-18 0-8-5-15-12-17z" />
+        </svg>
+
+        <svg className="absolute bottom-40 left-16 w-44 h-44 text-sky-blue" viewBox="0 0 200 200" fill="currentColor">
+          <ellipse cx="100" cy="100" rx="70" ry="35" opacity="0.6" />
+          <ellipse cx="80" cy="90" rx="50" ry="25" opacity="0.8" />
+        </svg>
+
+        <svg className="absolute top-1/3 left-1/4 w-36 h-36 text-sky-blue" viewBox="0 0 200 200" fill="currentColor">
+          <circle cx="100" cy="100" r="40" opacity="0.5" />
+          <ellipse cx="100" cy="100" rx="60" ry="30" />
+        </svg>
+
+        {/* Extra Side Clouds */}
+        <svg className="absolute top-1/4 -left-12 w-56 h-56 text-sky-blue" viewBox="0 0 200 200" fill="currentColor">
+          <path d="M140 60c-5.5-10-15.5-17-27-17-5 0-10 1.2-14 3.5C95 38 86 32 76 32c-15 0-28 10-32 24-12 2-21 12-21 24 0 13.3 10.7 24 24 24h90c11 0 20-9 20-20 0-9-6-17-14-20z" />
+        </svg>
+        <svg className="absolute bottom-1/4 -right-10 w-60 h-60 text-sky-blue" viewBox="0 0 200 200" fill="currentColor">
+          <ellipse cx="100" cy="100" rx="75" ry="35" />
+        </svg>
       </div>
 
       <div className="container mx-auto px-6 lg:px-12 xl:px-16 max-w-7xl relative z-10">
@@ -142,21 +178,7 @@ export default function HowItWorks() {
         </div>
       </div>
 
-      {/* Bottom Wave Divider - White to Gray (Next Section Background) */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]" style={{ marginBottom: '-1px' }}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 320"
-          preserveAspectRatio="none"
-          className="relative block w-full h-[80px] sm:h-[120px] lg:h-[160px]"
-        >
-          <path
-            fill="#F5F5F7"
-            fillOpacity="1"
-            d="M0,96L48,112C96,128,192,160,288,165.3C384,171,480,149,576,133.3C672,117,768,107,864,122.7C960,139,1056,181,1152,186.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-          />
-        </svg>
-      </div>
+
     </section>
   )
 }

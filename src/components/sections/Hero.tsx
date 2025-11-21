@@ -10,7 +10,7 @@ export default function Hero() {
     <section
       className="
         relative min-h-screen flex items-center justify-center overflow-hidden pt-20
-        bg-gradient-to-b from-sky-blue via-white to-light-gray
+        bg-gradient-to-b from-sky-blue via-sky-blue/80 via-40% to-sky-blue/30
       "
       style={{ width: '100%', minHeight: '100vh', paddingBottom: '8rem' }}
     >
