@@ -35,45 +35,50 @@ export function KPIStat({
       role="status"
       aria-label={`KPI ${label}`}
       className={cn(
-        "rounded-2xl bg-white shadow-lg p-6 border border-sky-gold/20",
-        "hover:shadow-2xl hover:border-sky-gold/40 transition-all duration-300",
-        "flex flex-col gap-3 group",
+        "flex h-full flex-col justify-between rounded-[2rem] bg-white p-6 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] transition-all duration-300 ease-out hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.08)]",
         className
       )}
     >
       {/* Header with label and icon */}
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-neutral-600 font-semibold">{label}</span>
+      <div className="mb-4 flex items-start justify-between">
+        <span className="text-[13px] font-medium uppercase tracking-wide text-neutral-500">
+          {label}
+        </span>
         {Icon && (
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-gold to-yellow-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
-            <Icon className="w-6 h-6 text-white" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50">
+            <Icon className="h-5 w-5 text-blue-600" />
           </div>
         )}
       </div>
 
       {/* Value */}
-      <div className="flex items-end justify-between gap-2">
-        <div className="text-3xl font-bold text-sky-navy">
+      <div>
+        <div className="mb-2 text-3xl font-semibold tracking-tight text-neutral-900">
           {formattedValue}
         </div>
 
         {/* Delta indicator */}
         {delta && (
-          <div
-            className={cn(
-              "flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold",
-              delta.direction === "up"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            )}
-            title={delta.tooltip}
-          >
-            {delta.direction === "up" ? (
-              <TrendingUp className="w-3.5 h-3.5" />
-            ) : (
-              <TrendingDown className="w-3.5 h-3.5" />
-            )}
-            <span>{Math.abs(delta.value)}%</span>
+          <div className="flex items-center gap-2">
+            <div
+              className={cn(
+                "flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold",
+                delta.direction === "up"
+                  ? "bg-green-100/50 text-green-700"
+                  : "bg-red-100/50 text-red-700"
+              )}
+              title={delta.tooltip}
+            >
+              {delta.direction === "up" ? (
+                <TrendingUp className="h-3 w-3" />
+              ) : (
+                <TrendingDown className="h-3 w-3" />
+              )}
+              <span>{Math.abs(delta.value)}%</span>
+            </div>
+            <span className="text-[11px] font-medium text-neutral-400">
+              vs last period
+            </span>
           </div>
         )}
       </div>

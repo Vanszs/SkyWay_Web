@@ -21,16 +21,17 @@ export function ChartCard({
       role="group"
       aria-label={`Chart ${title}`}
       className={cn(
-        "rounded-2xl bg-white shadow-lg p-6 border border-sky-gold/20 relative z-10",
-        "hover:shadow-2xl hover:border-sky-gold/40 transition-all duration-300",
+        "rounded-[2rem] bg-white p-6 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)]",
         className
       )}
     >
       {/* Header */}
-      <div className="mb-6 pb-4 border-b border-neutral-200">
-        <h3 className="text-xl font-bold text-sky-navy">{title}</h3>
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold tracking-tight text-neutral-900">
+          {title}
+        </h3>
         {subtitle && (
-          <p className="text-sm text-neutral-600 mt-1">{subtitle}</p>
+          <p className="mt-0.5 text-sm text-neutral-500">{subtitle}</p>
         )}
       </div>
 
